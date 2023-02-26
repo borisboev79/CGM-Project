@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <div th:include="~{fragments/head}"></div>
+    <title>GrouMan Login Error</title>
+</head>
+
+<body>
+
+<header>
+    <div th:replace="~{fragments/navbar}"></div>
+</header>
+<main>
+
+    <div class="container bg-blur text-center rounded mt-5" style="width: fit-content">
+        <div class="card bg-secondary" style="width: 50rem" >
+            <div class="h5 card-header" style="color: lightgray">Error logging you in.</div>
+            <h5>
+                Try to <a class="text-light" th:href="@{/auth/login}">login </a>
+               again!
+            </h5>
+        </div>
+    </div>
+
+</main>
+<div th:replace="~{fragments/footer}"></div>
+</body>
+</html>
