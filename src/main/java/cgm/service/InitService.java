@@ -9,6 +9,7 @@ import cgm.repository.BranchRepository;
 import cgm.repository.RoleRepository;
 import cgm.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,9 @@ public class InitService {
 
     public InitService(RoleRepository roleRepository,
                        UserRepository userRepository,
-                       BranchRepository branchRepository, PasswordEncoder passwordEncoder) {
+                       BranchRepository branchRepository,
+                       PasswordEncoder passwordEncoder,
+                       @Value("${app.default.password}") String defaultPassword) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.branchRepository = branchRepository;
@@ -37,7 +40,6 @@ public class InitService {
         initBranches();
         initUsers();
     }
-
 
 
     private void initRoles() {
@@ -53,7 +55,7 @@ public class InitService {
     }
 
     private void initBranches() {
-        if (branchRepository.count() == 0){
+        if (branchRepository.count() == 0) {
             List<BranchEntity> branches = List.of(
                     BranchEntity.builder().name("Head Office").code(BranchCode.HEAD).address("София, пл. Папа Йоан Павел II №1, ет.7").email("products@usitcolours.bg").build(),
                     BranchEntity.builder().name("Blagoevgrad").code(BranchCode.BLGD).address("Благоевград, ул. Крали Марко 1").email("blgd@usitcolours.bg").build(),
@@ -62,9 +64,6 @@ public class InitService {
             );
             this.branchRepository.saveAllAndFlush(branches);
         }
-
-
-
 
 
     }

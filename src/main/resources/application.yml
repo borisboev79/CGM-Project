@@ -18,6 +18,9 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: false
         show_sql: false
+app:
+  default:
+    password: topsecret
   mvc:
     hidden-method:
       filter:

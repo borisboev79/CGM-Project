@@ -25,9 +25,9 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.
-                        authorizeHttpRequests().
+                authorizeHttpRequests().
                 requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll().
-                requestMatchers("/", "/auth/login", "/groups/all").permitAll().
+                requestMatchers("/", "/auth/login", "/groups/all", "auth/login=error").permitAll().
                 requestMatchers("/auth/register").hasRole(Role.MANAGER.name()).
                 requestMatchers("/groups", "/groups/add", "/groups/delete", "auth/modify").hasRole(Role.ADMIN.name()).
                 anyRequest().authenticated().
@@ -37,22 +37,14 @@ public class SecurityConfiguration {
                 loginPage("/auth/login").
                 usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY).
                 passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY).
-                defaultSuccessUrl("/groups/all", true).
-                failureForwardUrl("/auth/login")
+                defaultSuccessUrl("/groups/all").
+                failureForwardUrl("/auth/login-error")
 
                 .and()
                 .logout()
-                .logoutSuccessUrl("/auth/logout")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID");
-
-               /* .permitAll()
-                .and()
-                .rememberMe()
-                .rememberMeParameter("remember")
-                .key("remember Me Encryption Key")
-                .rememberMeCookieName("rememberCrusitCookie")
-                .tokenValiditySeconds(10000);*/
+                .logoutUrl("/auth/logout")
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true);
 
         return http.build();
     }
