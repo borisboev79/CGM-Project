@@ -1,5 +1,6 @@
 package cgm.model.entity;
 
+import cgm.model.enums.Transportation;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +19,9 @@ public class Group extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    private Transportation transportation;
+
     @Column(name = "start-date", nullable = false)
     private LocalDate startDate;
 
@@ -34,7 +38,7 @@ public class Group extends BaseEntity {
     private Integer totalPax;
 
     @OneToMany
-    private List<Guest> guests;
+    private List<Cabin> cabins;
 
     @ManyToOne
     private UserEntity employee;

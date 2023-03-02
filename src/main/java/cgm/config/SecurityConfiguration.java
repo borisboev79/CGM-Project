@@ -27,7 +27,7 @@ public class SecurityConfiguration {
         http.
                 authorizeHttpRequests().
                 requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll().
-                requestMatchers("/", "/auth/login", "/groups/all", "auth/login=error").permitAll().
+                requestMatchers("/", "/auth/login", "/groups/all", "/auth/login-error").permitAll().
                 requestMatchers("/auth/register").hasRole(Role.MANAGER.name()).
                 requestMatchers("/groups", "/groups/add", "/groups/delete", "auth/modify").hasRole(Role.ADMIN.name()).
                 anyRequest().authenticated().
@@ -44,7 +44,8 @@ public class SecurityConfiguration {
                 .logout()
                 .logoutUrl("/auth/logout")
                 .logoutSuccessUrl("/")
-                .invalidateHttpSession(true);
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID");
 
         return http.build();
     }

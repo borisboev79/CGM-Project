@@ -1,18 +1,15 @@
 package cgm.service;
 
-import cgm.model.entity.BranchEntity;
-import cgm.model.entity.RoleEntity;
-import cgm.model.entity.UserEntity;
+import cgm.model.entity.*;
 import cgm.model.enums.BranchCode;
 import cgm.model.enums.Role;
-import cgm.repository.BranchRepository;
-import cgm.repository.RoleRepository;
-import cgm.repository.UserRepository;
+import cgm.repository.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,16 +19,23 @@ public class InitService {
     private final UserRepository userRepository;
     private final BranchRepository branchRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CruiseLineRepository cruiseLineRepository;
+    private final ShipRepository shipRepository;
 
     public InitService(RoleRepository roleRepository,
                        UserRepository userRepository,
                        BranchRepository branchRepository,
                        PasswordEncoder passwordEncoder,
-                       @Value("${app.default.password}") String defaultPassword) {
+                       @Value("${app.default.password}") String defaultPassword,
+                       CruiseLineRepository cruiseLineRepository,
+                       ShipRepository shipRepository) {
+
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.branchRepository = branchRepository;
         this.passwordEncoder = passwordEncoder;
+        this.cruiseLineRepository = cruiseLineRepository;
+        this.shipRepository = shipRepository;
     }
 
     @PostConstruct
@@ -39,6 +43,8 @@ public class InitService {
         initRoles();
         initBranches();
         initUsers();
+        initCruiseLines();
+        initShips();
     }
 
 
@@ -121,5 +127,39 @@ public class InitService {
 
         this.userRepository.save(normalUser);
     }
+
+    private void initCruiseLines() {
+        long count = this.cruiseLineRepository.count();
+        if (count == 0) {
+
+            List<CruiseLine> cruiseLines = List.of(
+                    CruiseLine.builder().name("MSC").logoUrl("https://i.pinimg.com/736x/d3/94/bc/d394bc6b6e668a4f6c9c22c1721e4478.jpg").build(),
+                    CruiseLine.builder().name("Costa").logoUrl("https://cruise.jobs/uploads/images/costa-cruises-logo.png").build(),
+                    CruiseLine.builder().name("Celestyal").logoUrl("https://image.center.cruises/image/00000000-0000-0000-0000-056287334995.png").build()
+            );
+
+            this.cruiseLineRepository.saveAllAndFlush(cruiseLines);
+        }
+    }
+
+    private void initShips() {
+        if (this.shipRepository.count() == 0) {
+            createShips("MSC", "MSC Fantasia", "MSC Sinfonia", "MSC Opera", "MSC Preziosa");
+            createShips("Costa", "Costa Toscana", "Costa Smeralda", "Costa Pacifica", "Costa Fascinosa");
+            createShips("Celestyal", "Celestyal Olympia", "Celestyal Crystal");
+        }
+    }
+    private void createShips(String cruiseLine, String... ships) {
+        CruiseLine line = this.cruiseLineRepository.findByName(cruiseLine).orElseThrow();
+        List<Ship> cruiseShips = new ArrayList<>();
+
+        for (String ship : ships) {
+            cruiseShips.add(Ship.builder().name(ship).cruiseLine(line).build());
+        }
+        this.shipRepository.saveAllAndFlush(cruiseShips);
+        line.setShips(this.shipRepository.findAllByCruiseLine_Name(cruiseLine).orElse(null));
+
+    }
+
 }
 
