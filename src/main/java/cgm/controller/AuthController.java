@@ -34,7 +34,7 @@ public class AuthController {
         redirectAttributes.addFlashAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY, username);
         redirectAttributes.addFlashAttribute("bad_credentials", true);
 
-        return "redirect:/login";
+        return "redirect:/auth/login";
     }
 
 
