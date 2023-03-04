@@ -1,17 +1,21 @@
 package cgm.model.dto;
 
 import cgm.model.enums.Transportation;
-import jakarta.persistence.*;
+import cgm.util.validation.DateAfterDate;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@DateAfterDate
 public class GroupAddDto {
 
     @Size(min = 10)
@@ -38,7 +42,6 @@ public class GroupAddDto {
     private LocalDate startDate;
 
     @NotNull
-    @Future
     private LocalDate endDate;
 
     @Size(min = 10)

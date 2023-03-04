@@ -2,7 +2,7 @@ package cgm.model.enums;
 
 public enum Transportation {
     BUS("Bus"),
-    AIRPLANE("Airplane"),
+    AIRPLANE("Flight"),
     CAR("Car");
 
     public final String label;

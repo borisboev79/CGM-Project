@@ -4,6 +4,7 @@ import cgm.model.enums.Transportation;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,10 +24,13 @@ public class CruiseGroup extends BaseEntity {
     private Transportation transportation;
 
     @Column(name = "start-date", nullable = false)
-    private LocalDate startDate;
+    private Instant startDate;
 
     @Column(name = "end-date", nullable = false)
-    private LocalDate endDate;
+    private Instant endDate;
+
+    @Column
+    private Long duration;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String itinerary;

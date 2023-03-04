@@ -10,6 +10,9 @@ import cgm.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,16 +34,29 @@ public class GroupService {
         this.currentGroup =  new CruiseGroup();
     }
 
-    public void createGroup(GroupAddDto groupAddDto, String principalUsername) {
+
+    public CruiseGroup createGroup(GroupAddDto groupAddDto, String principalUsername) {
 
         CruiseGroup group = mapper.map(groupAddDto, CruiseGroup.class);
+
+        group.setStartDate(dateToInstant(groupAddDto.getStartDate()));
+        group.setEndDate(dateToInstant(groupAddDto.getEndDate()));
+        group.setDuration(groupAddDto.getEndDate().toEpochDay() - groupAddDto.getStartDate().toEpochDay());
         group.setEmployee(this.userRepository.findUserEntityByUsername(principalUsername).orElseThrow());
         group.setShip(this.shipRepository.findShipByName(groupAddDto.getShip()).orElseThrow());
 
         this.groupRepository.saveAndFlush(group);
 
         this.currentGroup = group;
+
+        return group;
     }
+
+    private Instant dateToInstant(LocalDate date) {
+        ZoneId zoneId = ZoneId.systemDefault();
+        return date.plusDays(1).atStartOfDay(zoneId).toInstant();
+    }
+
 
     public void addCabins(){
         List<Cabin> cabins = new ArrayList<>();
@@ -52,4 +68,7 @@ public class GroupService {
     }
 
 
+    public List<CruiseGroup> getAllGroups() {
+        return this.groupRepository.findAll();
+    }
 }

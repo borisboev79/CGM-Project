@@ -1,9 +1,12 @@
 package cgm.controller;
 
 
+import cgm.model.dto.CabinAddDto;
 import cgm.model.dto.GroupAddDto;
+import cgm.model.entity.CruiseGroup;
 import cgm.model.entity.CruiseLine;
 import cgm.model.enums.Transportation;
+import cgm.service.CabinService;
 import cgm.service.CruiseLineService;
 import cgm.service.GroupService;
 import jakarta.validation.Valid;
@@ -24,12 +27,15 @@ import java.util.List;
 @RequestMapping("/groups")
 public class GroupController {
     private final GroupService groupService;
+    private final CabinService cabinService;
+
     private final CruiseLineService cruiseLineService;
 
 
 
-    public GroupController(GroupService groupService, CruiseLineService cruiseLineService) {
+    public GroupController(GroupService groupService, CabinService cabinService, CruiseLineService cruiseLineService) {
         this.groupService = groupService;
+        this.cabinService = cabinService;
         this.cruiseLineService = cruiseLineService;
     }
 
@@ -39,7 +45,12 @@ public class GroupController {
     }
 
     @GetMapping("/all")
-    public String getAllGroups(){
+    public String getAllGroups(Model model){
+
+        List<CruiseGroup> groups = this.groupService.getAllGroups();
+
+        model.addAttribute("groups", groups);
+
         return "groups";
     }
 
@@ -58,9 +69,10 @@ public class GroupController {
 
     @PostMapping("/add")
     public String addGroup(@Valid @ModelAttribute(name="groupAddDto") GroupAddDto groupAddDto,
-                           @AuthenticationPrincipal UserDetails userDetails,
                            BindingResult bindingResult,
-                           RedirectAttributes redirectAttributes){
+                           RedirectAttributes redirectAttributes,
+                           @AuthenticationPrincipal UserDetails userDetails
+    ){
 
         if(bindingResult.hasErrors()){
             redirectAttributes
@@ -70,14 +82,41 @@ public class GroupController {
             return "redirect:/groups/add";
         }
 
-        this.groupService.createGroup(groupAddDto, userDetails.getUsername());
+        CruiseGroup currentGroup = this.groupService.createGroup(groupAddDto, userDetails.getUsername());
+
+        final String id = String.valueOf(currentGroup.getId());
+
+        final String link = String.format("redirect:/groups/%s/add/cabins", id);
+
+        this.groupService.addCabins();
+
+        return link;
+    }
+    @GetMapping("/add/{id}/cabins")
+    public String getCabinsAdd() {
+        return "cabins-add";
+    }
+
+    @PostMapping("/add/cabins")
+    public String getCabinsAdd(@Valid @ModelAttribute(name="cabinAddDto") CabinAddDto cabinAddDto,
+                               BindingResult bindingResult,
+                               RedirectAttributes redirectAttributes,
+                               @AuthenticationPrincipal UserDetails userDetails){
+
+        if(bindingResult.hasErrors()){
+            redirectAttributes
+                    .addFlashAttribute("cabinAddDto", cabinAddDto)
+                    .addFlashAttribute("org.springframework.validation.BindingResult.cabinAddDto", bindingResult);
+
+
+
+            return "redirect:/groups/add";
+    }
+
+      //  this.cabinService.addCabins(cabinAddDto, userDetails.getUsername());
         this.groupService.addCabins();
 
         return "redirect:/groups/add/cabins";
-    }
-
-    @GetMapping("/add/cabins")
-    public String getCabinsAdd(){
-        return "cabins-add";
+    //    return "cabins-add";
     }
 }

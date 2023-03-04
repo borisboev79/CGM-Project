@@ -15,9 +15,10 @@
 
 <div class="container">
     <h2 class="text-center text-white">Add Cabins to Group</h2>
+    <h4 class="text-center text-white">Add Cabins to Group</h4>
     <form th:method="POST"
-          th:action="@{/groups/add}"
-          th:object="${groupAddDto}"
+          th:action="@{/cabins/add}"
+          th:object="${cabinAddDto}"
           class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
 
         <div class="row">
