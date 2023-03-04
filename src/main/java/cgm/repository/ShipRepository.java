@@ -10,4 +10,6 @@ import java.util.Set;
 @Repository
 public interface ShipRepository extends JpaRepository<Ship,Long> {
     Optional<Set<Ship>> findAllByCruiseLine_Name(String name);
+
+    Optional<Ship> findShipByName(String name);
 }

@@ -14,9 +14,8 @@
 
 
 <div class="container">
-    <h2 class="text-center text-white">Add Cruise Group</h2>
+    <h2 class="text-center text-white">Add Cabins to Group</h2>
     <form th:method="POST"
-
           th:action="@{/groups/add}"
           th:object="${groupAddDto}"
           class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
@@ -82,11 +81,11 @@
             <div class="form-group col-md-6 mb-3">
                 <label for="startDate" class="text-center text-white font-weight-bold">Date of Departure</label>
                 <input type="date"
-                        id="startDate"
-                        name="startDate"
-                        th:errorclass="is-invalid"
+                       id="startDate"
+                       name="startDate"
+                       th:errorclass="is-invalid"
                        th:value="*{startDate}"
-                        class="form-control"/>
+                       class="form-control"/>
 
                 <p class="invalid-feedback">
                     Start date is mandatory and cannot be in the past!

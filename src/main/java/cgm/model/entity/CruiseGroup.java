@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name="cruise-groups")
-public class Group extends BaseEntity {
+public class CruiseGroup extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
@@ -28,7 +28,7 @@ public class Group extends BaseEntity {
     @Column(name = "end-date", nullable = false)
     private LocalDate endDate;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String itinerary;
 
     @Column(nullable = false, name ="image-url")
@@ -37,14 +37,27 @@ public class Group extends BaseEntity {
     @Column(name = "total-pax", nullable = false)
     private Integer totalPax;
 
+    @ManyToOne(optional = false)
+    private UserEntity employee;
+
+    @ManyToOne(optional = false)
+    private Ship ship;
+
     @OneToMany
     private List<Cabin> cabins;
 
-    @ManyToOne
-    private UserEntity employee;
-
-
-
-
-
+    @Override
+    public String toString() {
+        return "CruiseGroup{" +
+                "name='" + name + '\'' +
+                ", transportation=" + transportation +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", itinerary='" + itinerary + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", totalPax=" + totalPax +
+                ", employee=" + employee +
+                ", cabins=" + cabins +
+                '}';
+    }
 }

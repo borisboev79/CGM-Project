@@ -21,8 +21,11 @@ public class Cabin extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private CabinType type;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Ship ship;
+
+    @ManyToOne
+    private CruiseGroup cruiseGroup;
 
     @Column(name = "max-occupancy", nullable = false)
     private Integer maxOccupancy;
