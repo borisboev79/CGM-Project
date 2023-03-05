@@ -1,7 +1,5 @@
 package cgm.model.dto;
 
-import cgm.model.entity.CruiseGroup;
-import cgm.model.entity.Ship;
 import cgm.model.enums.CabinType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,16 +18,12 @@ public class CabinAddDto {
     private String cabinCode;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private CabinType type;
-
-    @NotNull
-    private Ship ship;
-
-    @NotNull
-    private CruiseGroup cruiseGroup;
 
     @Min(2)
     @Max(4)
+    @NotNull
     private Integer maxOccupancy;
 
     @NotNull
@@ -43,5 +37,9 @@ public class CabinAddDto {
     @NotNull
     @Positive
     private Double extraAdultPrice;
+
+    @NotNull
+    @Positive
+    private Integer count;
 
 }

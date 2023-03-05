@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -47,7 +46,7 @@ public class CruiseGroup extends BaseEntity {
     @ManyToOne(optional = false)
     private Ship ship;
 
-    @OneToMany
+    @OneToMany(mappedBy = "cruiseGroup", targetEntity = Cabin.class)
     private List<Cabin> cabins;
 
     @Override

@@ -5,6 +5,7 @@ import cgm.model.dto.CabinAddDto;
 import cgm.model.dto.GroupAddDto;
 import cgm.model.entity.CruiseGroup;
 import cgm.model.entity.CruiseLine;
+import cgm.model.enums.CabinType;
 import cgm.model.enums.Transportation;
 import cgm.service.CabinService;
 import cgm.service.CruiseLineService;
@@ -100,28 +101,27 @@ public class GroupController {
         CruiseGroup currentGroup = this.groupService.findById(id);
 
         model.addAttribute("currentGroup", currentGroup);
+        model.addAttribute("cabinType", CabinType.values());
 
         return "cabins-add";
     }
 
-    @PostMapping("/add/cabins")
-    public String getCabinsAdd(@Valid @ModelAttribute(name = "cabinAddDto") CabinAddDto cabinAddDto,
-                               BindingResult bindingResult,
-                               RedirectAttributes redirectAttributes,
-                               @AuthenticationPrincipal UserDetails userDetails
+    @PostMapping("/add/cabins/{id}")
+    public String addCabins(@Valid @ModelAttribute(name = "cabinAddDto") CabinAddDto cabinAddDto,
+                            BindingResult bindingResult,
+                            RedirectAttributes redirectAttributes,
+                            @PathVariable Long id
     ) {
-
 
         if (bindingResult.hasErrors()) {
             redirectAttributes
                     .addFlashAttribute("cabinAddDto", cabinAddDto)
                     .addFlashAttribute("org.springframework.validation.BindingResult.cabinAddDto", bindingResult);
 
-            return "redirect:/groups/add/cabins";
+            return String.format("redirect:/groups/add/cabins/%s", id);
         }
 
-
-        this.cabinService.addCabin(cabinAddDto);
+        this.cabinService.addCabin(cabinAddDto, id);
 
         return "redirect:/groups/all";
 

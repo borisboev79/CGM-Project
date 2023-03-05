@@ -39,6 +39,9 @@ public class Cabin extends BaseEntity{
     @Column(name = "extra-adt-price", nullable = false)
     private Double extraAdultPrice;
 
+    @Column
+    private Integer count;
+
     @OneToMany(mappedBy = "cabin", targetEntity = Guest.class)
     private List<Guest> guests;
 

@@ -17,132 +17,133 @@
     <h2 class="text-center text-white">Add Cabins to</h2>
     <h4 class="text-center text-white" th:text="${currentGroup.name}"/>
     <form th:method="POST"
-          th:action="@{/groups/add/cabins}"
+          th:action="@{/groups/add/cabins/{id}(id= ${currentGroup.id})}"
           th:object="${cabinAddDto}"
           class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
 
         <div class="row">
 
-            <div class="form-group col-md-12 mb-3">
-                <label class="text-white font-weight-bold" for="imageUrl">Group name</label>
-                <input id="name" type="text" class="form-control"
-                       name="name"
+            <div class="form-group col-md-6 mb-3">
+                <label class="text-white font-weight-bold" for="cabinCode">Cabin Code</label>
+                <input id="cabinCode" type="text" class="form-control"
+                       name="cabinCode"
+                       th:errorclass="is-invalid"
+                       th:value="*{cabinCode}"
                        aria-describedby="nameHelpInline"
-                       placeholder="Enter Group Name">
-                <p class="invalid-feedback">
-                    Group name should be at least 10 characters long.
+                       placeholder="Enter Cabin code">
+                <p class="invalid-feedback" >
+                    Cabin code is mandatory!
                 </p>
             </div>
 
-        </div>
-
-        <div class="row">
             <div class="form-group col-md-6 mb-3">
-                <label for="ship" class="text-center text-white font-weight-bold">Ship</label>
-                <select id="ship"
-                        name="ship"
-
+                <label for="type" class="text-center text-white font-weight-bold">Cabin type</label>
+                <select id="type"
+                        name="type"
+                        th:errorclass="is-invalid"
                         class="form-control">
-                    <option value="">- Select a ship -</option>
-                    <optgroup>
-                        <option
-
-                        ></option>
-
-                    </optgroup>
+                    <option value="">- Select a cabin type -</option>
+                    <option
+                            th:each="type : ${cabinType}"
+                            th:value="${type}"
+                            th:text="${type.label}"
+                            th:selected="${type} == *{type}"
+                    ></option>
 
                 </select>
                 <p class="invalid-feedback">
-                    Ship is required.
+                    Cabin type is required.
                 </p>
             </div>
-            <div class="form-group col-md-6 mb-3">
-                <label for="totalPax" class="text-white font-weight-bold">Total size of group</label>
-                <input type="number" step="1"
-                       id="totalPax"
-                       name="totalPax"
 
-                       class="form-control"
-                       placeholder="Enter group size"/>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-4 mb-3">
+                <label for="adultPrice" class="text-center text-white font-weight-bold">Price per Adult</label>
+                <input id="adultPrice"
+                        name="adultPrice"
+                        type="number"
+                        th:errorclass="is-invalid"
+                        th:value="*{adultPrice}"
+                        class="form-control"
+                        aria-describedby="nameHelpInline"
+                        placeholder="Enter price for Adult">
+
                 <p class="invalid-feedback">
-                    Total group size should be at least 10 passengers.
+                    Price should be a positive number.
                 </p>
+
             </div>
+
+            <div class="form-group col-md-4 mb-3">
+                <label for="childPrice" class="text-center text-white font-weight-bold">Price per Child</label>
+                <input id="childPrice"
+                       name="childPrice"
+                       type="number"
+                       th:errorclass="is-invalid"
+                       th:value="*{childPrice}"
+                       class="form-control"
+                       aria-describedby="nameHelpInline"
+                       placeholder="Enter price for Child">
+
+                <p class="invalid-feedback">
+                    Price should be a positive number.
+                </p>
+
+            </div>
+
+            <div class="form-group col-md-4 mb-3">
+                <label for="extraAdultPrice" class="text-center text-white font-weight-bold">Price per 3rd/4th Adult</label>
+                <input id="extraAdultPrice"
+                       name="extraAdultPrice"
+                       type="number"
+                       th:errorclass="is-invalid"
+                       th:value="*{extraAdultPrice}"
+                       class="form-control"
+                       aria-describedby="nameHelpInline"
+                       placeholder="Enter price for Additional Adult">
+
+                <p class="invalid-feedback">
+                    Price should be a positive number.
+                </p>
+
+            </div>
+
         </div>
 
 
         <div class="row">
             <div class="form-group col-md-6 mb-3">
-                <label for="startDate" class="text-center text-white font-weight-bold">Date of Departure</label>
-                <input type="date"
-                       id="startDate"
-                       name="startDate"
-
-                       class="form-control"/>
-
+                <label class="text-white font-weight-bold" for="maxOccupancy">Max Occupancy</label>
+                <input id="maxOccupancy" type="number" step="1" min="2" max="4" class="form-control"
+                       name="maxOccupancy"
+                       th:errorclass="is-invalid"
+                       th:value="*{maxOccupancy}"
+                       aria-describedby="nameHelpInline"
+                       placeholder="Enter Max Occupancy">
                 <p class="invalid-feedback">
-                    Start date is mandatory and cannot be in the past!
+                    Max occupancy can be 2, 3 or 4.
                 </p>
             </div>
 
-            <div class="form-group col-md-6 mb-3">
-                <label for="endDate" class="text-center text-white font-weight-bold">Date of Return</label>
-                <input type="date"
-                       id="endDate"
-                       name="endDate"
-
-                       class="form-control"/>
-
+            <div class="form-group col-md-6">
+                <label class="text-white font-weight-bold" for="count">Number of cabins of this type</label>
+                <input type="number" step="1" min="1" max="10" class="form-control"
+                       id="count"
+                       name="count"
+                       th:errorclass="is-invalid"
+                       th:value="*{count}"
+                       aria-describedby="nameHelpInline"
+                       placeholder="Enter cabin count">
                 <p class="invalid-feedback">
-                    End date is mandatory.
+                    You can put between 1 and 10 cabins.
                 </p>
             </div>
+
 
         </div>
 
-
-
-
-
-        <div class="row">
-            <div class="form-group col-md-6 mb-3">
-                <label for="transportation" class="text-center text-white font-weight-bold">Transport</label>
-                <select id="transportation"
-                        name="transportation"
-
-                        class="form-control">
-                    <option value="">- Select transport -</option>
-                    <option >
-                    </option>
-                </select>
-                <p class="invalid-feedback">
-                    Transportation means is required.
-                </p>
-            </div>
-            <div class="form-group col-md-6 mb-3">
-                <label class="text-white font-weight-bold" for="imageUrl">Image URL</label>
-                <input id="imageUrl"
-                       name="imageUrl"
-                       type="url"
-
-                       class="form-control"
-                       placeholder="Place group image URL here">
-                <p class="invalid-feedback">
-                    Group image URL is required.
-                </p>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="text-white font-weight-bold" for="itinerary">Itinerary</label>
-            <textarea id="itinerary"
-                      name="itinerary"
-                      type="textarea" class="form-control" rows="3"
-                      placeholder="Enter cruise itinerary"></textarea>
-            <p class="invalid-feedback">
-                Description is required.
-            </p>
-        </div>
 
         <div class="row">
             <div class="col col-md-4">
