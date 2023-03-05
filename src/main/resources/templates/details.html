@@ -83,7 +83,7 @@
                 <td th:text="*{childPrice}"></td>
                 <td th:text="*{extraAdultPrice}"></td>
                 <td th:text="*{count}"></td>
-                <td><a class="card-link" href="/">Add guests</a></td>
+                <td><a class="card-link" th:href="@{/guests/add/{id}(id = *{id})}">Add guests</a></td>
             </tr>
 
             </tbody>

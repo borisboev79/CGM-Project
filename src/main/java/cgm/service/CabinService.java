@@ -37,5 +37,9 @@ public class CabinService {
     }
 
 
+    public Cabin findById(Long id) {
+        return this.cabinRepository.findById(id).orElseThrow();
+    }
+
 }
 

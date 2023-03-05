@@ -6,7 +6,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -25,7 +25,7 @@ public class Guest extends BaseEntity{
     private String phone;
 
     @Column(name = "birth-date")
-    private LocalDate birthDate;
+    private Instant birthDate;
 
     @Column
     private Integer age;

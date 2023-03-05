@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<div th:replace="~{fragments/head}"></div>
+<title>GrouMan Add Guest</title>
+
+
+<body>
+
+<header>
+  <div th:replace="~{fragments/navbar}"></div>
+</header>
+
+
+<div class="container">
+  <h2 class="text-center text-white">Add Guest Details</h2>
+  <form th:method="POST"
+
+        th:action="@{/guests/add/{id}(id = ${cabin.id})}"
+        th:object="${guestAddDto}"
+        class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
+
+    <div class="row">
+
+      <div class="form-group col-md-12 mb-3">
+        <label class="text-white font-weight-bold" for="fullName">Guest Full Name</label>
+        <input id="fullName" type="text" class="form-control"
+               name="fullName"
+               th:errorclass="is-invalid"
+               th:value="*{fullName}"
+               aria-describedby="nameHelpInline"
+               placeholder="Enter name and surname">
+        <p class="invalid-feedback">
+          Guest name should be at least 7 characters long.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6 mb-3">
+        <label for="EGN" class="text-center text-white font-weight-bold">EGN</label>
+        <input id="EGN" type="text" class="form-control"
+               name="EGN"
+               th:errorclass="is-invalid"
+               th:value="*{EGN}"
+               aria-describedby="nameHelpInline"
+               placeholder="Enter guest EGN">
+        <p class="invalid-feedback">
+          A valid EGN is required.
+        </p>
+      </div>
+      <div class="form-group col-md-6 mb-3">
+        <label for="birthDate" class="text-center text-white font-weight-bold">Birthdate</label>
+        <input type="date"
+               id="birthDate"
+               name="birthDate"
+               th:errorclass="is-invalid"
+               th:value="*{birthDate}"
+               class="form-control"/>
+        <p class="invalid-feedback">
+          Birthday cannot be empty or in the past.
+        </p>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="form-group col-md-6 mb-3">
+        <label for="email" class="text-center text-white font-weight-bold">Email</label>
+        <input id="email" type="text" class="form-control"
+               name="email"
+               th:errorclass="is-invalid"
+               th:value="*{email}"
+               aria-describedby="nameHelpInline"
+               placeholder="Enter email address">
+        <p class="invalid-feedback">
+          A valid email address is required.
+        </p>
+      </div>
+
+      <div class="form-group col-md-6 mb-3">
+        <label for="passportNumber" class="text-center text-white font-weight-bold">Passport</label>
+        <input id="passportNumber" type="text" class="form-control"
+               name="passportNumber"
+               th:errorclass="is-invalid"
+               th:value="*{passportNumber}"
+               aria-describedby="nameHelpInline"
+               placeholder="Enter passport number">
+        <p class="invalid-feedback">
+          A passport number is required.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-12 mb-3">
+        <label for="phone" class="text-center text-white font-weight-bold">Phone number</label>
+        <input id="phone" type="text" class="form-control"
+               name="phone"
+               th:errorclass="is-invalid"
+               th:value="*{phone}"
+               aria-describedby="nameHelpInline"
+               placeholder="Enter phone number">
+        <p class="invalid-feedback">
+          A valid telephone number is required.
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col col-md-4">
+        <div class="button-holder d-flex">
+          <input type="submit" class="btn btn-info btn-lg" value="Submit"/>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+<div th:replace="~{fragments/footer}"></div>
+</body>
+</html>
