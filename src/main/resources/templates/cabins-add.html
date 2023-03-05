@@ -14,10 +14,10 @@
 
 
 <div class="container">
-    <h2 class="text-center text-white">Add Cabins to Group</h2>
-    <h4 class="text-center text-white">Add Cabins to Group</h4>
+    <h2 class="text-center text-white">Add Cabins to</h2>
+    <h4 class="text-center text-white" th:text="${currentGroup.name}"/>
     <form th:method="POST"
-          th:action="@{/cabins/add}"
+          th:action="@{/groups/add/cabins}"
           th:object="${cabinAddDto}"
           class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
 
@@ -27,8 +27,6 @@
                 <label class="text-white font-weight-bold" for="imageUrl">Group name</label>
                 <input id="name" type="text" class="form-control"
                        name="name"
-                       th:errorclass="is-invalid"
-                       th:value="*{name}"
                        aria-describedby="nameHelpInline"
                        placeholder="Enter Group Name">
                 <p class="invalid-feedback">
@@ -43,16 +41,12 @@
                 <label for="ship" class="text-center text-white font-weight-bold">Ship</label>
                 <select id="ship"
                         name="ship"
-                        th:errorclass="is-invalid"
+
                         class="form-control">
                     <option value="">- Select a ship -</option>
-                    <optgroup th:each="line : ${cruiselines}"
-                              th:label="${line.name}">
+                    <optgroup>
                         <option
-                                th:each="ship : ${line.ships}"
-                                th:value="${ship.name}"
-                                th:text="${ship.name}"
-                                th:selected="${ship.name} == *{ship}"
+
                         ></option>
 
                     </optgroup>
@@ -67,8 +61,7 @@
                 <input type="number" step="1"
                        id="totalPax"
                        name="totalPax"
-                       th:value="*{totalPax}"
-                       th:errorclass="is-invalid"
+
                        class="form-control"
                        placeholder="Enter group size"/>
                 <p class="invalid-feedback">
@@ -84,8 +77,7 @@
                 <input type="date"
                        id="startDate"
                        name="startDate"
-                       th:errorclass="is-invalid"
-                       th:value="*{startDate}"
+
                        class="form-control"/>
 
                 <p class="invalid-feedback">
@@ -98,8 +90,7 @@
                 <input type="date"
                        id="endDate"
                        name="endDate"
-                       th:errorclass="is-invalid"
-                       th:value="*{endDate}"
+
                        class="form-control"/>
 
                 <p class="invalid-feedback">
@@ -118,13 +109,10 @@
                 <label for="transportation" class="text-center text-white font-weight-bold">Transport</label>
                 <select id="transportation"
                         name="transportation"
-                        th:errorclass="is-invalid"
+
                         class="form-control">
                     <option value="">- Select transport -</option>
-                    <option th:each="vehicle : ${transportation}"
-                            th:value="${vehicle}"
-                            th:text="${vehicle.label}"
-                            th:selected="${vehicle} == *{transportation}">
+                    <option >
                     </option>
                 </select>
                 <p class="invalid-feedback">
@@ -136,9 +124,7 @@
                 <input id="imageUrl"
                        name="imageUrl"
                        type="url"
-                       th:errorclass="is-invalid"
-                       th:value="*{imageUrl}"
-                       th:text="*{imageUrl}"
+
                        class="form-control"
                        placeholder="Place group image URL here">
                 <p class="invalid-feedback">
@@ -151,9 +137,6 @@
             <label class="text-white font-weight-bold" for="itinerary">Itinerary</label>
             <textarea id="itinerary"
                       name="itinerary"
-                      th:errorclass="is-invalid"
-                      th:value="*{itinerary}"
-                      th:text="*{itinerary}"
                       type="textarea" class="form-control" rows="3"
                       placeholder="Enter cruise itinerary"></textarea>
             <p class="invalid-feedback">

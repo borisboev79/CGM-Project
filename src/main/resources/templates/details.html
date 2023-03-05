@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
     <div th:replace="~{fragments/head}"></div>
     <title>GrouMan Group Details</title>
@@ -14,30 +16,37 @@
 <div class="container-fluid">
     <h2 class="text-center text-white mt-5">Details</h2>
     <div class="offers row mx-auto d-flex flex-row justify-content-center">
-        <div class="offer card col-sm-2 col-md-3  col-lg-4 m-1 p-0" >
+        <div class="offer card col-sm-2 col-md-3  col-lg-4 m-1 p-0"
+            th:object="${cruiseGroup}"
+        >
 
             <div class="card-body pb-1">
-                <h5 class="card-title">
-                    Offer year Brand name Model name</h5>
+                <h5 class="card-title" th:text="*{name}"></h5>
+                <h5 class="card-title" th:text="*{duration + ' days'}"></h5>
             </div>
             <ul class="offer-details list-group list-group-flush">
                 <li class="list-group-item">
-                    <div class="card-text"><span>• Mileage</span></div>
-                    <div class="card-text"><span>• Price</span></div>
-                    <div class="card-text"><span>• Engine type</span></div>
-                    <div class="card-text"><span>• Transmission type</span></div>
-                    <div class="card-text"><span>• Offer created</span></div>
-                    <div class="card-text"><span>• Offer modified</span></div>
-                    <div class="card-text"><span>• Seller - First and Last name</span></div>
+                    <div class="card-text"><span>• Available seats: <strong><th:block th:text="*{totalPax}"/></strong></span></div>
+                    <div class="card-text"><span>• Transport: <th:block th:text="*{transportation.label}"/></span></div>
+                    <div class="card-text"><span>• Departure: <th:block th:text="*{#dates.format(startDate, 'dd MMM yyyy')}"/></span></div>
+                    <div class="card-text"><span>• Return: <th:block th:text="*{#dates.format(endDate, 'dd MMM yyyy')}"/></span></div>
+                    <div class="card-text"><span>• Itinerary: <th:block th:text="*{itinerary}"/> days</span></div>
+
                 </li>
             </ul>
             <div class="card-body">
-                <a class="card-link" href="/">Update</a>
-                <a class="card-link" href="/">Delete</a>
+                <a class="card-link" sec:authorize="hasRole('ADMIN')" th:href="@{/groups/add/cabins/{id}(id = ${cruiseGroup.id})}">Add Cabins</a>
+                <a class="card-link" href="/">Enroll passengers</a>
             </div>
         </div>
         <div class="offer card col-sm-2 col-md-3  col-lg-4 m-1 p-0">
-            <img src="/" class="card-img-top"  alt="Car image">
+            <img th:src="${cruiseGroup.imageUrl}" class="card-img-top"  alt="Group image">
+            <div class="card-text">
+                <span>
+                    Group Added By: <th:block th:text="${cruiseGroup.getEmployee().getFirstName() + ' '
+                                                        + cruiseGroup.getEmployee().getLastName()}"/>
+                </span>
+            </div>
         </div>
     </div>
 </div>

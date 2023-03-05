@@ -15,10 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -28,10 +25,7 @@ import java.util.List;
 public class GroupController {
     private final GroupService groupService;
     private final CabinService cabinService;
-
     private final CruiseLineService cruiseLineService;
-
-
 
     public GroupController(GroupService groupService, CabinService cabinService, CruiseLineService cruiseLineService) {
         this.groupService = groupService;
@@ -39,13 +33,18 @@ public class GroupController {
         this.cruiseLineService = cruiseLineService;
     }
 
-    @ModelAttribute(name="groupAddDto")
-    public GroupAddDto groupAddDto(){
+    @ModelAttribute(name = "groupAddDto")
+    public GroupAddDto groupAddDto() {
         return new GroupAddDto();
     }
 
+    @ModelAttribute(name = "cabinAddDto")
+    public CabinAddDto cabinAddDto() {
+        return new CabinAddDto();
+    }
+
     @GetMapping("/all")
-    public String getAllGroups(Model model){
+    public String getAllGroups(Model model) {
 
         List<CruiseGroup> groups = this.groupService.getAllGroups();
 
@@ -54,9 +53,8 @@ public class GroupController {
         return "groups";
     }
 
-
     @GetMapping("/add")
-    public String getGroupAdd(Model model){
+    public String getGroupAdd(Model model) {
 
 
         List<CruiseLine> cruiselines = this.cruiseLineService.getCruiseLines();
@@ -68,13 +66,13 @@ public class GroupController {
     }
 
     @PostMapping("/add")
-    public String addGroup(@Valid @ModelAttribute(name="groupAddDto") GroupAddDto groupAddDto,
+    public String addGroup(@Valid @ModelAttribute(name = "groupAddDto") GroupAddDto groupAddDto,
                            BindingResult bindingResult,
                            RedirectAttributes redirectAttributes,
                            @AuthenticationPrincipal UserDetails userDetails
-    ){
+    ) {
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             redirectAttributes
                     .addFlashAttribute("groupAddDto", groupAddDto)
                     .addFlashAttribute("org.springframework.validation.BindingResult.groupAddDto", bindingResult);
@@ -82,41 +80,50 @@ public class GroupController {
             return "redirect:/groups/add";
         }
 
-        CruiseGroup currentGroup = this.groupService.createGroup(groupAddDto, userDetails.getUsername());
+        String id = String.valueOf(this.groupService.createGroup(groupAddDto, userDetails.getUsername()).getId());
 
-        final String id = String.valueOf(currentGroup.getId());
+        return String.format("redirect:/groups/add/cabins/%s", id);
 
-        final String link = String.format("redirect:/groups/%s/add/cabins", id);
-
-        this.groupService.addCabins();
-
-        return link;
     }
-    @GetMapping("/add/{id}/cabins")
-    public String getCabinsAdd() {
+
+    @GetMapping("/details/{id}")
+    public String getDetails(@PathVariable Long id, Model model) {
+        CruiseGroup cruiseGroup = this.groupService.findById(id);
+
+        model.addAttribute("cruiseGroup", cruiseGroup);
+
+        return "details";
+    }
+
+    @GetMapping("/add/cabins/{id}")
+    public String getCabinsAdd(@PathVariable Long id, Model model) {
+        CruiseGroup currentGroup = this.groupService.findById(id);
+
+        model.addAttribute("currentGroup", currentGroup);
+
         return "cabins-add";
     }
 
     @PostMapping("/add/cabins")
-    public String getCabinsAdd(@Valid @ModelAttribute(name="cabinAddDto") CabinAddDto cabinAddDto,
+    public String getCabinsAdd(@Valid @ModelAttribute(name = "cabinAddDto") CabinAddDto cabinAddDto,
                                BindingResult bindingResult,
                                RedirectAttributes redirectAttributes,
-                               @AuthenticationPrincipal UserDetails userDetails){
+                               @AuthenticationPrincipal UserDetails userDetails
+    ) {
 
-        if(bindingResult.hasErrors()){
+
+        if (bindingResult.hasErrors()) {
             redirectAttributes
                     .addFlashAttribute("cabinAddDto", cabinAddDto)
                     .addFlashAttribute("org.springframework.validation.BindingResult.cabinAddDto", bindingResult);
 
+            return "redirect:/groups/add/cabins";
+        }
 
 
-            return "redirect:/groups/add";
-    }
+        this.cabinService.addCabin(cabinAddDto);
 
-      //  this.cabinService.addCabins(cabinAddDto, userDetails.getUsername());
-        this.groupService.addCabins();
+        return "redirect:/groups/all";
 
-        return "redirect:/groups/add/cabins";
-    //    return "cabins-add";
     }
 }

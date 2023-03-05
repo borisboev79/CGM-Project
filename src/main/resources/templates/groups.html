@@ -26,17 +26,16 @@
             </div>
             <ul class="offer-details list-group list-group-flush">
                 <li class="list-group-item">
-                    <div class="card-text"><span>• Available seats: <strong><th:block
-                            th:text="*{totalPax}"/></strong></span></div>
+                    <div class="card-text"><span>• Available seats: <strong><th:block th:text="*{totalPax}"/></strong></span></div>
                     <div class="card-text"><span>• Transport: <th:block th:text="*{transportation.label}"/></span></div>
                     <div class="card-text"><span>• Departure: <th:block th:text="*{#dates.format(startDate, 'dd MMM yyyy')}"/></span></div>
                     <div class="card-text"><span>• Duration: <th:block th:text="*{duration}"/> days</span></div>
                 </li>
             </ul>
             <div class="card-body">
-                <a class="card-link" href="/">Details</a>
-            </div>
+                <a class="card-link" th:href="@{/groups/details/{id}(id= *{id})}">Details</a>
         </div>
+
     </div>
 </div>
 
