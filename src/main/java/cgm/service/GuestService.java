@@ -39,11 +39,14 @@ public class GuestService {
         guest.setCabin(cabin);
         guest.setAge(LocalDate.now().getYear() - guestAddDto.getBirthDate().getYear());
         guest.setBirthDate(dateToInstant(guestAddDto.getBirthDate()));
-
-        this.guestRepository.saveAndFlush(guest);
-
         cabin.setCount(cabin.getCount() -1);
         group.setTotalPax(group.getTotalPax() - 1);
+
+
+        this.guestRepository.saveAndFlush(guest);
+        this.cabinRepository.save(cabin);
+        this.groupRepository.save(group);
+
 
         System.out.println(false);
 
