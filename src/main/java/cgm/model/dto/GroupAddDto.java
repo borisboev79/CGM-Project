@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
 import java.time.LocalDate;
 
 @Getter
@@ -48,5 +47,17 @@ public class GroupAddDto {
     @NotBlank
     private String itinerary;
 
-
+    @Override
+    public String toString() {
+        return "GroupAddDto{" +
+                "name='" + name + '\'' +
+                ", ship='" + ship + '\'' +
+                ", totalPax=" + totalPax +
+                ", transportation=" + transportation +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", itinerary='" + itinerary + '\'' +
+                '}';
+    }
 }

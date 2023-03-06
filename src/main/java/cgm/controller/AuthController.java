@@ -1,8 +1,11 @@
 package cgm.controller;
 
 
+import cgm.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,8 +42,9 @@ public class AuthController {
 
 
     @GetMapping("/user")
-    public String getUser(Principal principal){
-        return principal.getName();
+    public String getUser(Principal principal, Model model){
+
+        return "index";
     }
 
 

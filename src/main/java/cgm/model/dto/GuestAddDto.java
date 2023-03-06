@@ -35,4 +35,15 @@ public class GuestAddDto {
     @NotBlank
     private String passportNumber;
 
+    @Override
+    public String toString() {
+        return "GuestAddDto{" +
+                "fullName='" + fullName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", birthDate=" + birthDate +
+                ", EGN='" + EGN + '\'' +
+                ", passportNumber='" + passportNumber + '\'' +
+                '}';
+    }
 }

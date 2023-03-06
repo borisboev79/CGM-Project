@@ -1,5 +1,6 @@
 package cgm.service;
 
+import cgm.model.entity.UserEntity;
 import cgm.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,5 +12,9 @@ public class UserService {
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public UserEntity getUserByUsername(String username){
+        return this.userRepository.findUserEntityByUsername(username).orElseThrow();
     }
 }
