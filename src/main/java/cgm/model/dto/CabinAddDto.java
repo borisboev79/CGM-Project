@@ -42,4 +42,16 @@ public class CabinAddDto {
     @Positive
     private Integer count;
 
+    @Override
+    public String toString() {
+        return "CabinAddDto{" +
+                "cabinCode='" + cabinCode + '\'' +
+                ", type=" + type +
+                ", maxOccupancy=" + maxOccupancy +
+                ", adultPrice=" + adultPrice +
+                ", childPrice=" + childPrice +
+                ", extraAdultPrice=" + extraAdultPrice +
+                ", count=" + count +
+                '}';
+    }
 }
