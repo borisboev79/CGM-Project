@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 
     <div th:replace="~{fragments/head}"></div>
@@ -14,59 +15,100 @@
 
 <div class="container">
     <h2 class="text-center text-white">Register User</h2>
-    <form method="POST" 
-          class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
+    <form th:method="POST"
+          th:action="@{/auth/register}"
+          class="main-form mx-auto bg-primary col-md-8 justify-content-center">
         <div class="row">
             <div class="form-group col-md-6 mb-3">
                 <label for="firstName" class="text-white font-weight-bold">First Name</label>
-                <input  id="firstName" type="text" min="2" max="20" class="form-control"
+                <input  id="firstName" name="firstName" type="text" min="2" max="20"
+
+                        class="form-control"
                        placeholder="First name"/>
-                <p class="errors alert alert-danger">
+                <p class="invalid-feedback">
                     First name is required.
                 </p>
             </div>
             <div class="form-group col-md-6 mb-3">
                 <label for="lastName" class="text-white font-weight-bold">Last Name</label>
-                <input id="lastName" type="text" min="2" max="20" class="form-control"
-                       placeholder="First name"/>
-                <p class="errors alert alert-danger">
+                <input id="lastName" type="text" min="2" max="20" name="lastName" class="form-control"
+                       placeholder="Last name"/>
+                <p class="invalid-feedback">
                     Last name is required.
                 </p>
             </div>
         </div>
+
         <div class="row">
             <div class="form-group col-md-6 mb-3">
                 <label for="username" class="text-white font-weight-bold">Username</label>
-                <input id="username" type="text" min="2" max="20" class="form-control"
-                       placeholder="First name"/>
-                <p class="errors alert alert-danger">
+                <input id="username" type="text" name="username" min="2" max="20" class="form-control"
+                       placeholder="Username"/>
+                <p class="invalid-feedback">
                     Username is required.
                 </p>
             </div>
             <div class="form-group col-md-6 mb-3">
                 <label for="password" class="text-white font-weight-bold">Password</label>
-                <input id="password" type="password" min="2" max="20" class="form-control"
+                <input id="password" type="password" name="password" min="2" max="20" class="form-control"
                        placeholder="Password"/>
-                <p class="errors alert alert-danger">
+                <p class="invalid-feedback">
                     Password is required.
                 </p>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="text-center text-white font-weight-bold" for="roles">Roles</label>
-            <select  id="roles" class="form-control" multiple>
-                <option>
-                </option>
-            </select>
-            <p class="errors alert alert-danger">
-                Selecting a role is required.
-            </p>
+
+            <div class="form-group col-md-6">
+                <label class="text-center text-white font-weight-bold" for="roles">Roles</label>
+                <select  id="roles"
+                         name="roles"
+                         class="form-control" multiple>
+                    <option value="">- Select roles -</option>
+                    <option th:value="${adminRole}"
+                            th:text="${adminRole}"
+                            sec:authorize="hasRole('ADMIN')"/>
+
+                    <option th:value="${managerRole}"
+                            th:text="${managerRole}"
+                            sec:authorize="hasRole('ADMIN')"/>
+
+                    <option
+                            th:value="${userRole}"
+                            th:text="${userRole}"
+                            th:selected="${userRole}"
+                            sec:authorize="hasRole('MANAGER')"/>
+
+                </select>
+                <p class="invalid-feedback">
+                    Selecting a role is required.
+                </p>
+
+             </div>
+
+
+            <div class="form-group col-md-6">
+                <label class="text-center text-white font-weight-bold" for="branch">Branch</label>
+                <select  id="branch" name="branch" class="form-control">
+                    <option value="">- Choose branch -</option>
+                    <option th:each="branch : ${branches}"
+                            th:value="${branch}"
+                            th:text="${branch}"
+
+                    >
+                    </option>
+                </select>
+                <p class="invalid-feedback">
+                    Selecting a branch is required.
+                </p>
+
+
+            </div>
+
         </div>
 
         <div class="row">
-            <div class="col col-md-4">
+            <div class="col col-md-3 mx-auto">
                 <div class="button-holder d-flex">
-                    <input type="submit" class="btn btn-info btn-lg" value="Submit Offer"/>
+                    <input type="submit" class="btn btn-info btn-lg" value="Register"/>
                 </div>
             </div>
         </div>

@@ -42,7 +42,7 @@ public class Cabin extends BaseEntity{
     @Column
     private Integer count;
 
-    @OneToMany(mappedBy = "cabin", targetEntity = Guest.class)
+    @OneToMany(mappedBy = "cabin", targetEntity = Guest.class, fetch = FetchType.EAGER)
     private List<Guest> guests;
 
 

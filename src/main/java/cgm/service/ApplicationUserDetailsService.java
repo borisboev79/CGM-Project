@@ -1,5 +1,6 @@
 package cgm.service;
 
+import cgm.model.GrouManUser;
 import cgm.model.entity.RoleEntity;
 import cgm.model.entity.UserEntity;
 import cgm.repository.UserRepository;
@@ -29,11 +30,13 @@ public class ApplicationUserDetailsService implements UserDetailsService {
     }
 
     private UserDetails userDetailsMap(UserEntity userEntity) {
-        return User.builder()
-                .username(userEntity.getUsername())
-                .password(userEntity.getPassword())
-                .authorities(userEntity.getRoles().stream().map(this::mapRole).toList())
-                .build();
+        return new GrouManUser(
+                userEntity.getUsername(),
+                userEntity.getPassword(),
+                userEntity.getRoles().stream().map(this::mapRole).toList())
+                .setFirstName(userEntity.getFirstName())
+                .setLastName(userEntity.getLastName())
+                .setBranch(userEntity.getBranch().getName());
     }
 
     private GrantedAuthority mapRole(RoleEntity roleEntity) {

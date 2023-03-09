@@ -46,7 +46,7 @@ public class CruiseGroup extends BaseEntity {
     @ManyToOne(optional = false)
     private Ship ship;
 
-    @OneToMany(mappedBy = "cruiseGroup", targetEntity = Cabin.class)
+    @OneToMany(mappedBy = "cruiseGroup", targetEntity = Cabin.class, fetch = FetchType.EAGER)
     private List<Cabin> cabins;
 
     @Override

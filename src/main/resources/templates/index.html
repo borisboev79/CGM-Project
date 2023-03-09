@@ -15,13 +15,17 @@
 <main>
 
     <div class="container bg-blur text-center rounded mt-5" style="width: fit-content">
-        <div class="card bg-secondary" style="width: 50rem" >
-            <div class="h5 card-header" style="color: lightgray">Welcome to Crusit Group Management Application</div>
-            <h5>
-            <a class="text-light" th:href="@{/auth/login}">Login</a>
-            if you have an account or ask your manager to make one for you.
-            </h5>
+        <div class="card bg-primary" style="width: 50rem">
+            <div class="h5 card-header" style="color: lightgray" sec:authorize="!isAuthenticated()">Welcome to Crusit Group Management Application</div>
+            <h5 sec:authorize="!isAuthenticated()"> <a class="text-light" th:href="@{/auth/login}">Login</a>
+            if you have an account or ask your manager to make one for you.</h5>
+
+            <div class="h5 card-header" style="color: lightgray" sec:authorize="isAuthenticated()">Welcome to Crusit Group Management Application,
+                <h3 class="text-center text-white mt-3" th:text="${firstName + ' from ' + branch}"/>
+            </div>
         </div>
+
+
     </div>
 
 </main>

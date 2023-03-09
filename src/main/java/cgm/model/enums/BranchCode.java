@@ -1,19 +1,23 @@
 package cgm.model.enums;
 
 public enum BranchCode {
-    HEAD,
+
     BLGD,
-    PDV,
     BUR,
-    VAR,
+    HEAD,
     MALL,
-    VLT,
-    RUS,
-    NBU,
-    STG,
-    SOFR,
     MOS,
-    ONL
+    ONL,
+    PDV,
+    RUS,
+    SOFR,
+    STG,
+    VAR,
+    VLT,
+
+
+
+
 
 
 }

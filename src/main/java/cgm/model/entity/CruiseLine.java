@@ -1,9 +1,6 @@
 package cgm.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Set;
@@ -23,7 +20,7 @@ public class CruiseLine extends BaseEntity{
     @Column(name="logo-url")
     private String logoUrl;
 
-    @OneToMany(mappedBy = "cruiseLine", targetEntity = Ship.class)
+    @OneToMany(mappedBy = "cruiseLine", targetEntity = Ship.class, fetch = FetchType.EAGER)
     private Set<Ship> ships;
 
 
