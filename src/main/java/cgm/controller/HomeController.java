@@ -19,6 +19,7 @@ public class HomeController {
 
         if(grouManUser != null){
             model.addAttribute("firstName", grouManUser.getFirstName());
+            model.addAttribute("lastName", grouManUser.getLastName());
 
             model.addAttribute("branch", grouManUser.getBranch());
         }
