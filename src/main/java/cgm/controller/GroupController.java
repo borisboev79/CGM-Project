@@ -140,7 +140,7 @@ public class GroupController {
 
         this.cabinService.addCabin(cabinAddDto, id);
 
-        return "redirect:/groups/all";
+        return "redirect:/groups/details/" + id;
 
     }
 }

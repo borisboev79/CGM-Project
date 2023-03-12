@@ -32,9 +32,12 @@
                     <div class="card-text"><span>• Duration: <th:block th:text="*{duration}"/> days</span></div>
                 </li>
             </ul>
-            <div class="card-body mx-auto">
+            <div class="card-body mx-auto" th:unless="*{soldOut}">
                 <a class="btn btn-info" th:href="@{/groups/details/{id}(id= *{id})}">Show Details</a>
-        </div>
+            </div>
+            <div class="card-body mx-auto" th:if="*{soldOut}">
+                <a class="btn btn-info bg-danger" th:href="@{/groups/details/{id}(id= *{id})}">SOLD OUT</a>
+            </div>
 
     </div>
 </div>

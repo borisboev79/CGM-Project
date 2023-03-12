@@ -77,8 +77,12 @@ public class GuestController {
 
         this.guestService.addGuest(guestAddDto, id);
 
+        Long groupId = cabin.getCruiseGroup().getId();
 
-        return "redirect:/groups/all";
+        if(cabin.isFull()){
+            return "redirect:/groups/details/" + groupId;
+        }
+        return "redirect:/guests/add/" + id;
     }
 
 
