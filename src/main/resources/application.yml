@@ -18,11 +18,20 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: false
         show_sql: false
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
 app:
   default:
     password: topsecret
-  mvc:
-    hidden-method:
-      filter:
-        enabled: true
+
+
+mail:
+  host: localhost
+  port: 1025
+  username: "admin"
+  password: ""
+
 

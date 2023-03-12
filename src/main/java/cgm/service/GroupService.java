@@ -54,6 +54,6 @@ public class GroupService {
     }
 
     public CruiseGroup findById(Long id) {
-        return this.groupRepository.findById(id).orElseThrow();
+        return this.groupRepository.findById(id).orElse(null);
     }
 }

@@ -1,12 +1,11 @@
 package cgm.service;
 
-import cgm.model.GrouManUser;
+import cgm.model.CurrentUser;
 import cgm.model.entity.RoleEntity;
 import cgm.model.entity.UserEntity;
 import cgm.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,7 +29,7 @@ public class ApplicationUserDetailsService implements UserDetailsService {
     }
 
     private UserDetails userDetailsMap(UserEntity userEntity) {
-        return new GrouManUser(
+        return new CurrentUser(
                 userEntity.getUsername(),
                 userEntity.getPassword(),
                 userEntity.getRoles().stream().map(this::mapRole).toList())

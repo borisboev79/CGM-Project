@@ -1,7 +1,7 @@
 package cgm.controller;
 
 
-import cgm.model.GrouManUser;
+import cgm.model.CurrentUser;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,13 +15,13 @@ public class HomeController {
 
 
     @GetMapping
-    public String getIndex(@AuthenticationPrincipal GrouManUser grouManUser, Model model) {
+    public String getIndex(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
 
-        if(grouManUser != null){
-            model.addAttribute("firstName", grouManUser.getFirstName());
-            model.addAttribute("lastName", grouManUser.getLastName());
+        if(currentUser != null){
+            model.addAttribute("firstName", currentUser.getFirstName());
+            model.addAttribute("lastName", currentUser.getLastName());
 
-            model.addAttribute("branch", grouManUser.getBranch());
+            model.addAttribute("branch", currentUser.getBranch());
         }
 
         return "index";

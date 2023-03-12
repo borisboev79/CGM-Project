@@ -1,5 +1,6 @@
 package cgm.controller;
 
+import cgm.model.ObjectNotFoundException;
 import cgm.model.dto.GuestAddDto;
 import cgm.model.entity.Cabin;
 import cgm.service.CabinService;
@@ -38,6 +39,10 @@ public class GuestController {
 
         final Cabin cabin = this.cabinService.findById(id);
 
+        if(cabin == null){
+            throw new ObjectNotFoundException(id, "cabin");
+        }
+
         model.addAttribute("cabin", cabin);
 
         return "guest-add";
@@ -49,6 +54,12 @@ public class GuestController {
                            BindingResult bindingResult,
                            RedirectAttributes redirectAttributes
                           ) {
+
+        final Cabin cabin = this.cabinService.findById(id);
+
+        if(cabin == null){
+            throw new ObjectNotFoundException(id, "cabin");
+        }
 
         if (bindingResult.hasErrors()) {
             redirectAttributes

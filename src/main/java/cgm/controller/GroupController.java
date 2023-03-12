@@ -1,6 +1,7 @@
 package cgm.controller;
 
 
+import cgm.model.ObjectNotFoundException;
 import cgm.model.dto.CabinAddDto;
 import cgm.model.dto.GroupAddDto;
 import cgm.model.entity.CruiseGroup;
@@ -91,14 +92,23 @@ public class GroupController {
     public String getDetails(@PathVariable Long id, Model model) {
         CruiseGroup cruiseGroup = this.groupService.findById(id);
 
-        model.addAttribute("cruiseGroup", cruiseGroup);
+            if(cruiseGroup == null){
+                throw new ObjectNotFoundException(id, "group");
+            }
+
+            model.addAttribute("cruiseGroup", cruiseGroup);
 
         return "details";
     }
 
     @GetMapping("/add/cabins/{id}")
     public String getCabinsAdd(@PathVariable Long id, Model model) {
+
         CruiseGroup currentGroup = this.groupService.findById(id);
+
+        if(currentGroup == null){
+            throw new ObjectNotFoundException(id, "group");
+        }
 
         model.addAttribute("currentGroup", currentGroup);
         model.addAttribute("cabinType", CabinType.values());
@@ -112,6 +122,13 @@ public class GroupController {
                             RedirectAttributes redirectAttributes,
                             @PathVariable Long id
     ) {
+
+        CruiseGroup currentGroup = this.groupService.findById(id);
+
+        if(currentGroup == null){
+            throw new ObjectNotFoundException(id, "group");
+        }
+
 
         if (bindingResult.hasErrors()) {
             redirectAttributes

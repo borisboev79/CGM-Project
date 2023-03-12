@@ -1,22 +1,14 @@
 package cgm.controller;
 
 
-import cgm.model.GrouManUser;
-import cgm.model.dto.GuestAddDto;
 import cgm.model.dto.UserRegistrationDto;
-import cgm.model.entity.BranchEntity;
-import cgm.model.entity.RoleEntity;
 import cgm.model.enums.BranchCode;
 import cgm.model.enums.Role;
-import cgm.repository.BranchRepository;
-import cgm.repository.RoleRepository;
-import cgm.service.ApplicationUserDetailsService;
 import cgm.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
@@ -25,11 +17,11 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.security.Principal;
-import java.util.List;
 
 @Controller
 @RequestMapping("/auth")
