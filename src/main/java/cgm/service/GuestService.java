@@ -1,6 +1,7 @@
 package cgm.service;
 
 import cgm.model.dto.GuestAddDto;
+import cgm.model.dto.GuestViewDto;
 import cgm.model.entity.Cabin;
 import cgm.model.entity.CruiseGroup;
 import cgm.model.entity.Guest;
@@ -16,6 +17,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class GuestService {
@@ -79,4 +82,18 @@ public class GuestService {
         return date.plusDays(1).atStartOfDay(zoneId).toInstant();
     }
 
+    public List<List<GuestViewDto>> getAllGuests(Long id) {
+        CruiseGroup group = this.groupRepository.findById(id).orElse(null);
+
+        List<Cabin> cabins = group.getCabins().stream().toList();
+
+        List<List<GuestViewDto>> guests = new ArrayList<>();
+
+        for (Cabin cabin : cabins) {
+            List<GuestViewDto> guestViewDtos = cabin.getGuests().stream().map(guest -> mapper.map(guest, GuestViewDto.class)).toList();
+            guests.add(guestViewDtos);
+        }
+
+        return guests;
+    }
 }
