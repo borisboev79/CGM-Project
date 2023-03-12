@@ -1,9 +1,7 @@
 package cgm.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import cgm.model.enums.AgeGroup;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
@@ -32,6 +30,9 @@ public class Guest extends BaseEntity{
 
     @Column
     private String EGN;
+
+    @Enumerated(EnumType.STRING)
+    private AgeGroup ageGroup;
 
     @Column(name = "passport-number")
     private String passportNumber;

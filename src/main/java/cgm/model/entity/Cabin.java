@@ -43,6 +43,9 @@ public class Cabin extends BaseEntity{
     @Column(columnDefinition = "integer default 0")
     private int paxNumber;
 
+    @Column(columnDefinition = "double default 0.0")
+    private double totalPrice;
+
     @Column
     @Value("false")
     private boolean isFull;

@@ -4,6 +4,7 @@ import cgm.model.dto.GuestAddDto;
 import cgm.model.entity.Cabin;
 import cgm.model.entity.CruiseGroup;
 import cgm.model.entity.Guest;
+import cgm.model.enums.AgeGroup;
 import cgm.repository.CabinRepository;
 import cgm.repository.GroupRepository;
 import cgm.repository.GuestRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class GuestService {
@@ -39,8 +41,26 @@ public class GuestService {
         guest.setCabin(cabin);
         guest.getCabin().setPaxNumber(cabin.getPaxNumber() + 1);
         group.setSoldPax(group.getSoldPax() + 1);
-        guest.setAge(LocalDate.now().getYear() - guestAddDto.getBirthDate().getYear());
+        guest.setAge(Math.abs((int)ChronoUnit.YEARS.between(LocalDate.now(), guestAddDto.getBirthDate())));
         guest.setBirthDate(dateToInstant(guestAddDto.getBirthDate()));
+
+        if(guest.getAge() > 11){
+            guest.setAgeGroup(AgeGroup.ADULT);
+        } else {
+            guest.setAgeGroup(AgeGroup.CHILD);
+        }
+
+        if(cabin.getPaxNumber() < 2) {
+            cabin.setTotalPrice(cabin.getTotalPrice() + cabin.getAdultPrice());
+        } else {
+
+            if (guest.getAgeGroup().equals(AgeGroup.ADULT)) {
+                cabin.setTotalPrice(cabin.getTotalPrice() + cabin.getExtraAdultPrice());
+            } else {
+                cabin.setTotalPrice(cabin.getTotalPrice() + cabin.getChildPrice());
+            }
+
+        }
 
         if(cabin.getMaxOccupancy() == cabin.getPaxNumber()){
             cabin.setFull(true);

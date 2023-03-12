@@ -73,10 +73,13 @@
                 <tr>
                     <th scope="col">Cabin Code</th>
                     <th scope="col">Cabin type</th>
-                    <th scope="col">Price per Adult</th>
-                    <th scope="col">Price per Child</th>
-                    <th scope="col">Price per Extra Adult</th>
-                    <th scope="col">Passengers in cabin</th>
+                    <th scope="col">ADT Price</th>
+                    <th scope="col">CHD Price</th>
+                    <th scope="col">Extra ADT</th>
+                    <th scope="col">Lead Pax</th>
+                    <th scope="col">Total Price</th>
+                    <th scope="col">Max Guests</th>
+                    <th scope="col">Booked Guests</th>
 
                     <th scope="col"></th>
                 </tr>
@@ -86,10 +89,14 @@
                     th:object="${cabin}">
                     <td th:text="*{cabinCode}"></td>
                     <td th:text="*{type}"></td>
-                    <td th:text="*{adultPrice}"></td>
-                    <td th:text="*{childPrice}"></td>
-                    <td th:text="*{extraAdultPrice}"></td>
+                    <td th:text="*{'€' + adultPrice}"></td>
+                    <td th:text="*{'€' + childPrice}"></td>
+                    <td th:text="*{'€' + extraAdultPrice}"></td>
+                    <td th:text="*{guests.isEmpty()} ? 'n/a': *{guests.get(0).fullName}"></td>
+                    <td style="font-weight: bold" th:text="*{'€' + totalPrice}"></td>
+                    <td th:text="*{maxOccupancy}"></td>
                     <td th:text="*{paxNumber}"></td>
+
                     <td th:if="${!cabin.full}"><a class="btn btn-info btn-sm"
                                                   th:href="@{/guests/add/{id}(id = *{id})}">Add guests</a></td>
                     <td th:if="${cabin.full}" class="table-danger">Cabin SOLD</td>

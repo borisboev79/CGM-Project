@@ -3,6 +3,7 @@ package cgm.service;
 import cgm.model.dto.CabinAddDto;
 import cgm.model.entity.Cabin;
 import cgm.model.entity.CruiseGroup;
+import cgm.model.entity.Guest;
 import cgm.repository.CabinRepository;
 import cgm.repository.GroupRepository;
 import org.modelmapper.ModelMapper;
@@ -35,7 +36,6 @@ public class CabinService {
         for (int i = 0; i < cabinAddDto.getCount(); i++) {
             Cabin cabin = mapper.map(cabinAddDto, Cabin.class);
             cabin.setShip(group.getShip());
-           // cabin.setFull(false);
             cabin.setCruiseGroup(group);
             group.getCabins().add(cabin);
             cabinsToSave.add(cabin);
@@ -52,7 +52,9 @@ public class CabinService {
     }
 
     public void closeCabin(Cabin cabinToClose) {
+
         cabinToClose.setFull(true);
+
         this.cabinRepository.save(cabinToClose);
     }
 }
