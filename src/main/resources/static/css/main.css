@@ -1,10 +1,11 @@
 body {
-     background-image: url('static/images/bg_img.jpg');
+     background-image: url('images/bg_img.jpg');
      background-position: center center;
      background-repeat: no-repeat;
      background-attachment: fixed;
      background-size: cover;
-     background-color: #464646;
+     background-color: lightsteelblue;
+      /*  #464646*/
  }
 
 .navbar .logo {
@@ -45,9 +46,9 @@ td, th {
 }
 
 form.main-form {
-     background-image: linear-gradient(to bottom right, rgba(70, 70, 70, 0.8), rgba(10, 10, 10, 0.8));
+     background-image: linear-gradient(to bottom right, rgba(9, 47, 71), rgba(9, 47, 71, 0.7));
      padding:10px 30px;
-     border-radius: 20px;
+     border-radius: 10px;
 }
 
 .field-error {
