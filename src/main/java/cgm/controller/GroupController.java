@@ -98,7 +98,7 @@ public class GroupController {
 
             model.addAttribute("cruiseGroup", cruiseGroup);
 
-        return "details";
+        return "group-details";
     }
 
     @GetMapping("/add/cabins/{id}")

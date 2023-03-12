@@ -3,6 +3,7 @@ package cgm.controller;
 import cgm.model.ObjectNotFoundException;
 import cgm.model.dto.GuestAddDto;
 import cgm.model.entity.Cabin;
+import cgm.model.entity.Guest;
 import cgm.service.CabinService;
 import cgm.service.GuestService;
 import jakarta.validation.Valid;
@@ -12,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/guests")
@@ -43,7 +46,10 @@ public class GuestController {
             throw new ObjectNotFoundException(id, "cabin");
         }
 
+        List<Guest> guests = cabin.getGuests();
+
         model.addAttribute("cabin", cabin);
+        model.addAttribute("guests", guests);
 
         return "guest-add";
     }
@@ -74,4 +80,6 @@ public class GuestController {
 
         return "redirect:/groups/all";
     }
+
+
 }

@@ -37,18 +37,20 @@ public class GuestService {
 
         Guest guest = this.mapper.map(guestAddDto, Guest.class);
         guest.setCabin(cabin);
+        guest.getCabin().setPaxNumber(cabin.getPaxNumber() + 1);
+        group.setSoldPax(group.getSoldPax() + 1);
         guest.setAge(LocalDate.now().getYear() - guestAddDto.getBirthDate().getYear());
         guest.setBirthDate(dateToInstant(guestAddDto.getBirthDate()));
-        cabin.setCount(cabin.getCount() -1);
-        group.setTotalPax(group.getTotalPax() - 1);
 
+        if(cabin.getMaxOccupancy() == cabin.getPaxNumber()){
+            cabin.setFull(true);
+        }
 
         this.guestRepository.saveAndFlush(guest);
         this.cabinRepository.save(cabin);
         this.groupRepository.save(group);
 
 
-        System.out.println(false);
 
     }
 

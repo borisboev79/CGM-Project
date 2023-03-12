@@ -14,6 +14,8 @@
 
 
 <div class="container">
+  <div class="row mx-auto" th:if="${!cabin.isFull()}">
+    <div class="col">
   <h2 class="text-center text-white">Add Guest Details</h2>
   <form th:method="POST"
 
@@ -116,9 +118,63 @@
           <input type="submit" class="btn btn-info btn-lg" value="Submit"/>
         </div>
       </div>
+      <div class="col col-md-4" th:if="${cabin.paxNumber > 0}">
+        <div class="button-holder d-flex">
+          <a class="btn btn-info btn-lg bg-danger" th:href="@{/cabin/close/{id}(id = ${cabin.id})}">Close cabin for sales</a>
+        </div>
+      </div>
     </div>
 
   </form>
+  </div>
+  </div>
+
+  <div class="row mx-auto mt-3">
+
+    <div class="col md-6">
+
+      <table class="table table-striped table-light text-center">
+
+        <thead style="background-color:#092f47; color: white">
+        <tr><h4 class="text-center text-light" style="background-color: #092f47">Guests in cabin</h4></tr>
+        <tr>
+          <th scope="col">Cabin</th>
+          <th scope="col">Name</th>
+          <th scope="col">DOB</th>
+          <th scope="col">Age</th>
+          <th scope="col">EGN</th>
+          <th scope="col">Passport No.</th>
+          <th scope="col">Email</th>
+          <th scope="col">Phone</th>
+
+          <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody class="">
+        <tr th:each="guest : ${guests}"
+            th:object="${guest}">
+          <td th:text="*{cabin.id}"></td>
+          <td th:text="*{fullName}"></td>
+          <td th:text="*{#dates.format(birthDate, 'dd/MM/yyyy')}"></td>
+          <td th:text="*{age}"></td>
+          <td th:text="*{EGN}"></td>
+          <td th:text="*{passportNumber}"></td>
+          <td th:text="*{email}"></td>
+          <td th:text="*{phone}"></td>
+
+          <td><a class="card-link" th:href="@{/guests/delete/{id}(id = *{id})}">Delete guest</a></td>
+        </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+
 </div>
 
 <div th:replace="~{fragments/footer}"></div>

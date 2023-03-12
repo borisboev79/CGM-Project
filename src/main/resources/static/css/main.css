@@ -58,3 +58,9 @@ form.main-form {
 .logged-user {
      color: white;
 }
+
+.my-footer {
+     position: absolute;
+     bottom: 30px;
+     width: 100%;
+}

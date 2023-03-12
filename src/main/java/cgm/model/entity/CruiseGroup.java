@@ -3,6 +3,7 @@ package cgm.model.entity;
 import cgm.model.enums.Transportation;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.Instant;
 import java.util.List;
@@ -48,6 +49,13 @@ public class CruiseGroup extends BaseEntity {
 
     @OneToMany(mappedBy = "cruiseGroup", targetEntity = Cabin.class, fetch = FetchType.EAGER)
     private List<Cabin> cabins;
+
+    @Column
+    @Value("false")
+    private boolean isSoldOut;
+
+    @Column(columnDefinition = "integer default 0")
+    private int soldPax;
 
     @Override
     public String toString() {

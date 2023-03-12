@@ -3,6 +3,7 @@ package cgm.model.entity;
 import cgm.model.enums.CabinType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
@@ -39,8 +40,12 @@ public class Cabin extends BaseEntity{
     @Column(name = "extra-adt-price", nullable = false)
     private Double extraAdultPrice;
 
+    @Column(columnDefinition = "integer default 0")
+    private int paxNumber;
+
     @Column
-    private Integer count;
+    @Value("false")
+    private boolean isFull;
 
     @OneToMany(mappedBy = "cabin", targetEntity = Guest.class, fetch = FetchType.EAGER)
     private List<Guest> guests;

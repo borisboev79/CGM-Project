@@ -1,6 +1,7 @@
 package cgm.service;
 
 import cgm.model.dto.GroupAddDto;
+import cgm.model.entity.Cabin;
 import cgm.model.entity.CruiseGroup;
 import cgm.repository.GroupRepository;
 import cgm.repository.ShipRepository;
@@ -55,5 +56,13 @@ public class GroupService {
 
     public CruiseGroup findById(Long id) {
         return this.groupRepository.findById(id).orElse(null);
+    }
+
+    public void checkAvailability(CruiseGroup cruiseGroup) {
+        List<Cabin> freeCabins = cruiseGroup.getCabins().stream().filter(cabin -> !cabin.isFull()).toList();
+        if(freeCabins.isEmpty()){
+            cruiseGroup.setSoldOut(true);
+            this.groupRepository.save(cruiseGroup);
+        }
     }
 }

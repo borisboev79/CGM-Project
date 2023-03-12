@@ -9,6 +9,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class CabinService {
     private final CabinRepository cabinRepository;
@@ -27,11 +30,18 @@ public class CabinService {
 
         CruiseGroup group = this.groupRepository.findById(groupId).orElseThrow();
 
-        Cabin cabin = mapper.map(cabinAddDto, Cabin.class);
-        cabin.setShip(group.getShip());
-        cabin.setCruiseGroup(group);
-        group.getCabins().add(cabin);
-        this.cabinRepository.saveAndFlush(cabin);
+        List<Cabin> cabinsToSave = new ArrayList<>();
+
+        for (int i = 0; i < cabinAddDto.getCount(); i++) {
+            Cabin cabin = mapper.map(cabinAddDto, Cabin.class);
+            cabin.setShip(group.getShip());
+           // cabin.setFull(false);
+            cabin.setCruiseGroup(group);
+            group.getCabins().add(cabin);
+            cabinsToSave.add(cabin);
+        }
+
+        this.cabinRepository.saveAllAndFlush(cabinsToSave);
 
 
     }
@@ -41,5 +51,9 @@ public class CabinService {
         return this.cabinRepository.findById(id).orElse(null);
     }
 
+    public void closeCabin(Cabin cabinToClose) {
+        cabinToClose.setFull(true);
+        this.cabinRepository.save(cabinToClose);
+    }
 }
 
