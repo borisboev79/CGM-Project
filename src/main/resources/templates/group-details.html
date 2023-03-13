@@ -47,10 +47,14 @@
             <div class="card-body">
                 <a class="btn btn-info btn-lg" sec:authorize="hasRole('ADMIN')"
                    th:href="@{/groups/add/cabins/{id}(id = ${cruiseGroup.id})}">Add Cabins</a>
-                <a class="btn btn-info btn-lg"
-                   th:href="@{/api/guests/{id}(id = ${cruiseGroup.id})}">Show All Passengers</a>
+                <button th:onclick="fetchPax([[${cruiseGroup.id}]])" class="btn btn-info btn-lg" id="show-pax-btn">Show All Passengers</button>
+                <button th:onclick="showHideContainer()" class="btn btn-info btn-lg d-none" id="hide-pax-btn">Hide Passengers</button>
             </div>
         </div>
+
+
+
+
 
         <div class="col-lg-6">
             <img th:src="${cruiseGroup.imageUrl}" class="card-img-top" alt="Group image">
@@ -63,12 +67,44 @@
 
     </div>
 
+    <div class="row mt-3 d-none", id="pax-list">
+
+        <div class="col">
+            <table class="table table-striped table-light text-center">
+                <tr><h4 class="text-center">Passenger List</h4></tr>
+                <thead>
+                <tr>
+                    <th scope="col">Cabin No.</th>
+                    <th scope="col">Cabin Code</th>
+                    <th scope="col">Cabin type</th>
+                    <th scope="col">Full Name</th>
+                    <th scope="col">Birth Date</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">EGN</th>
+                    <th scope="col">Passport</th>
+
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody class="" id="pax-info">
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
     <div class="row">
 
         <div class="col">
 
             <table class="table table-striped table-light text-center">
-                <tr><h4>Cabins in group</h4></tr>
+                <tr><h4 class="text-center">Cabins in group</h4></tr>
                 <thead>
                 <tr>
                     <th scope="col">Cabin Code</th>
@@ -112,7 +148,8 @@
 
 </div>
 
-<div th:replace="~{fragments/footer}"></div>
+<div class="container" th:replace="~{fragments/footer}"></div>
 
 </body>
+<script type="text/javascript" th:src="@{/js/paxFetch.js}"></script>
 </html>
