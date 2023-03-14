@@ -1,4 +1,5 @@
 const hostName = "http://localhost:8080";
+const tBody = document.getElementById("pax-info")
 const fetchPax = async (id) => {
     const response = await fetch(`${hostName}/api/guests/${id}`, {
         method: "GET",
@@ -8,14 +9,12 @@ const fetchPax = async (id) => {
     });
     const resp = await response.json();
 
-    const tBody = document.getElementById("pax-info")
     resp.forEach(arr => {
         arr.length > 0 && arr.forEach(el => {
             tBody.appendChild(createTR(el))
         })
     })
     showHideContainer(true);
-    console.log('resp', resp);
 }
 
 const showHideContainer = (show) => {
@@ -28,6 +27,7 @@ const showHideContainer = (show) => {
         container.classList.add("d-none")
         document.getElementById("hide-pax-btn").classList.add("d-none");
         document.getElementById("show-pax-btn").classList.remove("d-none");
+        tBody.innerHTML = '';
 
     }
 }
@@ -49,7 +49,7 @@ const createTR = (pax) => {
     tdEdit.appendChild(createTDButton("Edit"))
     tr.appendChild(tdEdit)
     const tdDelete = createTD()
-    tdDelete.appendChild(createTDButton("Delete"))
+    tdDelete.appendChild(createTDButton("Delete")).classList.add("bg-danger")
     tr.appendChild(tdDelete)
     return tr
 }
