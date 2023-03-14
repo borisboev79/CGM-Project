@@ -34,25 +34,59 @@ const showHideContainer = (show) => {
 
 const createTR = (pax) => {
     const tr = document.createElement("tr");
+    const editCallback = () => {
+        createEditableTD(pax.fullName, tr, fullName)
+        createEditableTD(paxDate, tr, birthDate)
+        createEditableTD(pax.age, tr, age)
+        createEditableTD(pax.email, tr, email)
+        createEditableTD(pax.phone, tr, phone)
+        createEditableTD(pax.egn, tr, egn)
+        createEditableTD(pax.passportNumber, tr, passport)
+
+        const tdSaveBtn = createTD()
+        const btnSave = createTDButton(undefined, "Save")
+        tdSaveBtn.appendChild(btnSave)
+        tr.replaceChild(tdSaveBtn, tdEdit)
+
+        const tdCancelBtn = createTD()
+        const btnCancel = createTDButton(undefined, "Cancel")
+        btnCancel.classList.add("bg-danger")
+        tdCancelBtn.appendChild(btnCancel)
+        tr.replaceChild(tdCancelBtn, tdDelete)
+
+    }
 
     tr.appendChild(createTD(pax.cabinNumber))
     tr.appendChild(createTD(pax.cabinCode))
     tr.appendChild(createTD(pax.cabinType))
-    tr.appendChild(createTD(pax.fullName))
-    tr.appendChild(createTD(pax.birthDate))
-    tr.appendChild(createTD(pax.age))
-    tr.appendChild(createTD(pax.email))
-    tr.appendChild(createTD(pax.phone))
-    tr.appendChild(createTD(pax.egn))
-    tr.appendChild(createTD(pax.passportNumber))
+    const fullName = createTD(pax.fullName)
+    tr.appendChild(fullName)
+    const paxDate = new Date(pax.birthDate).toLocaleDateString()
+    const birthDate = createTD(paxDate)
+    tr.appendChild(birthDate)
+    const age = createTD(pax.age)
+    tr.appendChild(age)
+    const email = createTD(pax.email)
+    tr.appendChild(email)
+    const phone = createTD(pax.phone)
+    tr.appendChild(phone)
+    const egn = createTD(pax.egn)
+    tr.appendChild(egn)
+    const passport = createTD(pax.passportNumber)
+    tr.appendChild(passport)
     const tdEdit = createTD()
-    tdEdit.appendChild(createTDButton("Edit"))
+    const btnEdit = createTDButton(editCallback, "Edit")
+
+    tdEdit.appendChild(btnEdit)
     tr.appendChild(tdEdit)
     const tdDelete = createTD()
-    tdDelete.appendChild(createTDButton("Delete")).classList.add("bg-danger")
+    tdDelete.appendChild(createTDButton(undefined, "Delete")).classList.add("bg-danger")
     tr.appendChild(tdDelete)
+
     return tr
 }
+
+
 
 const createTD = (value) => {
     const tdData = document.createElement("td")
@@ -60,10 +94,21 @@ const createTD = (value) => {
     return tdData;
 }
 
-const createTDButton = (text) => {
+const createTDButton = (callback, text, customClasses) => {
     const btn = document.createElement("button")
     btn.classList.add("btn", "btn-info", "btn-sm")
     btn.textContent = text
+    btn.onclick = callback
     return btn
 }
+
+const createEditableTD = (value, parentNode, childNode) => {
+    const newTd = document.createElement("td")
+    const inp = document.createElement("input")
+    inp.classList.add("form-control")
+    inp.value = value
+    newTd.appendChild(inp)
+    parentNode.replaceChild(newTd, childNode)
+}
+
 
