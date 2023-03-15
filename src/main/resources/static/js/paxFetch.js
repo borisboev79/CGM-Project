@@ -28,7 +28,6 @@ const showHideContainer = (show) => {
         document.getElementById("hide-pax-btn").classList.add("d-none");
         document.getElementById("show-pax-btn").classList.remove("d-none");
         tBody.innerHTML = '';
-
     }
 }
 
@@ -106,13 +105,9 @@ const createTR = (pax) => {
             newTd.appendChild(inp)
             parentNode.replaceChild(newTd, childNode)
 
-
             return { td: newTd, input: inp}
         }
-
     }
-
-
 
     tr.appendChild(createTD(pax.cabinNumber))
     tr.appendChild(createTD(pax.cabinCode))
@@ -144,7 +139,6 @@ const createTR = (pax) => {
     return tr
 }
 
-
 const createTD = (value) => {
     const tdData = document.createElement("td")
     tdData.textContent = value
@@ -161,8 +155,6 @@ const createTDButton = (callback, text) => {
 
 function validateFullName(value) {
     return !(!value || value.length < 7);
-
-
 }
 
 function validateBirthDate(value){
@@ -174,8 +166,6 @@ function validateBirthDate(value){
     const date = new Date(formattedDate)
 
     return date <= Date.now();
-
-
 }
 
 
