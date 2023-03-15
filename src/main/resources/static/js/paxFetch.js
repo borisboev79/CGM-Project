@@ -34,14 +34,15 @@ const showHideContainer = (show) => {
 
 const createTR = (pax) => {
     const tr = document.createElement("tr");
+    const inputs = {}
     const editCallback = () => {
-        createEditableTD(pax.fullName, tr, fullName)
-        createEditableTD(paxDate, tr, birthDate)
-        createEditableTD(pax.age, tr, age)
-        createEditableTD(pax.email, tr, email)
-        createEditableTD(pax.phone, tr, phone)
-        createEditableTD(pax.egn, tr, egn)
-        createEditableTD(pax.passportNumber, tr, passport)
+        const editFullName = createEditableTD(pax.fullName, tr, fullName, "inputFullName", validateFullName)
+        const editBirthDate = createEditableTD(paxDate, tr, birthDate, "inputBirthDate", validateBirthDate)
+        const editAge = createEditableTD(pax.age, tr, age)
+        const editEmail= createEditableTD(pax.email, tr, email)
+        const editPhone = createEditableTD(pax.phone, tr, phone)
+        const editEgn = createEditableTD(pax.egn, tr, egn)
+        const editPassport = createEditableTD(pax.passportNumber, tr, passport)
 
         const tdSaveBtn = createTD()
         const btnSave = createTDButton(undefined, "Save")
@@ -49,12 +50,69 @@ const createTR = (pax) => {
         tr.replaceChild(tdSaveBtn, tdEdit)
 
         const tdCancelBtn = createTD()
-        const btnCancel = createTDButton(undefined, "Cancel")
+        const btnCancel = createTDButton(cancelCallback, "Cancel")
         btnCancel.classList.add("bg-danger")
         tdCancelBtn.appendChild(btnCancel)
         tr.replaceChild(tdCancelBtn, tdDelete)
 
+        function cancelCallback() {
+            tr.replaceChild(fullName, editFullName.td)
+            tr.replaceChild(birthDate, editBirthDate.td)
+            tr.replaceChild(age, editAge.td)
+            tr.replaceChild(email, editEmail.td)
+            tr.replaceChild(phone, editPhone.td)
+            tr.replaceChild(egn, editEgn.td)
+            tr.replaceChild(passport, editPassport.td)
+            tr.replaceChild(tdEdit, tdSaveBtn)
+            tr.replaceChild(tdDelete, tdCancelBtn)
+        }
+
+        function createEditableTD(value, parentNode, childNode, inputName, validate) {
+            const newTd = document.createElement("td")
+            const inp = document.createElement("input")
+            inputs[inputName] = {
+                valid: true,
+                value: value
+            }
+            inp.classList.add("form-control")
+            inp.value = value
+            inp.oninput = () => {
+                const inputValue = inp.value
+                if (!validate(inputValue)) {
+                    inp.classList.add("bg-danger")
+                    inputs[inputName].valid = false
+
+                } else {
+                    inp.classList.remove("bg-danger")
+                    inputs[inputName].valid = true
+                }
+                inputs[inputName].value = inputValue
+
+                let validInputs = true
+
+                for (const v of Object.values(inputs)) {
+                    if(!v.valid) {
+                        validInputs = false
+                        break
+                    }
+                }
+
+                if (validInputs) {
+                    btnSave.removeAttribute("disabled")
+                } else {
+                    btnSave.setAttribute('disabled', true)
+                }
+            }
+            newTd.appendChild(inp)
+            parentNode.replaceChild(newTd, childNode)
+
+
+            return { td: newTd, input: inp}
+        }
+
     }
+
+
 
     tr.appendChild(createTD(pax.cabinNumber))
     tr.appendChild(createTD(pax.cabinCode))
@@ -87,14 +145,13 @@ const createTR = (pax) => {
 }
 
 
-
 const createTD = (value) => {
     const tdData = document.createElement("td")
     tdData.textContent = value
     return tdData;
 }
 
-const createTDButton = (callback, text, customClasses) => {
+const createTDButton = (callback, text) => {
     const btn = document.createElement("button")
     btn.classList.add("btn", "btn-info", "btn-sm")
     btn.textContent = text
@@ -102,13 +159,24 @@ const createTDButton = (callback, text, customClasses) => {
     return btn
 }
 
-const createEditableTD = (value, parentNode, childNode) => {
-    const newTd = document.createElement("td")
-    const inp = document.createElement("input")
-    inp.classList.add("form-control")
-    inp.value = value
-    newTd.appendChild(inp)
-    parentNode.replaceChild(newTd, childNode)
+function validateFullName(value) {
+    return !(!value || value.length < 7);
+
+
 }
+
+function validateBirthDate(value){
+    if (!value) {
+        return false
+    }
+    const dateParts = value.split("/")
+    const formattedDate = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2]
+    const date = new Date(formattedDate)
+
+    return date <= Date.now();
+
+
+}
+
 
 
