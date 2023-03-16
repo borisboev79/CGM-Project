@@ -1,6 +1,7 @@
 package cgm.controller;
 
 
+import cgm.model.CurrentUser;
 import cgm.model.ObjectNotFoundException;
 import cgm.model.dto.CabinAddDto;
 import cgm.model.dto.GroupAddDto;
@@ -46,7 +47,11 @@ public class GroupController {
     }
 
     @GetMapping("/all")
-    public String getAllGroups(Model model) {
+    public String getAllGroups(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
+
+        if(currentUser != null){
+            model.addAttribute("firstName", currentUser.getFirstName());
+        }
 
         List<CruiseGroup> groups = this.groupService.getAllGroups();
 

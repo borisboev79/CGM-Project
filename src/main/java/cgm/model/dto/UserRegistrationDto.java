@@ -1,13 +1,7 @@
 package cgm.model.dto;
 
-import cgm.model.entity.BranchEntity;
-import cgm.model.entity.RoleEntity;
 import cgm.model.enums.BranchCode;
 import cgm.model.enums.Role;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -23,25 +17,25 @@ import java.util.List;
 public class UserRegistrationDto {
 
 
-    @NotBlank
+    @NotBlank(message = "Last name is mandatory")
     @Size(min = 3)
     private String username;
 
-    @NotBlank
+    @NotBlank(message = "Last name is mandatory")
     @Size(min = 8)
     private String password;
 
-    @NotBlank
+    @NotBlank(message = "Last name is mandatory")
     @Size(min = 3)
     private String firstName;
 
-    @NotBlank
-    @Size(min = 3)
+    @NotBlank(message = "Last name is mandatory")
+    @Size(min = 3, message="Last name too short")
     private String lastName;
 
-    @NotNull
+    @NotNull(message = "Last name is mandatory")
     private List<Role> roles;
 
-    @NotNull
+    @NotNull(message = "Last name is mandatory")
     private BranchCode branch;
 }

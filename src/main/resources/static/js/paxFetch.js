@@ -9,11 +9,10 @@ const fetchPax = async (id) => {
     });
     const resp = await response.json();
 
-    resp.forEach(arr => {
-        arr.length > 0 && arr.forEach(el => {
+    resp.forEach(el => {
             tBody.appendChild(createTR(el))
         })
-    })
+
     showHideContainer(true);
 }
 

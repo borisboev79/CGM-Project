@@ -1,7 +1,6 @@
 package cgm.controller;
 
 import cgm.model.dto.GuestViewDto;
-import cgm.service.CabinService;
 import cgm.service.GuestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,7 @@ public class ShowAllPaxController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<List<GuestViewDto>>> getGuests(@PathVariable("id")Long id){
+    public ResponseEntity<List<GuestViewDto>> getGuests(@PathVariable("id")Long id){
         return ResponseEntity.ok(this.guestService.getAllGuests(id));
     }
 

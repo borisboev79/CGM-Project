@@ -17,8 +17,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class GuestService {
@@ -82,18 +82,14 @@ public class GuestService {
         return date.plusDays(1).atStartOfDay(zoneId).toInstant();
     }
 
-    public List<List<GuestViewDto>> getAllGuests(Long id) {
-        CruiseGroup group = this.groupRepository.findById(id).orElse(null);
+    public List<GuestViewDto> getAllGuests(Long id) {
 
-        List<Cabin> cabins = group.getCabins().stream().toList();
+        return Objects.requireNonNull(this.guestRepository.findAllByCabin_CruiseGroup_Id(id).orElse(null))
+                .stream()
+                .map(guest -> mapper.map(guest, GuestViewDto.class)).toList();
 
-        List<List<GuestViewDto>> guests = new ArrayList<>();
-
-        for (Cabin cabin : cabins) {
-            List<GuestViewDto> guestViewDtos = cabin.getGuests().stream().map(guest -> mapper.map(guest, GuestViewDto.class)).toList();
-            guests.add(guestViewDtos);
-        }
-
-        return guests;
     }
+
+
+
 }
