@@ -21,7 +21,7 @@
                 if you have an account or ask your manager to make one for you.</h5>
 
             <div class="h5 card-header" style="color: lightgray" sec:authorize="isAuthenticated()">Welcome to GrouMan,
-                <h3 class="text-center text-white mt-3" th:text="${firstName + ' ' + lastName + ' (' + branch + ')'}"/>
+                <h3 class="text-center text-white mt-3" th:text="${firstName + ' ' + lastName + ' (' + branch.name + ')'}"/>
             </div>
         </div>
 

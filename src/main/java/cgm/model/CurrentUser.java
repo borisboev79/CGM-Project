@@ -1,5 +1,6 @@
 package cgm.model;
 
+import cgm.model.entity.BranchEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -10,7 +11,7 @@ public class CurrentUser extends User {
 
     private String firstName;
     private String lastName;
-    private String branch;
+    private BranchEntity branch;
 
 
     public CurrentUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
@@ -35,11 +36,11 @@ public class CurrentUser extends User {
         return this;
     }
 
-    public String getBranch() {
+    public BranchEntity getBranch() {
         return branch;
     }
 
-    public CurrentUser setBranch(String branch) {
+    public CurrentUser setBranch(BranchEntity branch) {
         this.branch = branch;
         return this;
     }

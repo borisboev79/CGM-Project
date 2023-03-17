@@ -35,7 +35,7 @@ public class ApplicationUserDetailsService implements UserDetailsService {
                 userEntity.getRoles().stream().map(this::mapRole).toList())
                 .setFirstName(userEntity.getFirstName())
                 .setLastName(userEntity.getLastName())
-                .setBranch(userEntity.getBranch().getName());
+                .setBranch(userEntity.getBranch());
     }
 
     private GrantedAuthority mapRole(RoleEntity roleEntity) {

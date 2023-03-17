@@ -67,7 +67,7 @@
 
     </div>
 
-    <div class="row my-3 d-none", id="pax-list">
+    <div class="row my-3 d-none" id="pax-list">
 
         <div class="col">
             <table class="table-responsive-xl table-striped table-light text-center">
@@ -115,6 +115,8 @@
                     <th scope="col">Total Price</th>
                     <th scope="col">Max Guests</th>
                     <th scope="col">Booked Guests</th>
+                    <th scope="col">Booked By</th>
+
 
                     <th scope="col"></th>
                 </tr>
@@ -131,6 +133,7 @@
                     <td style="font-weight: bold" th:text="*{'€' + totalPrice}"></td>
                     <td th:text="*{maxOccupancy}"></td>
                     <td th:text="*{paxNumber}"></td>
+                    <td th:text="*{addedBy == null} ? 'n/a' : *{addedBy.code}"></td>
 
                     <td th:if="${!cabin.full}"><a class="btn btn-info btn-sm"
                                                   th:href="@{/guests/add/{id}(id = *{id})}">Add guests</a></td>

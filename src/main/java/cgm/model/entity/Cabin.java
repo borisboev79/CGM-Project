@@ -53,5 +53,8 @@ public class Cabin extends BaseEntity{
     @OneToMany(mappedBy = "cabin", targetEntity = Guest.class, fetch = FetchType.EAGER)
     private List<Guest> guests;
 
+    @ManyToOne
+    private BranchEntity addedBy;
+
 
 }

@@ -49,7 +49,7 @@ public class GroupController {
     @GetMapping("/all")
     public String getAllGroups(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
 
-        if(currentUser != null){
+        if (currentUser != null) {
             model.addAttribute("firstName", currentUser.getFirstName());
         }
 
@@ -61,8 +61,11 @@ public class GroupController {
     }
 
     @GetMapping("/add")
-    public String getGroupAdd(Model model) {
+    public String getGroupAdd(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
 
+        if (currentUser != null) {
+            model.addAttribute("firstName", currentUser.getFirstName());
+        }
 
         List<CruiseLine> cruiselines = this.cruiseLineService.getCruiseLines();
 
@@ -94,24 +97,36 @@ public class GroupController {
     }
 
     @GetMapping("/details/{id}")
-    public String getDetails(@PathVariable Long id, Model model) {
+    public String getDetails(@PathVariable Long id,
+                             @AuthenticationPrincipal CurrentUser currentUser,
+                             Model model) {
+
+        if (currentUser != null) {
+            model.addAttribute("firstName", currentUser.getFirstName());
+        }
+
         CruiseGroup cruiseGroup = this.groupService.findById(id);
 
-            if(cruiseGroup == null){
-                throw new ObjectNotFoundException(id, "group");
-            }
+        if (cruiseGroup == null) {
+            throw new ObjectNotFoundException(id, "group");
+        }
 
-            model.addAttribute("cruiseGroup", cruiseGroup);
+        model.addAttribute("cruiseGroup", cruiseGroup);
 
         return "group-details";
     }
 
     @GetMapping("/add/cabins/{id}")
-    public String getCabinsAdd(@PathVariable Long id, Model model) {
+    public String getCabinsAdd(@PathVariable Long id,
+                               @AuthenticationPrincipal CurrentUser currentUser,
+                               Model model) {
+
+
+        model.addAttribute("firstName", currentUser.getFirstName());
 
         CruiseGroup currentGroup = this.groupService.findById(id);
 
-        if(currentGroup == null){
+        if (currentGroup == null) {
             throw new ObjectNotFoundException(id, "group");
         }
 
@@ -125,15 +140,13 @@ public class GroupController {
     public String addCabins(@Valid @ModelAttribute(name = "cabinAddDto") CabinAddDto cabinAddDto,
                             BindingResult bindingResult,
                             RedirectAttributes redirectAttributes,
-                            @PathVariable Long id
-    ) {
+                            @PathVariable Long id) {
 
         CruiseGroup currentGroup = this.groupService.findById(id);
 
-        if(currentGroup == null){
+        if (currentGroup == null) {
             throw new ObjectNotFoundException(id, "group");
         }
-
 
         if (bindingResult.hasErrors()) {
             redirectAttributes
@@ -142,6 +155,7 @@ public class GroupController {
 
             return String.format("redirect:/groups/add/cabins/%s", id);
         }
+
 
         this.cabinService.addCabin(cabinAddDto, id);
 

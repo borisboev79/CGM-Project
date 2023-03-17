@@ -39,7 +39,10 @@
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <div class="form-inline my-2 my-lg-0 border px-3">
-                        <div class="logged-user">Welcome,
+                        <div class="logged-user">
+                            <span sec:authorize="hasRole('ADMIN')"><th:block th:text="Admin"/>:</span>
+                            <span sec:authorize="hasRole('MANAGER') && !hasRole('ADMIN')"><th:block th:text="Manager"/>:</span>
+                            <span sec:authorize="hasRole('USER') && !hasRole('ADMIN')"><th:block th:text="User"/>:</span>
                             <span th:text="${firstName != null}? ${firstName}:'user'"></span>
                         </div>
                         <form th:method="post" th:action="@{/auth/logout}">
