@@ -120,7 +120,7 @@
       </div>
       <div class="col col-md-4" th:if="${cabin.paxNumber > 0}">
         <div class="button-holder d-flex">
-          <a class="btn btn-info btn-lg bg-danger" th:href="@{/cabin/close/{id}(id = ${cabin.id})}">Close cabin for sales</a>
+          <a class="btn btn-info btn-lg bg-danger" th:href="@{/cabins/close/{id}(id = ${cabin.id})}">Close cabin for sales</a>
         </div>
       </div>
     </div>

@@ -46,7 +46,7 @@
             </ul>
             <div class="card-body">
                 <a class="btn btn-info btn-lg" sec:authorize="hasRole('ADMIN')"
-                   th:href="@{/groups/add/cabins/{id}(id = ${cruiseGroup.id})}">Add Cabins</a>
+                   th:href="@{/cabins/add/{id}(id = ${cruiseGroup.id})}">Add Cabins</a>
                 <button th:onclick="fetchPax([[${cruiseGroup.id}]])" class="btn btn-info btn-lg" id="show-pax-btn">Show All Passengers</button>
                 <button th:onclick="showHideContainer()" class="btn btn-info btn-lg d-none" id="hide-pax-btn">Hide Passengers</button>
             </div>

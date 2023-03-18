@@ -17,7 +17,7 @@
     <h2 class="text-center text-white">Add Cabins to</h2>
     <h4 class="text-center text-white" th:text="${currentGroup.name}"/>
     <form th:method="POST"
-          th:action="@{/groups/add/cabins/{id}(id= ${currentGroup.id})}"
+          th:action="@{/cabins/add/{id}(id= ${currentGroup.id})}"
           th:object="${cabinAddDto}"
           class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
 

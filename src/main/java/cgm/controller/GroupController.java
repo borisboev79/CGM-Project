@@ -116,7 +116,7 @@ public class GroupController {
         return "group-details";
     }
 
-    @GetMapping("/add/cabins/{id}")
+    /*@GetMapping("/add/cabins/{id}")
     public String getCabinsAdd(@PathVariable Long id,
                                @AuthenticationPrincipal CurrentUser currentUser,
                                Model model) {
@@ -134,9 +134,9 @@ public class GroupController {
         model.addAttribute("cabinType", CabinType.values());
 
         return "cabins-add";
-    }
+    }*/
 
-    @PostMapping("/add/cabins/{id}")
+/*    @PostMapping("/add/cabins/{id}")
     public String addCabins(@Valid @ModelAttribute(name = "cabinAddDto") CabinAddDto cabinAddDto,
                             BindingResult bindingResult,
                             RedirectAttributes redirectAttributes,
@@ -161,7 +161,7 @@ public class GroupController {
 
         return "redirect:/groups/details/" + id;
 
-    }
+    }*/
 
     @GetMapping("delete")
     public String getGroupsDelete(@AuthenticationPrincipal CurrentUser currentUser, Model model){
@@ -177,7 +177,7 @@ public class GroupController {
     }
 
     @GetMapping("delete/{id}")
-    public String deleteGroups(@PathVariable Long id){
+    public String deleteGroup(@PathVariable Long id){
 
       this.groupService.deleteGroupById(id);
 
