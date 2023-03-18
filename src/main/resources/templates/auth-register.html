@@ -3,8 +3,8 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 
-    <div th:replace="~{fragments/head}"></div>
-    <title>GrouMan Register Employee</title>
+<div th:replace="~{fragments/head}"></div>
+<title>GrouMan Register Employee</title>
 
 
 <body>
@@ -22,12 +22,12 @@
         <div class="row">
             <div class="form-group col-md-6 mb-3">
                 <label for="firstName" class="text-white font-weight-bold">First Name</label>
-                <input  id="firstName"
-                        name="firstName"
-                        type="text"
-                        th:errorclass="is-invalid"
-                        th:value="*{firstName}"
-                        class="form-control"
+                <input id="firstName"
+                       name="firstName"
+                       type="text"
+                       th:errorclass="is-invalid"
+                       th:value="*{firstName}"
+                       class="form-control"
                        placeholder="First name"/>
                 <p class="invalid-feedback">
                     First name should be at least 3 characters long.
@@ -69,20 +69,75 @@
                        name="password"
                        th:value="*{password}"
                        th:errorclass="is-invalid"
-                        class="form-control"
+                       class="form-control"
                        placeholder="Password"/>
                 <p class="invalid-feedback">
                     Password should be at least 8 characters long.
                 </p>
             </div>
 
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-6" sec:authorize="!hasRole('ADMIN')">
+                <label class="text-center text-white font-weight-bold" for="roles">Role</label>
+                <p>
+
+                    <input checked type="radio" name="roles"
+                           th:errorclass="is-invalid"
+                           th:value="${userRole}">
+                    <span class="text-light"
+                          th:text="${userRole}"></span>
+                </p>
+
+            </div>
+
+            <!-- THIS IS A TEST-->
+
+            <div class="form-group col-md-6" id="roles" sec:authorize="hasRole('ADMIN')">
                 <label class="text-center text-white font-weight-bold" for="roles">Roles</label>
-                <select  id="roles"
-                         name="roles"
-                         th:value="*{roles}"
-                         th:errorclass="is-invalid"
-                         class="form-control" multiple>
+
+                <div class="row">
+                    <div class="col-4">
+                        <input checked type="checkbox" name="roles"
+                               th:errorclass="is-invalid"
+                               th:value="${userRole}">
+                        <span class="text-light"
+                              th:text="${userRole}"></span>
+                    </div>
+
+                    <div class="col-5 px-0">
+                        <input type="checkbox" name="roles"
+                               th:errorclass="is-invalid"
+                               th:value="${managerRole}">
+                        <span class="text-light"
+                              th:text="${managerRole}"></span>
+                    </div>
+                    <div class="col-3 px-0">
+                        <input type="checkbox" name="roles"
+                               th:errorclass="is-invalid"
+                               th:value="${adminRole}">
+                        <span class="text-light"
+                              th:text="${adminRole}"></span>
+                    </div>
+                    <div class="col">
+                        <small th:if="${#fields.hasErrors('roles')}" th:errorclass="error" th:errors="*{roles}"
+                               class="text-danger"> </small>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!--END OF TEST-->
+
+
+            <!--<div class="form-group col-md-6" sec:authorize="hasRole('ADMIN')">
+                <label class="text-center text-white font-weight-bold" for="roles">Roles</label>
+
+
+                <select id="roles"
+                        name="roles"
+                        th:value="*{roles}"
+                        th:errorclass="is-invalid"
+                        class="form-control" multiple>
                     <option value="">- Select roles -</option>
                     <option th:value="${adminRole}"
                             th:text="${adminRole}"
@@ -103,14 +158,14 @@
                     Selecting a role is required.
                 </p>
 
-             </div>
+            </div>-->
 
 
             <div class="form-group col-md-6">
                 <label class="text-center text-white font-weight-bold" for="branch">Branch</label>
-                <select  id="branch" name="branch"
-                         th:errorclass="is-invalid"
-                         class="form-control">
+                <select id="branch" name="branch"
+                        th:errorclass="is-invalid"
+                        class="form-control">
 
                     <option sec:authorize="hasRole('MANAGER') && !hasRole('ADMIN')"
                             th:text="${principalBranch.code}"/>

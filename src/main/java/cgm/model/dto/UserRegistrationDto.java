@@ -17,25 +17,25 @@ import java.util.List;
 public class UserRegistrationDto {
 
 
-    @NotBlank(message = "Last name is mandatory")
-    @Size(min = 3)
+    @NotBlank(message = "Username is mandatory")
+    @Size(min = 3, message = "Username too short")
     private String username;
 
-    @NotBlank(message = "Last name is mandatory")
-    @Size(min = 8)
+    @NotBlank(message = "Password is mandatory")
+    @Size(min = 8, message = "Password should be at least 8 characters long")
     private String password;
 
-    @NotBlank(message = "Last name is mandatory")
-    @Size(min = 3)
+    @NotBlank(message = "First name is mandatory")
+    @Size(min = 3, message = "First name too short")
     private String firstName;
 
     @NotBlank(message = "Last name is mandatory")
     @Size(min = 3, message="Last name too short")
     private String lastName;
 
-    @NotNull(message = "Last name is mandatory")
+    @NotNull(message = "There should be at least one role selected!")
     private List<Role> roles;
 
-    @NotNull(message = "Last name is mandatory")
+    @NotNull(message = "Choosing branch is mandatory")
     private BranchCode branch;
 }
