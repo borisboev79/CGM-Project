@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-@DateAfterDate
+@DateAfterDate(message = "Return date must be after Departure date.")
 public class GroupAddDto {
 
     @Size(min = 10)
@@ -36,11 +36,12 @@ public class GroupAddDto {
     @NotBlank
     private String imageUrl;
 
-    @NotNull
-    @FutureOrPresent
+    @NotNull(message = "Start date is mandatory.")
+    @FutureOrPresent(message = "Start date cannot be in the past.")
     private LocalDate startDate;
 
-    @NotNull
+    @NotNull(message = "End date is mandatory.")
+    @FutureOrPresent(message = "End date cannot be in the past.")
     private LocalDate endDate;
 
     @Size(min = 10)
