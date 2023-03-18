@@ -29,9 +29,8 @@
                        th:value="*{firstName}"
                        class="form-control"
                        placeholder="First name"/>
-                <p class="invalid-feedback">
-                    First name should be at least 3 characters long.
-                </p>
+                <small th:if="${#fields.hasErrors('firstName')}" th:errorclass="error" th:errors="*{firstName}"
+                       class="text-danger"> </small>
             </div>
             <div class="form-group col-md-6 mb-3">
                 <label for="lastName" class="text-white font-weight-bold">Last Name</label>
@@ -42,9 +41,8 @@
                        th:errorclass="is-invalid"
                        class="form-control"
                        placeholder="Last name"/>
-                <p class="invalid-feedback">
-                    Last name should be at least 3 characters long.
-                </p>
+                <small th:if="${#fields.hasErrors('lastName')}" th:errorclass="error" th:errors="*{lastName}"
+                       class="text-danger"> </small>
             </div>
         </div>
 
@@ -58,9 +56,8 @@
                        th:errorclass="is-invalid"
                        class="form-control"
                        placeholder="Username"/>
-                <p class="invalid-feedback">
-                    Username should be at least 3 characters long.
-                </p>
+                <small th:if="${#fields.hasErrors('username')}" th:errorclass="error" th:errors="*{username}"
+                       class="text-danger"> </small>
             </div>
             <div class="form-group col-md-6 mb-3">
                 <label for="password" class="text-white font-weight-bold">Password</label>
@@ -71,9 +68,8 @@
                        th:errorclass="is-invalid"
                        class="form-control"
                        placeholder="Password"/>
-                <p class="invalid-feedback">
-                    Password should be at least 8 characters long.
-                </p>
+                <small th:if="${#fields.hasErrors('password')}" th:errorclass="error" th:errors="*{password}"
+                       class="text-danger"> </small>
             </div>
 
             <div class="form-group col-md-6" sec:authorize="!hasRole('ADMIN')">
@@ -178,7 +174,7 @@
                     </option>
                 </select>
                 <p class="invalid-feedback">
-                    Selecting a branch is required.
+                    Choosing a branch is mandatory.
                 </p>
 
 

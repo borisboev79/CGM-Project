@@ -2,6 +2,7 @@ package cgm.model.dto;
 
 import cgm.model.enums.BranchCode;
 import cgm.model.enums.Role;
+import cgm.util.validation.ValidateUserExistence;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -19,6 +20,7 @@ public class UserRegistrationDto {
 
     @NotBlank(message = "Username is mandatory")
     @Size(min = 3, message = "Username too short")
+    @ValidateUserExistence(message = "This username already exists!")
     private String username;
 
     @NotBlank(message = "Password is mandatory")
@@ -36,6 +38,6 @@ public class UserRegistrationDto {
     @NotNull(message = "There should be at least one role selected!")
     private List<Role> roles;
 
-    @NotNull(message = "Choosing branch is mandatory")
+    @NotNull(message = "Choosing a branch is mandatory.")
     private BranchCode branch;
 }
