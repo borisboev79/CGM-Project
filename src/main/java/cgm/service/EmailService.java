@@ -1,5 +1,6 @@
 package cgm.service;
 
+import cgm.model.entity.CruiseGroup;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.util.List;
 import java.util.Locale;
 
 @Service
@@ -17,12 +19,13 @@ public class EmailService {
     private final TemplateEngine templateEngine;
 
     public EmailService(JavaMailSender javaMailSender,
-                        TemplateEngine templateEngine) {
+                        TemplateEngine templateEngine
+                        ) {
         this.javaMailSender = javaMailSender;
         this.templateEngine = templateEngine;
     }
 
-    public void sendInfoEmail(String userEmail, String userName) {
+    public void sendInfoEmail(String userEmail, String name, List<CruiseGroup> soldGroups) {
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
@@ -32,7 +35,7 @@ public class EmailService {
             mimeMessageHelper.setTo(userEmail);
 
             mimeMessageHelper.setSubject("Cruise Group Has Sold Out!");
-            mimeMessageHelper.setText(generateEmailText(userName), true);
+            mimeMessageHelper.setText(generateEmailText(name, soldGroups), true);
 
             javaMailSender.send(mimeMessageHelper.getMimeMessage());
 
@@ -42,11 +45,12 @@ public class EmailService {
 
     }
 
-    private String generateEmailText(String username){
+    private String generateEmailText(String username, List<CruiseGroup> soldGroups){
 
         Context context = new Context();
         context.setLocale(Locale.getDefault());
         context.setVariable("userName", username);
+        context.setVariable("soldGroups", soldGroups);
 
         return templateEngine.process("info-email", context);
     }

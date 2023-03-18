@@ -6,13 +6,20 @@
 </head>
 <body>
 Hello, <th:block th:text="${userName}"/>,
+<p></p>
+<div class="container my-5">The following <th:block th:text="${soldGroups.size() == 1} ? 'group has' : 'groups have'"/> sold out:
+    <p></p>
+        <div class="col my-5" th:each="group : ${soldGroups}"
+             th:text="${group.name} + ', departing on '
+             + ${#dates.format(group.startDate, 'dd MMM yyyy')}
+             + ', ship name: ' + ${group.ship.name}"></div>
 
-<p>Group has sold out!</p>
+</div>
 
 <p>Please, inform colleagues!</p>
 
 <p>
-    Regards,
+    Regards,<br>
     GrouMan
 
 </p>

@@ -1,5 +1,6 @@
 package cgm.service;
 
+import cgm.model.ObjectNotFoundException;
 import cgm.model.dto.GuestAddDto;
 import cgm.model.dto.GuestViewDto;
 import cgm.model.entity.Cabin;
@@ -9,6 +10,7 @@ import cgm.model.enums.AgeGroup;
 import cgm.repository.CabinRepository;
 import cgm.repository.GroupRepository;
 import cgm.repository.GuestRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,16 +46,16 @@ public class GuestService {
         guest.setCabin(cabin);
         guest.getCabin().setPaxNumber(cabin.getPaxNumber() + 1);
         group.setSoldPax(group.getSoldPax() + 1);
-        guest.setAge(Math.abs((int)ChronoUnit.YEARS.between(LocalDate.now(), guestAddDto.getBirthDate())));
+        guest.setAge(Math.abs((int) ChronoUnit.YEARS.between(LocalDate.now(), guestAddDto.getBirthDate())));
         guest.setBirthDate(dateToInstant(guestAddDto.getBirthDate()));
 
-        if(guest.getAge() > 11){
+        if (guest.getAge() > 11) {
             guest.setAgeGroup(AgeGroup.ADULT);
         } else {
             guest.setAgeGroup(AgeGroup.CHILD);
         }
 
-        if(cabin.getPaxNumber() < 2) {
+        if (cabin.getPaxNumber() < 2) {
             cabin.setTotalPrice(cabin.getTotalPrice() + cabin.getAdultPrice());
         } else {
 
@@ -65,13 +67,26 @@ public class GuestService {
 
         }
 
-        if(cabin.getMaxOccupancy() == cabin.getPaxNumber()){
+        if (cabin.getMaxOccupancy() == cabin.getPaxNumber()) {
             cabin.setFull(true);
         }
 
         this.guestRepository.saveAndFlush(guest);
-        this.cabinRepository.save(cabin);
-        this.groupRepository.save(group);
+        updateCounts(group, cabin);
+    }
+
+    @Transactional
+    public void deleteGuest(Long id) {
+
+        Guest guest = this.guestRepository.findById(id).orElseThrow(ObjectNotFoundException::new);
+        CruiseGroup group = guest.getCabin().getCruiseGroup();
+        Cabin cabin = guest.getCabin();
+
+        cabin.setPaxNumber(guest.getCabin().getPaxNumber() - 1);
+        group.setSoldPax(group.getSoldPax() - 1);
+
+        updateCounts(group, cabin);
+        guestRepository.delete(guest);
 
 
 
@@ -87,9 +102,12 @@ public class GuestService {
         return Objects.requireNonNull(this.guestRepository.findAllByCabin_CruiseGroup_Id(id).orElse(null))
                 .stream()
                 .map(guest -> mapper.map(guest, GuestViewDto.class)).toList();
-
     }
 
 
+    private void updateCounts(CruiseGroup group, Cabin cabin){
+        this.cabinRepository.save(cabin);
+        this.groupRepository.save(group);
+    }
 
 }

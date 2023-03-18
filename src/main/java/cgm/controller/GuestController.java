@@ -100,4 +100,10 @@ public class GuestController {
     }
 
 
+    @DeleteMapping("/delete/{id}")
+    public String deleteGuest(@PathVariable Long id){
+        this.guestService.deleteGuest(id);
+
+        return "redirect:/groups/all";
+    }
 }
