@@ -162,4 +162,25 @@ public class GroupController {
         return "redirect:/groups/details/" + id;
 
     }
+
+    @GetMapping("delete")
+    public String getGroupsDelete(@AuthenticationPrincipal CurrentUser currentUser, Model model){
+        if (currentUser != null) {
+            model.addAttribute("firstName", currentUser.getFirstName());
+        }
+
+        List<CruiseGroup> groups = this.groupService.getAllGroups();
+
+        model.addAttribute("groups", groups);
+
+        return "groups-delete";
+    }
+
+    @GetMapping("delete/{id}")
+    public String deleteGroups(@PathVariable Long id){
+
+      this.groupService.deleteGroupById(id);
+
+        return "redirect:/groups/delete";
+    }
 }

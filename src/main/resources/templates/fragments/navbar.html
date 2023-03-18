@@ -27,11 +27,11 @@
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Group Management
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" th:href="@{/groups/add}">Add Group</a>
-                        <a class="dropdown-item" th:href="@{/groups/delete}">Delete Group</a>
+                    <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" style="color: cornflowerblue" th:href="@{/groups/add}">Add Group</a>
+                        <a class="dropdown-item" style="color: cornflowerblue" th:href="@{/groups/delete}">Delete Group</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" th:href="@{/auth/modify}">Modify User</a>
+                        <a class="dropdown-item" style="color: cornflowerblue" th:href="@{/auth/modify}">Modify User</a>
                     </div>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('MANAGER')">

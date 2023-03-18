@@ -50,7 +50,7 @@ public class Cabin extends BaseEntity{
     @Value("false")
     private boolean isFull;
 
-    @OneToMany(mappedBy = "cabin", targetEntity = Guest.class, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cabin", targetEntity = Guest.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Guest> guests;
 
     @ManyToOne

@@ -6,6 +6,7 @@ import cgm.model.entity.CruiseGroup;
 import cgm.repository.GroupRepository;
 import cgm.repository.ShipRepository;
 import cgm.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -63,6 +64,16 @@ public class GroupService {
         if(freeCabins.isEmpty()){
             cruiseGroup.setSoldOut(true);
             this.groupRepository.save(cruiseGroup);
+        }
+    }
+
+    @Transactional
+    public void deleteGroupById(Long id){
+        CruiseGroup groupToDelete = this.groupRepository.findById(id).orElse(null);
+
+        if(groupToDelete != null) {
+            this.groupRepository.delete(groupToDelete);
+            System.out.println(groupToDelete);
         }
     }
 }
