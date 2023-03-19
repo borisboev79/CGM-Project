@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div th:replace="~{fragments/head}"></div>
+<title>GrouMan Users</title>
+
+<body>
+
+<header>
+  <div th:replace="~{fragments/navbar}"></div>
+</header>
+<div class="container mb-3"></div>
+
+<div class="container rounded bg-light pt-2">
+  <div class="row mt-3">
+
+    <div class="col">
+
+      <table class="table-responsive-lg mx-auto mb-3 table-striped table-light text-center" style="width: 100%;">
+        <tr><h4 class="text-center">List of GrouMan Users</h4></tr>
+        <thead>
+        <tr style="font-weight: bold">
+          <th scope="col">Id</th>
+          <th scope="col">First Name</th>
+          <th scope="col">Last Name</th>
+          <th scope="col">Username</th>
+          <th scope="col">Roles</th>
+          <th scope="col">Branch</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody class="">
+        <tr th:each="user : ${allUsers}"
+            th:object="${user}">
+          <td th:text="*{id}"></td>
+          <td th:text="*{firstName}"></td>
+          <td th:text="*{lastName}"></td>
+          <td th:text="*{username}"></td>
+          <td th:text="*{roles}"></td>
+          <td th:text="*{branch}"></td>
+          <td><a class="btn btn-info btn-sm" th:href="@{/users/modify/{id}(id = *{id})}">Modify</a></td>
+          <td><a class="btn btn-info btn-sm bg-danger" th:href="@{/users/delete/{id}(id = *{id})}">Delete</a></td>
+
+        </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+</body>
+</html>

@@ -29,4 +29,9 @@ public class BranchEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "branch", targetEntity = UserEntity.class, fetch = FetchType.EAGER)
     private Set<UserEntity> employees;
+
+    @Override
+    public String toString() {
+        return code.name();
+    }
 }

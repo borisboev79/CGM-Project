@@ -19,4 +19,8 @@ public class RoleEntity extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Override
+    public String toString() {
+        return role.name();
+    }
 }

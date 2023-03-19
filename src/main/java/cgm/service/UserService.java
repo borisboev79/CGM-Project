@@ -1,6 +1,7 @@
 package cgm.service;
 
 import cgm.model.dto.UserRegistrationDto;
+import cgm.model.dto.UserViewDto;
 import cgm.model.entity.BranchEntity;
 import cgm.model.entity.RoleEntity;
 import cgm.model.entity.UserEntity;
@@ -8,11 +9,14 @@ import cgm.model.enums.BranchCode;
 import cgm.repository.BranchRepository;
 import cgm.repository.RoleRepository;
 import cgm.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -20,31 +24,21 @@ public class UserService {
     private final BranchRepository branchRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
-
- //   private final UserDetailsService userDetailsService;
-
+    private final ModelMapper mapper;
 
     @Autowired
-    public UserService(UserRepository userRepository, BranchRepository branchRepository, RoleRepository roleRepository, PasswordEncoder encoder
-            //, UserDetailsService userDetailsService
-    ) {
+    public UserService(UserRepository userRepository, BranchRepository branchRepository,
+                       RoleRepository roleRepository, PasswordEncoder encoder,
+                       ModelMapper mapper) {
         this.userRepository = userRepository;
         this.branchRepository = branchRepository;
         this.roleRepository = roleRepository;
+
         this.encoder = encoder;
-
-    //    this.userDetailsService = userDetailsService;
-
+        this.mapper = mapper;
     }
 
-/*
-    public UserEntity getUserByUsername(String username) {
-        return this.userRepository.findUserEntityByUsername(username).orElseThrow();
-    }
-*/
-
-
-    public void registerUser(UserRegistrationDto userRegistrationDto){
+    public void registerUser(UserRegistrationDto userRegistrationDto) {
 
         List<RoleEntity> roles = userRegistrationDto.getRoles()
                 .stream()
@@ -67,38 +61,23 @@ public class UserService {
 
     }
 
-    /*public void registerUser(UserRegistrationDto userRegistrationDto,
-                             Consumer<Authentication> successfulLoginProcessor) {
+    public List<UserViewDto> getAllUsers() {
 
-        List<RoleEntity> roles = userRegistrationDto.getRoles()
-                .stream()
-                .map(role -> this.roleRepository.findRoleEntityByRole(role).orElseThrow())
-                .toList();
+        List<UserViewDto> userViews = new ArrayList<>();
 
-        BranchEntity branch = this.branchRepository.findBranchEntityByCode(BranchCode.valueOf(userRegistrationDto.getBranch().name()))
-                .orElseThrow(NullPointerException::new);
+        this.userRepository.findAll().forEach(user -> {
 
-        UserEntity user = UserEntity.builder()
-                .username(userRegistrationDto.getUsername())
-                .password(encoder.encode(userRegistrationDto.getPassword()))
-                .firstName(userRegistrationDto.getFirstName())
-                .lastName(userRegistrationDto.getLastName())
-                .branch(branch)
-                .roles(roles)
-                .build();
+            UserViewDto userViewDto = new UserViewDto();
 
-        userRepository.saveAndFlush(user);
+            mapper.map(user, userViewDto);
+            userViewDto.setRoles(user.getRoles()
+                    .stream()
+                    .map(RoleEntity::toString)
+                    .collect(Collectors.joining(", ")));
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(userRegistrationDto.getUsername());
+            userViews.add(userViewDto);
+        });
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                userDetails.getPassword(),
-                userDetails.getAuthorities()
-        );
-
-        successfulLoginProcessor.accept(authentication);
-    }*/
-
-
+        return userViews;
+    }
 }

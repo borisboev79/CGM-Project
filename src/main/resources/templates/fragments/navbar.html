@@ -22,21 +22,23 @@
                     <a class="nav-link" th:href="@{/groups/all}">All Groups</a>
                 </li>
 
+                <li class="nav-item" sec:authorize="hasRole('MANAGER')">
+                    <a class="nav-link" th:href="@{/users/register}">Register Employee</a>
+                </li>
+
                 <li class="nav-item dropdown" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Group Management
+                        Manage Application
                     </a>
                     <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" style="color: cornflowerblue" th:href="@{/groups/add}">Add Group</a>
                         <a class="dropdown-item" style="color: cornflowerblue" th:href="@{/groups/delete}">Delete Group</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" style="color: cornflowerblue" th:href="@{/auth/modify}">Modify User</a>
+                        <a class="dropdown-item" style="color: cornflowerblue" th:href="@{/users/modify}">Modify User</a>
                     </div>
                 </li>
-                <li class="nav-item" sec:authorize="hasRole('MANAGER')">
-                    <a class="nav-link" th:href="@{/users/register}">Register Employee</a>
-                </li>
+
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <div class="form-inline my-2 my-lg-0 border px-3">
                         <div class="logged-user">
