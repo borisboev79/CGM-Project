@@ -16,7 +16,7 @@
 <div class="container">
     <h2 class="text-center text-white">Register User</h2>
     <form th:method="POST"
-          th:action="@{/auth/register}"
+          th:action="@{/users/register}"
           th:object="${userRegistrationDto}"
           class="main-form mx-auto col-md-8 justify-content-center">
         <div class="row">
@@ -85,7 +85,7 @@
 
             </div>
 
-            <!-- THIS IS A TEST-->
+
 
             <div class="form-group col-md-6" id="roles" sec:authorize="hasRole('ADMIN')">
                 <label class="text-center text-white font-weight-bold" for="roles">Roles</label>
@@ -122,8 +122,9 @@
             </div>
 
 
-            <!--END OF TEST-->
 
+
+            <!-- THIS IS THE OLD VERSION MULTI-SELECT DROPDOWN -->
 
             <!--<div class="form-group col-md-6" sec:authorize="hasRole('ADMIN')">
                 <label class="text-center text-white font-weight-bold" for="roles">Roles</label>
@@ -156,6 +157,8 @@
 
             </div>-->
 
+            <!--END OF MULTI-SELECT DIV -->
+
 
             <div class="form-group col-md-6">
                 <label class="text-center text-white font-weight-bold" for="branch">Branch</label>
@@ -169,15 +172,11 @@
                     <option sec:authorize="hasRole('ADMIN')">- Choose branch -</option>
                     <option th:each="branch : ${branches}"
                             th:value="${branch.name}"
-                            th:text="${branch.name}">
-
-                    </option>
+                            th:text="${branch.name}"></option>
                 </select>
                 <p class="invalid-feedback">
                     Choosing a branch is mandatory.
                 </p>
-
-
             </div>
 
         </div>
