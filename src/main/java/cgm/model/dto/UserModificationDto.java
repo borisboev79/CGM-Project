@@ -15,12 +15,12 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserRegistrationDto {
+public class UserModificationDto {
 
     private Long id;
 
-    @NotBlank(message = "Username is mandatory")
-    @Size(min = 3, message = "Username too short")
+    //@NotBlank(message = "Username is mandatory")
+    //@Size(min = 3, message = "Username too short")
     @ValidateUserExistence(message = "This username already exists!")
     private String username;
 
@@ -37,7 +37,7 @@ public class UserRegistrationDto {
     private String lastName;
 
     @NotNull(message = "There should be at least one role selected!")
-    private List<Role> roles;
+    private List<String> roles;
 
     @NotNull(message = "Choosing a branch is mandatory.")
     private BranchCode branch;

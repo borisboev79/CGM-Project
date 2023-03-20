@@ -1,12 +1,8 @@
 package cgm.model.dto;
 
-import cgm.model.enums.BranchCode;
-import cgm.model.enums.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -17,14 +13,22 @@ public class UserViewDto {
 
     private String username;
 
-    private String password = "********";
+    private String password;
 
     private String firstName;
 
     private String lastName;
 
-
     private String roles;
 
     private String branch;
+
+    @Override
+    public String toString() {
+        return "UserViewDto{"+ id + " " +
+                username + " " +
+                firstName + " " +
+                lastName + " [" +
+                roles + "] " + branch.toString() + '}';
+    }
 }

@@ -2,6 +2,8 @@ package cgm.controller;
 
 
 import cgm.model.CurrentUser;
+import cgm.model.ObjectNotFoundException;
+import cgm.model.dto.UserModificationDto;
 import cgm.model.dto.UserRegistrationDto;
 import cgm.model.dto.UserViewDto;
 import cgm.model.enums.BranchCode;
@@ -33,6 +35,11 @@ public class UserController {
     @ModelAttribute(name = "userRegistrationDto")
     public UserRegistrationDto userRegistrationDto() {
         return new UserRegistrationDto();
+    }
+
+    @ModelAttribute(name = "userModificationDto")
+    public UserModificationDto userModificationDto(){
+        return new UserModificationDto();
     }
 
     @GetMapping("/register")
@@ -68,8 +75,10 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/modify")
-    public String getUsersList(Model model){
+    @GetMapping("/all")
+    public String getUsersList(@AuthenticationPrincipal CurrentUser currentUser, Model model){
+
+        model.addAttribute("firstName", currentUser.getFirstName());
 
         List<UserViewDto> allUsers = this.userService.getAllUsers();
 
@@ -79,10 +88,54 @@ public class UserController {
     }
 
     @GetMapping("/modify/{id}")
-    public String getModifyUser(@PathVariable Long id, Model model){
+    public String getModifyUser(@PathVariable Long id, @AuthenticationPrincipal CurrentUser currentUser, Model model){
+
+        model.addAttribute("firstName", currentUser.getFirstName());
+
+        UserModificationDto user = this.userService.getUserById(id);
+
+        if(user == null){
+
+            throw new ObjectNotFoundException(id, "user");
+        }
+
+        model.addAttribute("user", user);
+        model.addAttribute("userBranch", user.getBranch().name());
+
+        model.addAttribute("branches", BranchCode.values());
+
+        model.addAttribute("adminRole", Role.ADMIN);
+        model.addAttribute("managerRole", Role.MANAGER);
+        model.addAttribute("userRole", Role.USER);
 
         return "users-modify";
     }
+
+    @PostMapping("/modify/{id}")
+    public String modifyUser(@PathVariable Long id,
+                             @Valid @ModelAttribute(name = "userModificationDto") UserModificationDto userModificationDto,
+                             BindingResult bindingResult
+                            ,RedirectAttributes redirectAttributes
+                             ){
+
+        String userId = String.valueOf(id);
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes
+                    .addFlashAttribute("userModificationDto", userModificationDto)
+                    .addFlashAttribute("org.springframework.validation.BindingResult.userModificationDto", bindingResult);
+
+            String redirectString = String.format("redirect:/users/modify/%s", userId);
+
+            return redirectString;
+        }
+
+        this.userService.submitChanges(userModificationDto, id);
+
+
+        return "redirect:/users/all";
+    }
+
 
 
 }

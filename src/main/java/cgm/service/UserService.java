@@ -1,5 +1,6 @@
 package cgm.service;
 
+import cgm.model.dto.UserModificationDto;
 import cgm.model.dto.UserRegistrationDto;
 import cgm.model.dto.UserViewDto;
 import cgm.model.entity.BranchEntity;
@@ -80,4 +81,59 @@ public class UserService {
 
         return userViews;
     }
+
+
+    public UserModificationDto getUserById(Long id) {
+
+        UserEntity user = this.userRepository.findById(id).orElse(null);
+
+        UserModificationDto modifiedUser = mapper.map(user, UserModificationDto.class);
+        if(user == null){
+            return null;
+        }
+        modifiedUser.setBranch(user.getBranch().getCode());
+        modifiedUser.setRoles(user.getRoles().stream().map(roleEntity -> roleEntity.getRole().name()).toList());
+
+        return modifiedUser;
+
+    }
+
+    public void submitChanges(UserModificationDto userModificationDto,Long id) {
+
+        UserEntity user = this.userRepository.findById(id).orElseThrow();
+
+
+
+        if(!userModificationDto.getUsername().isBlank()){
+            user.setUsername(userModificationDto.getUsername());
+        } else {
+            user.setUsername(user.getUsername());
+        }
+        if(!userModificationDto.getPassword().equals("********")){
+            user.setPassword(encoder.encode(userModificationDto.getPassword()));
+        } else {
+            user.setPassword(user.getPassword());
+        }
+        if(!userModificationDto.getFirstName().equals(user.getFirstName())){
+            user.setFirstName(userModificationDto.getFirstName());
+        }
+        if(!userModificationDto.getLastName().equals(user.getLastName())){
+            user.setLastName(userModificationDto.getLastName());
+        }
+        if(!userModificationDto.getBranch().equals(user.getBranch().getCode())){
+            BranchCode branchCode = userModificationDto.getBranch();
+            if(this.branchRepository.findBranchEntityByCode(branchCode).isPresent()) {
+                BranchEntity branch = this.branchRepository.findBranchEntityByCode(branchCode).get();
+                user.setBranch(branch);
+            }
+
+        }
+
+
+
+
+        this.userRepository.save(user);
+
+    }
+
 }
