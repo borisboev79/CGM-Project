@@ -118,19 +118,16 @@ public class UserController {
                             ,RedirectAttributes redirectAttributes
                              ){
 
-        String userId = String.valueOf(id);
 
         if (bindingResult.hasErrors()) {
             redirectAttributes
                     .addFlashAttribute("userModificationDto", userModificationDto)
                     .addFlashAttribute("org.springframework.validation.BindingResult.userModificationDto", bindingResult);
 
-            String redirectString = String.format("redirect:/users/modify/%s", userId);
-
-            return redirectString;
+            return "redirect:/users/modify/" + id;
         }
 
-        this.userService.submitChanges(userModificationDto, id);
+        this.userService.modifyUser(userModificationDto, id);
 
 
         return "redirect:/users/all";

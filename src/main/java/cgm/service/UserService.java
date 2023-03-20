@@ -101,7 +101,7 @@ public class UserService {
     }
 
     @Transactional
-    public void submitChanges(UserModificationDto userModificationDto,Long id) {
+    public void modifyUser(UserModificationDto userModificationDto,Long id) {
 
         UserEntity user = this.userRepository.findById(id).orElseThrow();
 
@@ -138,7 +138,7 @@ public class UserService {
 
         user.clearRoles();
 
-      //  user.setRoles(roles);
+        roles.forEach(role -> user.getRoles().add(role));
 
 
         this.userRepository.save(user);
