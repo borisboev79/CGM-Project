@@ -26,11 +26,15 @@ public class UserEntity extends BaseEntity {
     @Column(name="last-name", nullable = false)
     private String lastName;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<RoleEntity> roles;
 
     @ManyToOne(optional = false)
     private BranchEntity branch;
+
+    public void clearRoles(){
+        roles.clear();
+    }
 
 
 }

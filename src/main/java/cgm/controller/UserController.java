@@ -92,15 +92,15 @@ public class UserController {
 
         model.addAttribute("firstName", currentUser.getFirstName());
 
-        UserModificationDto user = this.userService.getUserById(id);
+        UserModificationDto userModificationDto = this.userService.getUserById(id);
 
-        if(user == null){
+        if(userModificationDto == null){
 
             throw new ObjectNotFoundException(id, "user");
         }
 
-        model.addAttribute("user", user);
-        model.addAttribute("userBranch", user.getBranch().name());
+        model.addAttribute("userModificationDto", userModificationDto);
+        model.addAttribute("userBranch", userModificationDto.getBranch().name());
 
         model.addAttribute("branches", BranchCode.values());
 

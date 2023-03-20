@@ -7,9 +7,11 @@ import cgm.model.entity.BranchEntity;
 import cgm.model.entity.RoleEntity;
 import cgm.model.entity.UserEntity;
 import cgm.model.enums.BranchCode;
+import cgm.model.enums.Role;
 import cgm.repository.BranchRepository;
 import cgm.repository.RoleRepository;
 import cgm.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -98,9 +100,15 @@ public class UserService {
 
     }
 
+    @Transactional
     public void submitChanges(UserModificationDto userModificationDto,Long id) {
 
         UserEntity user = this.userRepository.findById(id).orElseThrow();
+
+        List<RoleEntity> roles = userModificationDto.getRoles()
+                .stream()
+                .map(role -> this.roleRepository.findRoleEntityByRole(Role.valueOf(role)).orElseThrow())
+                .toList();
 
 
 
@@ -126,10 +134,11 @@ public class UserService {
                 BranchEntity branch = this.branchRepository.findBranchEntityByCode(branchCode).get();
                 user.setBranch(branch);
             }
-
         }
 
+        user.clearRoles();
 
+      //  user.setRoles(roles);
 
 
         this.userRepository.save(user);
