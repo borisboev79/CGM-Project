@@ -1,7 +1,7 @@
 package cgm.model.dto;
 
 import cgm.model.enums.BranchCode;
-import cgm.model.enums.Role;
+import cgm.util.validation.BlankOrMinSize;
 import cgm.util.validation.ValidateUserExistence;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,8 +19,7 @@ public class UserModificationDto {
 
     private Long id;
 
-    //@NotBlank(message = "Username is mandatory")
-    //@Size(min = 3, message = "Username too short")
+    @BlankOrMinSize(message = "Username too short")
     @ValidateUserExistence(message = "This username already exists!")
     private String username;
 
