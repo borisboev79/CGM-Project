@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -145,4 +146,12 @@ public class UserService {
 
     }
 
+    public UserEntity findById(Long id) {
+        return this.userRepository.findById(id).orElse(null);
+    }
+
+    @Transactional
+    public void deleteUser(UserEntity user) {
+        this.userRepository.delete(user);
+    }
 }

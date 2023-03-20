@@ -6,6 +6,7 @@ import cgm.model.ObjectNotFoundException;
 import cgm.model.dto.UserModificationDto;
 import cgm.model.dto.UserRegistrationDto;
 import cgm.model.dto.UserViewDto;
+import cgm.model.entity.UserEntity;
 import cgm.model.enums.BranchCode;
 import cgm.model.enums.Role;
 import cgm.service.UserService;
@@ -42,6 +43,8 @@ public class UserController {
         return new UserModificationDto();
     }
 
+    //REGISTER USER
+
     @GetMapping("/register")
     private String getRegisterUser(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
 
@@ -75,6 +78,8 @@ public class UserController {
         return "redirect:/";
     }
 
+    //VIEW ALL USERS
+
     @GetMapping("/all")
     public String getUsersList(@AuthenticationPrincipal CurrentUser currentUser, Model model){
 
@@ -86,6 +91,9 @@ public class UserController {
 
         return "users-all";
     }
+
+
+    //MODIFY USER
 
     @GetMapping("/modify/{id}")
     public String getModifyUser(@PathVariable Long id, @AuthenticationPrincipal CurrentUser currentUser, Model model){
@@ -114,8 +122,8 @@ public class UserController {
     @PostMapping("/modify/{id}")
     public String modifyUser(@PathVariable Long id,
                              @Valid @ModelAttribute(name = "userModificationDto") UserModificationDto userModificationDto,
-                             BindingResult bindingResult
-                            ,RedirectAttributes redirectAttributes
+                             BindingResult bindingResult,
+                            RedirectAttributes redirectAttributes
                              ){
 
 
@@ -129,6 +137,21 @@ public class UserController {
 
         this.userService.modifyUser(userModificationDto, id);
 
+
+        return "redirect:/users/all";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable Long id){
+
+        UserEntity user = this.userService.findById(id);
+
+        if(user == null){
+
+            throw new ObjectNotFoundException(id, "user");
+        }
+
+        this.userService.deleteUser(user);
 
         return "redirect:/users/all";
     }
