@@ -27,11 +27,9 @@
                        th:errorclass="is-invalid"
                        class="form-control"
                        placeholder="First name"/>
-                <p class="invalid-feedback">
-                    First name is mandatory.
-                </p>
-                <small th:if="${#fields.hasErrors('firstName')}" th:errorclass="field-error" th:errors="*{firstName}"
-                       class="text-danger">VERY WRONG! </small>
+
+                <small th:if="${#fields.hasErrors('firstName')}" th:errorclass="error" th:errors="*{firstName}"
+                       class="text-danger"></small>
             </div>
             <div class="form-group col-md-6 mb-3">
                 <label for="lastName" class="text-white font-weight-bold">Last Name</label>

@@ -121,18 +121,18 @@ public class UserController {
 
     @GetMapping("/errors/{id}")
     public String getErrorsModifying(@PathVariable Long id, @AuthenticationPrincipal CurrentUser currentUser,
-                                    @ModelAttribute(name = "userModificationDto") UserModificationDto userModificationDto,
                                      Model model){
 
         model.addAttribute("firstName", currentUser.getFirstName());
 
-        if (userModificationDto == null) {
 
-            throw new ObjectNotFoundException(id, "user");
-        }
-        model.addAttribute("userModificationDto", userModificationDto);
+        model.addAttribute("branches", BranchCode.values());
 
-        return "redirect:/users/modify/" + id;
+        model.addAttribute("adminRole", Role.ADMIN);
+        model.addAttribute("managerRole", Role.MANAGER);
+        model.addAttribute("userRole", Role.USER);
+
+        return "users-modify";
     }
 
     @PostMapping("/modify/{id}")

@@ -4,6 +4,7 @@ import cgm.model.enums.BranchCode;
 import cgm.model.enums.Role;
 import cgm.util.validation.ValidateUserExistence;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
