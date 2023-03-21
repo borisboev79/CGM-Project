@@ -4,6 +4,7 @@ import cgm.model.CurrentUser;
 import cgm.model.entity.RoleEntity;
 import cgm.model.entity.UserEntity;
 import cgm.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +22,7 @@ public class ApplicationUserDetailsService implements UserDetailsService {
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return
                 userRepository.

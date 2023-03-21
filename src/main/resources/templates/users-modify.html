@@ -21,16 +21,17 @@
           class="main-form mx-auto col-md-8 justify-content-center">
         <div class="row">
             <div class="form-group col-md-6 mb-3">
-                <label for="firstName" class="text-white font-weight-bold">First Name</label>
-                <input id="firstName"
-                       name="firstName"
-                       type="text"
+                <label class="text-white font-weight-bold">First Name</label>
+                <input type="text"
+                       th:field="*{firstName}"
                        th:errorclass="is-invalid"
-                       th:value="*{firstName}"
                        class="form-control"
                        placeholder="First name"/>
+                <p class="invalid-feedback">
+                    First name is mandatory.
+                </p>
                 <small th:if="${#fields.hasErrors('firstName')}" th:errorclass="field-error" th:errors="*{firstName}"
-                       class="text-danger"> </small>
+                       class="text-danger">VERY WRONG! </small>
             </div>
             <div class="form-group col-md-6 mb-3">
                 <label for="lastName" class="text-white font-weight-bold">Last Name</label>
@@ -41,6 +42,7 @@
                        th:errorclass="is-invalid"
                        class="form-control"
                        placeholder="Last name"/>
+
                 <small th:if="${#fields.hasErrors('lastName')}" th:errorclass="error" th:errors="*{lastName}"
                        class="text-danger"> </small>
             </div>
@@ -108,9 +110,7 @@
 
             <div class="form-group col-md-6">
                 <label class="text-center text-white font-weight-bold" for="branch">Branch</label>
-                <select id="branch" name="branch"
-                        th:errorclass="is-invalid"
-                        class="form-control">
+                <select id="branch" name="branch" class="form-control">
 
                     <option th:text="*{branch}"></option>
                     <option th:each="branch : ${branches}"
@@ -119,9 +119,7 @@
 
                     ></option>
                 </select>
-                <p class="invalid-feedback">
-                    Choosing a branch is mandatory.
-                </p>
+
             </div>
 
         </div>

@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @ModelAttribute(name = "userModificationDto")
-    public UserModificationDto userModificationDto(){
+    public UserModificationDto userModificationDto() {
         return new UserModificationDto();
     }
 
@@ -73,7 +73,7 @@ public class UserController {
 
             return "redirect:/users/register";
         }
-        userService.registerUser(userRegistrationDto);
+        this.userService.registerUser(userRegistrationDto);
 
         return "redirect:/";
     }
@@ -81,7 +81,7 @@ public class UserController {
     //VIEW ALL USERS
 
     @GetMapping("/all")
-    public String getUsersList(@AuthenticationPrincipal CurrentUser currentUser, Model model){
+    public String getUsersList(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
 
         model.addAttribute("firstName", currentUser.getFirstName());
 
@@ -96,13 +96,13 @@ public class UserController {
     //MODIFY USER
 
     @GetMapping("/modify/{id}")
-    public String getModifyUser(@PathVariable Long id, @AuthenticationPrincipal CurrentUser currentUser, Model model){
+    public String getModifyUser(@PathVariable Long id, @AuthenticationPrincipal CurrentUser currentUser, Model model) {
 
         model.addAttribute("firstName", currentUser.getFirstName());
 
         UserModificationDto userModificationDto = this.userService.getUserById(id);
 
-        if(userModificationDto == null){
+        if (userModificationDto == null) {
 
             throw new ObjectNotFoundException(id, "user");
         }
@@ -119,12 +119,28 @@ public class UserController {
         return "users-modify";
     }
 
+    @GetMapping("/errors/{id}")
+    public String getErrorsModifying(@PathVariable Long id, @AuthenticationPrincipal CurrentUser currentUser,
+                                    @ModelAttribute(name = "userModificationDto") UserModificationDto userModificationDto,
+                                     Model model){
+
+        model.addAttribute("firstName", currentUser.getFirstName());
+
+        if (userModificationDto == null) {
+
+            throw new ObjectNotFoundException(id, "user");
+        }
+        model.addAttribute("userModificationDto", userModificationDto);
+
+        return "redirect:/users/modify/" + id;
+    }
+
     @PostMapping("/modify/{id}")
-    public String modifyUser(@PathVariable Long id,
-                             @Valid @ModelAttribute(name = "userModificationDto") UserModificationDto userModificationDto,
+    public String modifyUser(@Valid @ModelAttribute(name = "userModificationDto") UserModificationDto userModificationDto,
                              BindingResult bindingResult,
-                            RedirectAttributes redirectAttributes
-                             ){
+                             RedirectAttributes redirectAttributes,
+                             @PathVariable Long id
+    ) {
 
 
         if (bindingResult.hasErrors()) {
@@ -132,7 +148,7 @@ public class UserController {
                     .addFlashAttribute("userModificationDto", userModificationDto)
                     .addFlashAttribute("org.springframework.validation.BindingResult.userModificationDto", bindingResult);
 
-            return "redirect:/users/modify/" + id;
+            return "redirect:/users/errors/" + id;
         }
 
         this.userService.modifyUser(userModificationDto, id);
@@ -142,11 +158,11 @@ public class UserController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteUser(@PathVariable Long id){
+    public String deleteUser(@PathVariable Long id) {
 
         UserEntity user = this.userService.findById(id);
 
-        if(user == null){
+        if (user == null) {
 
             throw new ObjectNotFoundException(id, "user");
         }
@@ -155,7 +171,6 @@ public class UserController {
 
         return "redirect:/users/all";
     }
-
 
 
 }
