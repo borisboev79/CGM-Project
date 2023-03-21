@@ -25,18 +25,20 @@ public class ShowAllPaxController {
         return ResponseEntity.ok(this.guestService.getAllGuests(id));
     }
 
-    @PostMapping("/edit")
+    @PutMapping("/edit")
     public ResponseEntity<GuestViewDto> editGuest(@RequestBody GuestViewDto guestViewDto){
-        return ResponseEntity.ok(this.guestService.editGuest(guestViewDto));
+        GuestViewDto guestViewDto1 = this.guestService.editGuest(guestViewDto);
+
+        return ResponseEntity.ok(guestViewDto1);
     }
 
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteGuest(@PathVariable("id") Long id, @RequestBody GuestViewDto guestViewDto){
+    public ResponseEntity<Void> deleteGuest(@PathVariable("id") Long id){
 
-       this.guestService.deleteGuest(guestViewDto);
+       this.guestService.deleteGuest(id);
 
-        return "redirect:/api/guests/" + id;
+        return ResponseEntity.ok(null);
     }
 
 }

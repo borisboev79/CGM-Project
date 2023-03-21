@@ -34,6 +34,7 @@ public class GuestViewDto {
     private String phone;
 
     private Instant birthDate;
+
     private Integer age;
 
     private String EGN;

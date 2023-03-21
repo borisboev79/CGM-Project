@@ -7,6 +7,7 @@ import cgm.service.ApplicationUserDetailsService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,7 +40,7 @@ public class SecurityConfiguration {
                 authorizeHttpRequests().
                 requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll().
                 requestMatchers("/", "/auth/login", "/groups/all", "/auth/login-error").permitAll().
-                requestMatchers("/api/**").permitAll().
+                requestMatchers(HttpMethod.PUT, "/api/**").permitAll().
                 requestMatchers("/auth/register").hasRole(Role.MANAGER.name()).
                 requestMatchers("/groups", "/groups/add", "/groups/delete", "auth/modify").hasRole(Role.ADMIN.name()).
                 anyRequest().authenticated().

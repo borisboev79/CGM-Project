@@ -77,9 +77,9 @@ public class GuestService {
     }
 
     @Transactional
-    public void deleteGuest(GuestViewDto guestViewDto) {
+    public void deleteGuest(Long id) {
 
-        Guest guest = this.guestRepository.findById(guestViewDto.getId()).orElseThrow(ObjectNotFoundException::new);
+        Guest guest = this.guestRepository.findById(id).orElseThrow(ObjectNotFoundException::new);
         CruiseGroup group = guest.getCabin().getCruiseGroup();
         Cabin cabin = guest.getCabin();
 
@@ -87,7 +87,9 @@ public class GuestService {
         group.setSoldPax(group.getSoldPax() - 1);
 
         updateCounts(group, cabin);
-        guestRepository.delete(guest);
+        this.guestRepository.deleteById(id);
+        this.guestRepository.flush();
+
 
 
 
@@ -119,15 +121,16 @@ public class GuestService {
         Instant dtoBirthDate = guestViewDto.getBirthDate();
 
 
-        Guest guest = this.guestRepository.findById(guestViewDto.getId()).orElse(null);
+        Guest guest = this.guestRepository.findById(guestViewDto.getId())
+                .orElseThrow(() -> new ObjectNotFoundException(guestViewDto.getId(), "guest"));
 
-        if(guest != null){
+
             if(!guest.getFullName().equals(dtoFullName)){
                 guest.setFullName(dtoFullName);
             }
             if(!guest.getBirthDate().equals(dtoBirthDate)){
                 guest.setBirthDate(dtoBirthDate);
-                guest.setAge(Math.abs((int) ChronoUnit.YEARS.between(LocalDate.now(), dtoBirthDate)));
+                //guest.setAge(Math.abs((int) ChronoUnit.YEARS.between(LocalDate.now(), dtoBirthDate)));
             }
             if(!guest.getEmail().equals(dtoEmail)){
                 guest.setEmail(dtoEmail);
@@ -142,12 +145,10 @@ public class GuestService {
                 guest.setPassportNumber(dtoPassport);
             }
 
-            this.guestRepository.save(guest);
+            guest = this.guestRepository.save(guest);
 
             return this.mapper.map(guest, GuestViewDto.class);
 
-        }
-        return null;
     }
 
     private Instant dateToInstant(LocalDate date) {

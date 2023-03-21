@@ -15,7 +15,7 @@
 <div class="container">
     <h2 class="text-center text-white">Edit User</h2>
     <form
-          th:method="post"
+          th:method="put"
           th:action="@{/users/modify/{id}(id = *{id})}"
           th:object="${userModificationDto}"
           class="main-form mx-auto col-md-8 justify-content-center">

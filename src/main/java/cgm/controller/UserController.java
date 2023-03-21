@@ -135,7 +135,7 @@ public class UserController {
         return "users-modify";
     }
 
-    @PostMapping("/modify/{id}")
+    @PutMapping("/modify/{id}")
     public String modifyUser(@Valid @ModelAttribute(name = "userModificationDto") UserModificationDto userModificationDto,
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes,

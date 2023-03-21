@@ -19,6 +19,6 @@ public class ObjectNotFoundAdviceController {
         modelAndView.addObject("itemType", notFoundException.getItemType());
 
         return modelAndView;
-
     }
+
 }

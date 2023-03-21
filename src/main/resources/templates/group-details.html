@@ -27,12 +27,18 @@
             </div>
             <ul class="offer-details list-group list-group-flush">
                 <li class="list-group-item">
-                    <div class="card-text" th:unless="*{soldOut}"><strong>• Group total: <th:block
-                            th:text="*{totalPax}"/></strong>
-                      / Sold beds: <strong><th:block
-                            th:text="*{soldPax}"/></strong>
-                      / Available beds: <strong><th:block
-                            th:text="*{totalPax - soldPax}"/></strong>
+                    <div class="card-text" th:unless="*{soldOut}"><strong>• Group total:
+                        <th:block
+                                th:text="*{totalPax}"/>
+                    </strong>
+                        / Sold beds: <strong>
+                            <th:block
+                                    th:text="*{soldPax}"/>
+                        </strong>
+                        / Available beds: <strong>
+                            <th:block
+                                    th:text="*{totalPax - soldPax}"/>
+                        </strong>
                     </div>
                     <div class="card-text text-danger" th:if="*{soldOut}"><strong>• GROUP SOLD OUT</strong>
                     </div>
@@ -47,13 +53,14 @@
             <div class="card-body">
                 <a class="btn btn-info btn-lg" sec:authorize="hasRole('ADMIN')"
                    th:href="@{/cabins/add/{id}(id = ${cruiseGroup.id})}">Add Cabins</a>
-                <button th:onclick="fetchPax([[${cruiseGroup.id}]])" class="btn btn-info btn-lg" id="show-pax-btn">Show All Passengers</button>
-                <button th:onclick="showHideContainer()" class="btn btn-info btn-lg d-none" id="hide-pax-btn">Hide Passengers</button>
+                <button th:onclick="fetchPax([[${cruiseGroup.id}]])" class="btn btn-info btn-lg" id="show-pax-btn">Show
+                    All Passengers
+                </button>
+                <button th:onclick="showHideContainer()" class="btn btn-info btn-lg d-none" id="hide-pax-btn">Hide
+                    Passengers
+                </button>
             </div>
         </div>
-
-
-
 
 
         <div class="col-lg-6">
@@ -149,6 +156,10 @@
     </div>
 
 </div>
+<input id="csrf"
+       type="hidden"
+       th:name="${_csrf.headerName}"
+       th:value="${_csrf.token}">
 
 <div class="container" th:replace="~{fragments/footer}"></div>
 

@@ -6,13 +6,14 @@ const fetchPax = async (id) => {
         headers: {
             'Content-type': 'application/json'
         }
-    });
-    const resp = await response.json();
-
-    resp.forEach(el => {
-            tBody.appendChild(createTR(el))
+    })
+        .catch(err => {
+            console.log("Error SHIT, ", err)
         })
-
+    const resp = await response.json();
+    resp.forEach(pax => {
+        tBody.appendChild(createTR(pax))
+    })
     showHideContainer(true);
 }
 
@@ -33,30 +34,45 @@ const showHideContainer = (show) => {
 const createTR = (pax) => {
     const tr = document.createElement("tr");
     const inputs = {}
+    let trData = {...pax}
     const editCallback = () => {
-        const editFullName = createEditableTD(pax.fullName, tr, fullName, "inputFullName", validateFullName)
-        const editBirthDate = createEditableTD(paxDate, tr, birthDate, "inputBirthDate", validateBirthDate)
-        const editAge = createEditableTD(pax.age, tr, age)
-        const editEmail= createEditableTD(pax.email, tr, email)
-        const editPhone = createEditableTD(pax.phone, tr, phone)
-        const editEgn = createEditableTD(pax.egn, tr, egn)
-        const editPassport = createEditableTD(pax.passportNumber, tr, passport)
+        const editFullName = createEditableTD(pax.fullName, tr, fullName, "fullName", validateFullName)
+        const editBirthDate = createEditableTD(paxDate, tr, birthDate, "birthDate", validateBirthDate)
+        const editEmail= createEditableTD(pax.email, tr, email, "email", () => true)
+        const editPhone = createEditableTD(pax.phone, tr, phone, "phone", () => true)
+        const editEgn = createEditableTD(pax.egn, tr, egn, "egn", () => true)
+        const editPassport = createEditableTD(pax.passportNumber, tr, passport, "passportNumber", () => true)
 
         const tdSaveBtn = createTD()
-        const btnSave = createTDButton(undefined, "Save")
+        const btnSave = createTDButton(async () => {
+            console.log("new data", trData)
+            const response = await sendUpdate(trData)
+            pax = {...response}
+            toggleCallback(response)
+        }, "Save")
+
         tdSaveBtn.appendChild(btnSave)
         tr.replaceChild(tdSaveBtn, tdEdit)
 
         const tdCancelBtn = createTD()
-        const btnCancel = createTDButton(cancelCallback, "Cancel")
+        const btnCancel = createTDButton(() => toggleCallback(undefined), "Cancel")
         btnCancel.classList.add("bg-danger")
         tdCancelBtn.appendChild(btnCancel)
         tr.replaceChild(tdCancelBtn, tdDelete)
 
-        function cancelCallback() {
+        function toggleCallback(responseData) {
+            if (responseData) {
+                fullName.textContent = responseData.fullName
+                const paxDate = new Date(responseData.birthDate).toLocaleDateString()
+                birthDate.textContent = paxDate
+                email.textContent = responseData.email
+                phone.textContent = responseData.phone
+                egn.textContent = responseData.egn
+                passport.textContent = responseData.passportNumber
+            }
+            console.log("fullName", fullName)
             tr.replaceChild(fullName, editFullName.td)
             tr.replaceChild(birthDate, editBirthDate.td)
-            tr.replaceChild(age, editAge.td)
             tr.replaceChild(email, editEmail.td)
             tr.replaceChild(phone, editPhone.td)
             tr.replaceChild(egn, editEgn.td)
@@ -97,6 +113,17 @@ const createTR = (pax) => {
 
                 if (validInputs) {
                     btnSave.removeAttribute("disabled")
+                    let newValue;
+                    if(inputName === 'birthDate') {
+                        newValue = dateConverter(inputs[inputName].value).toISOString()
+                        console.log("newValue", newValue)
+                    } else {
+                        newValue = inputs[inputName].value
+                    }
+                    trData = {
+                        ...trData,
+                        [inputName]: newValue
+                    }
                 } else {
                     btnSave.setAttribute('disabled', true)
                 }
@@ -132,7 +159,9 @@ const createTR = (pax) => {
     tdEdit.appendChild(btnEdit)
     tr.appendChild(tdEdit)
     const tdDelete = createTD()
-    tdDelete.appendChild(createTDButton(undefined, "Delete")).classList.add("bg-danger")
+    tdDelete.appendChild(createTDButton(async () => {
+        await sendDelete(pax.id, tBody, tr)
+    }, "Delete")).classList.add("bg-danger")
     tr.appendChild(tdDelete)
 
     return tr
@@ -160,11 +189,60 @@ function validateBirthDate(value){
     if (!value) {
         return false
     }
+
+    const date = dateConverter(value)
+
+    return date <= Date.now();
+}
+
+function dateConverter(value) {
     const dateParts = value.split("/")
     const formattedDate = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2]
     const date = new Date(formattedDate)
+    return date
+}
 
-    return date <= Date.now();
+async function sendUpdate(data) {
+
+    const csrfHeaderName = document.getElementById("csrf").getAttribute("name")
+    const csrfHeaderToken = document.getElementById("csrf").getAttribute("value")
+
+    const resp = await fetch(`${hostName}/api/guests/edit`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+            'Content-type': 'application/json',
+            [csrfHeaderName]: csrfHeaderToken
+        }
+    })
+        .catch(err => {
+            console.log("Error SHIT, ", err)
+        });
+    const jsonResp = await resp.json();
+    return jsonResp;
+}
+
+async function sendDelete(id, parentNode, childNode) {
+    const csrfHeaderName = document.getElementById("csrf").getAttribute("name")
+    const csrfHeaderToken = document.getElementById("csrf").getAttribute("value")
+
+    const resp = await fetch(`${hostName}/api/guests/delete/${id}`, {
+        method: "DELETE",
+        headers: {
+            'Content-type': 'application/json',
+            [csrfHeaderName]: csrfHeaderToken
+        }
+    })
+        .then(r => {
+            if(r.status === 200) {
+                parentNode.removeChild(childNode)
+            } else {
+                console.log("Something happened")
+            }
+        })
+        .catch(err => {
+            console.log("Error SHIT, ", err)
+        });
 }
 
 
