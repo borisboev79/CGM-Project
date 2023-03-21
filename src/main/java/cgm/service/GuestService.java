@@ -21,6 +21,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class GuestService {
@@ -76,9 +77,9 @@ public class GuestService {
     }
 
     @Transactional
-    public void deleteGuest(Long id) {
+    public void deleteGuest(GuestViewDto guestViewDto) {
 
-        Guest guest = this.guestRepository.findById(id).orElseThrow(ObjectNotFoundException::new);
+        Guest guest = this.guestRepository.findById(guestViewDto.getId()).orElseThrow(ObjectNotFoundException::new);
         CruiseGroup group = guest.getCabin().getCruiseGroup();
         Cabin cabin = guest.getCabin();
 
@@ -92,10 +93,7 @@ public class GuestService {
 
     }
 
-    private Instant dateToInstant(LocalDate date) {
-        ZoneId zoneId = ZoneId.systemDefault();
-        return date.plusDays(1).atStartOfDay(zoneId).toInstant();
-    }
+
 
     public List<GuestViewDto> getAllGuests(Long id) {
 
@@ -110,4 +108,50 @@ public class GuestService {
         this.groupRepository.save(group);
     }
 
+    @Transactional
+    public GuestViewDto editGuest(GuestViewDto guestViewDto) {
+
+        String dtoFullName = guestViewDto.getFullName();
+        String dtoEmail = guestViewDto.getEmail();
+        String dtoPhone = guestViewDto.getPhone();
+        String dtoEgn = guestViewDto.getEGN();
+        String dtoPassport = guestViewDto.getPassportNumber();
+        Instant dtoBirthDate = guestViewDto.getBirthDate();
+
+
+        Guest guest = this.guestRepository.findById(guestViewDto.getId()).orElse(null);
+
+        if(guest != null){
+            if(!guest.getFullName().equals(dtoFullName)){
+                guest.setFullName(dtoFullName);
+            }
+            if(!guest.getBirthDate().equals(dtoBirthDate)){
+                guest.setBirthDate(dtoBirthDate);
+                guest.setAge(Math.abs((int) ChronoUnit.YEARS.between(LocalDate.now(), dtoBirthDate)));
+            }
+            if(!guest.getEmail().equals(dtoEmail)){
+                guest.setEmail(dtoEmail);
+            }
+            if(!guest.getEGN().equals(dtoEgn)){
+                guest.setEGN(dtoEgn);
+            }
+            if(!guest.getPhone().equals(dtoPhone)){
+                guest.setPhone(dtoPhone);
+            }
+            if(!guest.getPassportNumber().equals(dtoPassport)){
+                guest.setPassportNumber(dtoPassport);
+            }
+
+            this.guestRepository.save(guest);
+
+            return this.mapper.map(guest, GuestViewDto.class);
+
+        }
+        return null;
+    }
+
+    private Instant dateToInstant(LocalDate date) {
+        ZoneId zoneId = ZoneId.systemDefault();
+        return date.plusDays(1).atStartOfDay(zoneId).toInstant();
+    }
 }

@@ -34,6 +34,7 @@ public class ApplicationUserDetailsServiceTest {
     @BeforeEach
     void setUp(){
         toTest = new ApplicationUserDetailsService(mockUserRepository);
+
     }
 
     @Test

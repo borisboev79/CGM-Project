@@ -2,12 +2,11 @@ package cgm.controller;
 
 import cgm.model.dto.GuestViewDto;
 import cgm.service.GuestService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,6 +23,20 @@ public class ShowAllPaxController {
     @GetMapping("/{id}")
     public ResponseEntity<List<GuestViewDto>> getGuests(@PathVariable("id")Long id){
         return ResponseEntity.ok(this.guestService.getAllGuests(id));
+    }
+
+    @PostMapping("/edit")
+    public ResponseEntity<GuestViewDto> editGuest(@RequestBody GuestViewDto guestViewDto){
+        return ResponseEntity.ok(this.guestService.editGuest(guestViewDto));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteGuest(@PathVariable("id") Long id, @RequestBody GuestViewDto guestViewDto){
+
+       this.guestService.deleteGuest(guestViewDto);
+
+        return "redirect:/api/guests/" + id;
     }
 
 }

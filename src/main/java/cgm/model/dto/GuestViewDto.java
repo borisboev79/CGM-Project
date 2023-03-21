@@ -19,6 +19,8 @@ import java.util.List;
 @Builder
 public class GuestViewDto {
 
+    private Long id;
+
     private Long cabinNumber;
 
     private String cabinCode;

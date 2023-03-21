@@ -99,11 +99,4 @@ public class GuestController {
         return "redirect:/guests/add/" + id;
     }
 
-
-    @DeleteMapping("/delete/{id}")
-    public String deleteGuest(@PathVariable Long id){
-        this.guestService.deleteGuest(id);
-
-        return "redirect:/groups/all";
-    }
 }
