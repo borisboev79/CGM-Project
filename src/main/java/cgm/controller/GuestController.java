@@ -43,20 +43,19 @@ public class GuestController {
                               @AuthenticationPrincipal CurrentUser currentUser,
                               Model model) {
 
+        final Cabin cabin = this.cabinService.findById(id);
+
         if(currentUser != null){
             model.addAttribute("firstName", currentUser.getFirstName());
         }
 
-        final Cabin cabin = this.cabinService.findById(id);
 
         if(cabin == null){
             throw new ObjectNotFoundException(id, "cabin");
         }
 
-        List<Guest> guests = cabin.getGuests();
-
         model.addAttribute("cabin", cabin);
-        model.addAttribute("guests", guests);
+        model.addAttribute("guests", cabin.getGuests());
 
         return "guest-add";
     }

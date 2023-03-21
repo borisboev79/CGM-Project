@@ -43,6 +43,11 @@ public class CabinService {
 
         this.cabinRepository.saveAllAndFlush(cabinsToSave);
 
+        if(group.isSoldOut()){
+            group.setSoldOut(false);
+            this.groupRepository.save(group);
+        }
+
 
     }
 

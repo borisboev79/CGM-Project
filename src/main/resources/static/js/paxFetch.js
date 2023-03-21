@@ -36,6 +36,7 @@ const createTR = (pax) => {
     const inputs = {}
     let trData = {...pax}
     const editCallback = () => {
+
         const editFullName = createEditableTD(pax.fullName, tr, fullName, "fullName", validateFullName)
         const editBirthDate = createEditableTD(paxDate, tr, birthDate, "birthDate", validateBirthDate)
         const editEmail= createEditableTD(pax.email, tr, email, "email", () => true)

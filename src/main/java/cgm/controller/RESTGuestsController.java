@@ -2,7 +2,6 @@ package cgm.controller;
 
 import cgm.model.dto.GuestViewDto;
 import cgm.service.GuestService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +11,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/guests")
-public class ShowAllPaxController {
+public class RESTGuestsController {
     private final GuestService guestService;
 
     @Autowired
-    public ShowAllPaxController(GuestService guestService) {
+    public RESTGuestsController(GuestService guestService) {
         this.guestService = guestService;
     }
 

@@ -10,6 +10,7 @@ import cgm.model.enums.AgeGroup;
 import cgm.repository.CabinRepository;
 import cgm.repository.GroupRepository;
 import cgm.repository.GuestRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -56,6 +59,7 @@ public class GuestService {
             guest.setAgeGroup(AgeGroup.CHILD);
         }
 
+
         if (cabin.getPaxNumber() < 2) {
             cabin.setTotalPrice(cabin.getTotalPrice() + cabin.getAdultPrice());
         } else {
@@ -72,42 +76,25 @@ public class GuestService {
             cabin.setFull(true);
         }
 
-        this.guestRepository.saveAndFlush(guest);
-        updateCounts(group, cabin);
+        updateCounts(guest, group, cabin);
     }
-
-    @Transactional
-    public void deleteGuest(Long id) {
-
-        Guest guest = this.guestRepository.findById(id).orElseThrow(ObjectNotFoundException::new);
-        CruiseGroup group = guest.getCabin().getCruiseGroup();
-        Cabin cabin = guest.getCabin();
-
-        cabin.setPaxNumber(guest.getCabin().getPaxNumber() - 1);
-        group.setSoldPax(group.getSoldPax() - 1);
-
-        updateCounts(group, cabin);
-        this.guestRepository.deleteById(id);
-        this.guestRepository.flush();
-
-
-
-
-    }
-
-
 
     public List<GuestViewDto> getAllGuests(Long id) {
 
-        return Objects.requireNonNull(this.guestRepository.findAllByCabin_CruiseGroup_Id(id).orElse(null))
-                .stream()
-                .map(guest -> mapper.map(guest, GuestViewDto.class)).toList();
-    }
+        List<GuestViewDto> guestViews = new ArrayList<>();
+
+        List<Guest> groupGuests = this.guestRepository.findAllByCabin_CruiseGroup_Id(id)
+                .orElseThrow(() -> new ObjectNotFoundException(id, "cabin"))
+                .stream().toList();
+
+        for (Guest groupGuest : groupGuests) {
+            GuestViewDto guestView = mapper.map(groupGuest, GuestViewDto.class);
+            guestView.setCabinNumber(groupGuest.getCabin().getId());
+            guestViews.add(guestView);
+        }
 
 
-    private void updateCounts(CruiseGroup group, Cabin cabin){
-        this.cabinRepository.save(cabin);
-        this.groupRepository.save(group);
+        return guestViews;
     }
 
     @Transactional
@@ -118,41 +105,80 @@ public class GuestService {
         String dtoPhone = guestViewDto.getPhone();
         String dtoEgn = guestViewDto.getEGN();
         String dtoPassport = guestViewDto.getPassportNumber();
-        Instant dtoBirthDate = guestViewDto.getBirthDate();
+        LocalDate dtoBirthDate = instantToLocalDate(guestViewDto.getBirthDate());
 
 
         Guest guest = this.guestRepository.findById(guestViewDto.getId())
                 .orElseThrow(() -> new ObjectNotFoundException(guestViewDto.getId(), "guest"));
 
 
-            if(!guest.getFullName().equals(dtoFullName)){
-                guest.setFullName(dtoFullName);
-            }
-            if(!guest.getBirthDate().equals(dtoBirthDate)){
-                guest.setBirthDate(dtoBirthDate);
-                //guest.setAge(Math.abs((int) ChronoUnit.YEARS.between(LocalDate.now(), dtoBirthDate)));
-            }
-            if(!guest.getEmail().equals(dtoEmail)){
-                guest.setEmail(dtoEmail);
-            }
-            if(!guest.getEGN().equals(dtoEgn)){
-                guest.setEGN(dtoEgn);
-            }
-            if(!guest.getPhone().equals(dtoPhone)){
-                guest.setPhone(dtoPhone);
-            }
-            if(!guest.getPassportNumber().equals(dtoPassport)){
-                guest.setPassportNumber(dtoPassport);
-            }
+        if (!guest.getFullName().equals(dtoFullName)) {
+            guest.setFullName(dtoFullName);
+        }
+        if (!guest.getBirthDate().equals(guestViewDto.getBirthDate())) {
+            guest.setAge(Math.abs((int) ChronoUnit.YEARS.between(LocalDate.now(), dtoBirthDate)));
+            guest.setBirthDate(guestViewDto.getBirthDate()
+                    .plus(1, ChronoUnit.DAYS)
+            );
 
-            guest = this.guestRepository.save(guest);
+        }
+        if (!guest.getEmail().equals(dtoEmail)) {
+            guest.setEmail(dtoEmail);
+        }
+        if (!guest.getEGN().equals(dtoEgn)) {
+            guest.setEGN(dtoEgn);
+        }
+        if (!guest.getPhone().equals(dtoPhone)) {
+            guest.setPhone(dtoPhone);
+        }
+        if (!guest.getPassportNumber().equals(dtoPassport)) {
+            guest.setPassportNumber(dtoPassport);
+        }
 
-            return this.mapper.map(guest, GuestViewDto.class);
+        guest = this.guestRepository.save(guest);
+
+        return this.mapper.map(guest, GuestViewDto.class);
+
+    }
+
+    public void deleteGuest(Long id) {
+
+        Guest guest = this.guestRepository.findById(id).orElseThrow(ObjectNotFoundException::new);
+        CruiseGroup group = guest.getCabin().getCruiseGroup();
+        Cabin cabin = guest.getCabin();
+
+
+        cabin.setPaxNumber(guest.getCabin().getPaxNumber() - 1);
+        if (cabin.isFull()) {
+            cabin.setFull(false);
+        }
+
+        guest.setCabin(null);
+
+        group.setSoldPax(group.getSoldPax() - 1);
+        if (group.isSoldOut()) {
+            group.setSoldOut(false);
+        }
+
+        updateCounts(guest, group, cabin);
+        this.guestRepository.delete(guest);
+        this.guestRepository.flush();
 
     }
 
     private Instant dateToInstant(LocalDate date) {
         ZoneId zoneId = ZoneId.systemDefault();
         return date.plusDays(1).atStartOfDay(zoneId).toInstant();
+    }
+
+    private LocalDate instantToLocalDate(Instant date){
+        ZoneId zoneId = ZoneId.systemDefault();
+        return LocalDate.ofInstant(date, zoneId);
+    }
+
+    private void updateCounts(Guest guest, CruiseGroup group, Cabin cabin) {
+        this.guestRepository.saveAndFlush(guest);
+        this.cabinRepository.saveAndFlush(cabin);
+        this.groupRepository.saveAndFlush(group);
     }
 }
