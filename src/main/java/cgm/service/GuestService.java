@@ -39,7 +39,6 @@ public class GuestService {
         this.mapper = mapper;
     }
 
-
     public void addGuest(GuestAddDto guestAddDto, Long id) {
         Cabin cabin = this.cabinRepository.findById(id).orElseThrow();
         CruiseGroup group = this.groupRepository.findById(cabin.getCruiseGroup().getId()).orElseThrow();

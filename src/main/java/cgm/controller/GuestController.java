@@ -4,6 +4,7 @@ import cgm.model.CurrentUser;
 import cgm.model.ObjectNotFoundException;
 import cgm.model.dto.GuestAddDto;
 import cgm.model.entity.Cabin;
+import cgm.model.entity.UserEntity;
 import cgm.service.CabinService;
 import cgm.service.GuestService;
 import jakarta.validation.Valid;
@@ -26,14 +27,11 @@ public class GuestController {
         return new GuestAddDto();
     }
 
-
     @Autowired
     public GuestController(GuestService guestService, CabinService cabinService) {
         this.guestService = guestService;
         this.cabinService = cabinService;
     }
-
-
 
     @GetMapping("/add/{id}")
     public String getAddGuest(@PathVariable Long id,
@@ -53,6 +51,7 @@ public class GuestController {
 
         model.addAttribute("cabin", cabin);
         model.addAttribute("guests", this.guestService.getAllGuestsInCabin(id));
+        model.addAttribute("groupId", id);
 
 
         return "guest-add";
@@ -94,6 +93,14 @@ public class GuestController {
             return "redirect:/groups/details/" + groupId;
         }
         return "redirect:/guests/add/" + id;
+    }
+
+    @GetMapping("/group/{groupId}/delete/{id}")
+    public String deleteGuest(@PathVariable Long groupId, @PathVariable Long id) {
+
+        this.guestService.deleteGuest(id);
+
+        return "redirect:/guests/add/" + groupId;
     }
 
 }

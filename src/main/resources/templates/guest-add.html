@@ -162,7 +162,7 @@
           <td th:text="*{email}"></td>
           <td th:text="*{phone}"></td>
 
-          <td><a class="card-link" th:href="@{/guests/delete/{id}(id = *{id})}">Delete guest</a></td>
+          <td><a class="btn btn-info btn-sm bg-danger" th:href="@{/guests/group/{groupId}/delete/{id}(id = *{id}, groupId = ${groupId})}">Delete Guest</a></td>
         </tr>
 
         </tbody>
