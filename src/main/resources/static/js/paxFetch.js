@@ -39,10 +39,10 @@ const createTR = (pax) => {
 
         const editFullName = createEditableTD(pax.fullName, tr, fullName, "fullName", validateFullName)
         const editBirthDate = createEditableTD(paxDate, tr, birthDate, "birthDate", validateBirthDate)
-        const editEmail= createEditableTD(pax.email, tr, email, "email", () => true)
-        const editPhone = createEditableTD(pax.phone, tr, phone, "phone", () => true)
-        const editEgn = createEditableTD(pax.egn, tr, egn, "egn", () => true)
-        const editPassport = createEditableTD(pax.passportNumber, tr, passport, "passportNumber", () => true)
+        const editEmail= createEditableTD(pax.email, tr, email, "email", validateEmail)
+        const editPhone = createEditableTD(pax.phone, tr, phone, "phone", validatePhone)
+        const editEgn = createEditableTD(pax.egn, tr, egn, "egn", validateEgn)
+        const editPassport = createEditableTD(pax.passportNumber, tr, passport, "passportNumber", validatePassport)
 
         const tdSaveBtn = createTD()
         const btnSave = createTDButton(async () => {
@@ -194,6 +194,26 @@ function validateBirthDate(value){
     const date = dateConverter(value)
 
     return date <= Date.now();
+}
+const validateEmail = (email) => {
+    return String(email)
+        .toLowerCase()
+        .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+};
+
+function validatePhone(value) {
+    return !(!value.match(/^[+]?\d+$/) || value.length < 9);
+}
+
+function validatePassport(value) {
+    return !(value.length < 5);
+}
+
+function validateEgn(value)
+{
+    return !(!value.match(/^\d+$/) || value.length !== 10);
 }
 
 function dateConverter(value) {
