@@ -57,7 +57,7 @@ public class GuestService {
         }
 
 
-        if (cabin.getPaxNumber() < 2) {
+        if (cabin.getPaxNumber() <= 2) {
             cabin.setTotalPrice(cabin.getTotalPrice() + cabin.getAdultPrice());
         } else {
 
@@ -115,7 +115,21 @@ public class GuestService {
         Cabin cabin = guest.getCabin();
 
 
+        if (cabin.getPaxNumber() <= 2) {
+            cabin.setTotalPrice(cabin.getTotalPrice() - cabin.getAdultPrice());
+        } else {
+
+            if (guest.getAgeGroup().equals(AgeGroup.ADULT)) {
+                cabin.setTotalPrice(cabin.getTotalPrice() - cabin.getExtraAdultPrice());
+            } else {
+                cabin.setTotalPrice(cabin.getTotalPrice() - cabin.getChildPrice());
+            }
+        }
+
         cabin.setPaxNumber(guest.getCabin().getPaxNumber() - 1);
+        cabin.setAddedBy(null);
+
+
         if (cabin.isFull()) {
             cabin.setFull(false);
         }
