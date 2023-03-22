@@ -153,7 +153,7 @@
         <tbody class="">
         <tr th:each="guest : ${guests}"
             th:object="${guest}">
-          <td th:text="*{cabin.id}"></td>
+          <td th:text="*{cabinId}"></td>
           <td th:text="*{fullName}"></td>
           <td th:text="*{#dates.format(birthDate, 'dd/MM/yyyy')}"></td>
           <td th:text="*{age}"></td>

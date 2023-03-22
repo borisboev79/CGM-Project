@@ -1,5 +1,6 @@
 package cgm.service;
 
+import cgm.model.ObjectNotFoundException;
 import cgm.model.dto.UserModificationDto;
 import cgm.model.dto.UserRegistrationDto;
 import cgm.model.dto.UserViewDto;
@@ -87,12 +88,14 @@ public class UserService {
 
     public UserModificationDto getUserById(Long id) {
 
-        UserEntity user = this.userRepository.findById(id).orElse(null);
+        UserEntity user = this.userRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id, "user"));
 
-        UserModificationDto modifiedUser = mapper.map(user, UserModificationDto.class);
         if(user == null){
             return null;
         }
+
+        UserModificationDto modifiedUser = mapper.map(user, UserModificationDto.class);
+
         modifiedUser.setBranch(user.getBranch().getCode());
         modifiedUser.setRoles(user.getRoles().stream().map(roleEntity -> roleEntity.getRole().name()).toList());
 
@@ -146,7 +149,7 @@ public class UserService {
     }
 
     public UserEntity findById(Long id) {
-        return this.userRepository.findById(id).orElse(null);
+        return this.userRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id, "user"));
     }
 
     @Transactional

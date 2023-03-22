@@ -4,7 +4,6 @@ import cgm.model.CurrentUser;
 import cgm.model.ObjectNotFoundException;
 import cgm.model.dto.GuestAddDto;
 import cgm.model.entity.Cabin;
-import cgm.model.entity.Guest;
 import cgm.service.CabinService;
 import cgm.service.GuestService;
 import jakarta.validation.Valid;
@@ -15,8 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/guests")
@@ -55,7 +52,8 @@ public class GuestController {
         }
 
         model.addAttribute("cabin", cabin);
-        model.addAttribute("guests", cabin.getGuests());
+        model.addAttribute("guests", this.guestService.getAllGuestsInCabin(id));
+
 
         return "guest-add";
     }

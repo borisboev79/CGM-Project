@@ -2,6 +2,7 @@ package cgm.service;
 
 import cgm.model.ObjectNotFoundException;
 import cgm.model.dto.GuestAddDto;
+import cgm.model.dto.GuestInitialViewDto;
 import cgm.model.dto.GuestViewDto;
 import cgm.model.entity.Cabin;
 import cgm.model.entity.CruiseGroup;
@@ -10,7 +11,6 @@ import cgm.model.enums.AgeGroup;
 import cgm.repository.CabinRepository;
 import cgm.repository.GroupRepository;
 import cgm.repository.GuestRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +20,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class GuestService {
@@ -41,6 +38,7 @@ public class GuestService {
 
         this.mapper = mapper;
     }
+
 
     public void addGuest(GuestAddDto guestAddDto, Long id) {
         Cabin cabin = this.cabinRepository.findById(id).orElseThrow();
@@ -79,61 +77,28 @@ public class GuestService {
         updateCounts(guest, group, cabin);
     }
 
-    public List<GuestViewDto> getAllGuests(Long id) {
-
-        List<GuestViewDto> guestViews = new ArrayList<>();
-
-        List<Guest> groupGuests = this.guestRepository.findAllByCabin_CruiseGroup_Id(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id, "cabin"))
-                .stream().toList();
-
-        for (Guest groupGuest : groupGuests) {
-            GuestViewDto guestView = mapper.map(groupGuest, GuestViewDto.class);
-            guestView.setCabinNumber(groupGuest.getCabin().getId());
-            guestViews.add(guestView);
-        }
-
-
-        return guestViews;
-    }
 
     @Transactional
     public GuestViewDto editGuest(GuestViewDto guestViewDto) {
 
-        String dtoFullName = guestViewDto.getFullName();
-        String dtoEmail = guestViewDto.getEmail();
-        String dtoPhone = guestViewDto.getPhone();
-        String dtoEgn = guestViewDto.getEGN();
-        String dtoPassport = guestViewDto.getPassportNumber();
-        LocalDate dtoBirthDate = instantToLocalDate(guestViewDto.getBirthDate());
-
-
         Guest guest = this.guestRepository.findById(guestViewDto.getId())
                 .orElseThrow(() -> new ObjectNotFoundException(guestViewDto.getId(), "guest"));
 
+        guest.setFullName(guestViewDto.getFullName());
 
-        if (!guest.getFullName().equals(dtoFullName)) {
-            guest.setFullName(dtoFullName);
-        }
+        LocalDate dtoBirthDate = instantToLocalDate(guestViewDto.getBirthDate());
+
         if (!guest.getBirthDate().equals(guestViewDto.getBirthDate())) {
             guest.setAge(Math.abs((int) ChronoUnit.YEARS.between(LocalDate.now(), dtoBirthDate)));
             guest.setBirthDate(guestViewDto.getBirthDate()
                     .plus(1, ChronoUnit.DAYS)
             );
+        }
 
-        }
-        if (!guest.getEmail().equals(dtoEmail)) {
-            guest.setEmail(dtoEmail);
-        }
-        if (!guest.getEGN().equals(dtoEgn)) {
-            guest.setEGN(dtoEgn);
-        }
-        if (!guest.getPhone().equals(dtoPhone)) {
-            guest.setPhone(dtoPhone);
-        }
-        if (!guest.getPassportNumber().equals(dtoPassport)) {
-            guest.setPassportNumber(dtoPassport);
-        }
+        guest.setEmail(guestViewDto.getEmail());
+        guest.setEGN(guestViewDto.getEGN());
+        guest.setPhone(guestViewDto.getPhone());
+        guest.setPassportNumber(guestViewDto.getPassportNumber());
 
         guest = this.guestRepository.save(guest);
 
@@ -153,8 +118,6 @@ public class GuestService {
             cabin.setFull(false);
         }
 
-        guest.setCabin(null);
-
         group.setSoldPax(group.getSoldPax() - 1);
         if (group.isSoldOut()) {
             group.setSoldOut(false);
@@ -166,12 +129,47 @@ public class GuestService {
 
     }
 
+    public List<GuestInitialViewDto> getAllGuestsInCabin(Long id){
+        List<GuestInitialViewDto> cabinGuests = new ArrayList<>();
+        List<Guest> persistedGuests = this.guestRepository.findAllByCabin_Id(id).orElseThrow(null)
+                .stream()
+                .toList();
+
+        for (Guest persistedGuest : persistedGuests) {
+            GuestInitialViewDto cabinGuest = new GuestInitialViewDto();
+            this.mapper.map(persistedGuest, cabinGuest);
+            cabinGuests.add(cabinGuest);
+
+        }
+
+        return cabinGuests;
+
+    }
+
+
+    public List<GuestViewDto> getAllGuests(Long id) {
+
+        List<GuestViewDto> guestViews = new ArrayList<>();
+
+        List<Guest> groupGuests = this.guestRepository.findAllByCabin_CruiseGroup_Id(id)
+                .orElseThrow(() -> new ObjectNotFoundException(id, "cabin"))
+                .stream().toList();
+
+        for (Guest groupGuest : groupGuests) {
+            GuestViewDto guestView = mapper.map(groupGuest, GuestViewDto.class);
+            guestView.setCabinNumber(groupGuest.getCabin().getId());
+            guestViews.add(guestView);
+        }
+
+        return guestViews;
+    }
+
     private Instant dateToInstant(LocalDate date) {
         ZoneId zoneId = ZoneId.systemDefault();
         return date.plusDays(1).atStartOfDay(zoneId).toInstant();
     }
 
-    private LocalDate instantToLocalDate(Instant date){
+    private LocalDate instantToLocalDate(Instant date) {
         ZoneId zoneId = ZoneId.systemDefault();
         return LocalDate.ofInstant(date, zoneId);
     }

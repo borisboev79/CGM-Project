@@ -37,7 +37,7 @@ public class Guest extends BaseEntity{
     @Column(name = "passport-number")
     private String passportNumber;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne()
     private Cabin cabin;
 
 }

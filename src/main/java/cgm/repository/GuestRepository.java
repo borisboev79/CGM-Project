@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface GuestRepository extends JpaRepository<Guest, Long> {
 
     Optional<List<Guest>> findAllByCabin_CruiseGroup_Id(Long id);
+    Optional<List<Guest>> findAllByCabin_Id(Long id);
 }

@@ -102,11 +102,6 @@ public class UserController {
 
         UserModificationDto userModificationDto = this.userService.getUserById(id);
 
-        if (userModificationDto == null) {
-
-            throw new ObjectNotFoundException(id, "user");
-        }
-
         model.addAttribute("userModificationDto", userModificationDto);
         model.addAttribute("userBranch", userModificationDto.getBranch().name());
 
@@ -123,14 +118,11 @@ public class UserController {
     public String getErrorsModifying(@PathVariable Long id, @AuthenticationPrincipal CurrentUser currentUser,
                                      Model model){
 
+       if (this.userService.findById(id) == null){
+           throw new ObjectNotFoundException(id, "user");
+       }
+
         model.addAttribute("firstName", currentUser.getFirstName());
-
-
-        model.addAttribute("branches", BranchCode.values());
-
-        model.addAttribute("adminRole", Role.ADMIN);
-        model.addAttribute("managerRole", Role.MANAGER);
-        model.addAttribute("userRole", Role.USER);
 
         return "users-modify";
     }
@@ -143,9 +135,19 @@ public class UserController {
     ) {
 
 
+        UserEntity user = this.userService.findById(id);
+
+        if(user == null){
+            throw new ObjectNotFoundException(id, "user");
+        }
+
         if (bindingResult.hasErrors()) {
             redirectAttributes
                     .addFlashAttribute("userModificationDto", userModificationDto)
+                    .addFlashAttribute("branches", BranchCode.values())
+                    .addFlashAttribute("adminRole", Role.ADMIN)
+                    .addFlashAttribute("managerRole", Role.MANAGER)
+                    .addFlashAttribute("userRole", Role.USER)
                     .addFlashAttribute("org.springframework.validation.BindingResult.userModificationDto", bindingResult);
 
             return "redirect:/users/errors/" + id;

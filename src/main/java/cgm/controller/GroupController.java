@@ -7,9 +7,7 @@ import cgm.model.dto.CabinAddDto;
 import cgm.model.dto.GroupAddDto;
 import cgm.model.entity.CruiseGroup;
 import cgm.model.entity.CruiseLine;
-import cgm.model.enums.CabinType;
 import cgm.model.enums.Transportation;
-import cgm.service.CabinService;
 import cgm.service.CruiseLineService;
 import cgm.service.GroupService;
 import jakarta.validation.Valid;
@@ -27,12 +25,10 @@ import java.util.List;
 @RequestMapping("/groups")
 public class GroupController {
     private final GroupService groupService;
-    private final CabinService cabinService;
     private final CruiseLineService cruiseLineService;
 
-    public GroupController(GroupService groupService, CabinService cabinService, CruiseLineService cruiseLineService) {
+    public GroupController(GroupService groupService, CruiseLineService cruiseLineService) {
         this.groupService = groupService;
-        this.cabinService = cabinService;
         this.cruiseLineService = cruiseLineService;
     }
 
@@ -115,53 +111,6 @@ public class GroupController {
 
         return "group-details";
     }
-
-    /*@GetMapping("/add/cabins/{id}")
-    public String getCabinsAdd(@PathVariable Long id,
-                               @AuthenticationPrincipal CurrentUser currentUser,
-                               Model model) {
-
-
-        model.addAttribute("firstName", currentUser.getFirstName());
-
-        CruiseGroup currentGroup = this.groupService.findById(id);
-
-        if (currentGroup == null) {
-            throw new ObjectNotFoundException(id, "group");
-        }
-
-        model.addAttribute("currentGroup", currentGroup);
-        model.addAttribute("cabinType", CabinType.values());
-
-        return "cabins-add";
-    }*/
-
-/*    @PostMapping("/add/cabins/{id}")
-    public String addCabins(@Valid @ModelAttribute(name = "cabinAddDto") CabinAddDto cabinAddDto,
-                            BindingResult bindingResult,
-                            RedirectAttributes redirectAttributes,
-                            @PathVariable Long id) {
-
-        CruiseGroup currentGroup = this.groupService.findById(id);
-
-        if (currentGroup == null) {
-            throw new ObjectNotFoundException(id, "group");
-        }
-
-        if (bindingResult.hasErrors()) {
-            redirectAttributes
-                    .addFlashAttribute("cabinAddDto", cabinAddDto)
-                    .addFlashAttribute("org.springframework.validation.BindingResult.cabinAddDto", bindingResult);
-
-            return String.format("redirect:/groups/add/cabins/%s", id);
-        }
-
-
-        this.cabinService.addCabin(cabinAddDto, id);
-
-        return "redirect:/groups/details/" + id;
-
-    }*/
 
     @GetMapping("delete")
     public String getGroupsDelete(@AuthenticationPrincipal CurrentUser currentUser, Model model){
