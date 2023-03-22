@@ -8,7 +8,7 @@ body {
  }
 
 main {
-     min-height: calc(100vh - 190px);
+     min-height: 80vh;
 }
 .navbar .logo {
      max-height: 50px;

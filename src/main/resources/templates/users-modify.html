@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 
-<div th:replace="~{fragments/head}"></div>
+<head th:replace="~{fragments/head}">
 <title>GrouMan Edit User</title>
-
+</head>
 
 <body>
 
 <header>
     <div th:replace="~{fragments/navbar}"></div>
 </header>
-
+<main>
 <div class="container">
     <h2 class="text-center text-white">Edit User</h2>
     <form
@@ -132,8 +133,8 @@
         </div>
     </form>
 </div>
-
-<div th:replace="~{fragments/footer}"></div>
+</main>
+<footer th:replace="~{fragments/footer}"></footer>
 
 </body>
 </html>

@@ -79,9 +79,9 @@ public class GuestService {
 
     @Transactional
     public GuestViewDto editGuest(GuestViewDto guestViewDto) {
-        if(guestViewDto.getId() != 10000) {
+        /*if(guestViewDto.getId() != 10000) {
             throw new ObjectNotFoundException(100L, "test");
-        }
+        }*/
 
         Guest guest = this.guestRepository.findById(guestViewDto.getId())
                 .orElseThrow(() -> new ObjectNotFoundException(guestViewDto.getId(), "guest"));

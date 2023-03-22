@@ -47,13 +47,8 @@ const createTR = (pax) => {
         const tdSaveBtn = createTD()
         const btnSave = createTDButton(async () => {
             const response = await sendUpdate(trData)
-            console.log("bad update", response)
-            if(!response.error) {
                 pax = {...response}
                 toggleCallback(response)
-            } else {
-                toggleCallback()
-            }
         }, "Save")
 
         tdSaveBtn.appendChild(btnSave)
@@ -240,12 +235,12 @@ async function sendUpdate(data) {
             [csrfHeaderName]: csrfHeaderToken
         }
     })
-        .then(resp => {
+        /*.then(resp => {
             if(resp.status !== 200) {
                 alert("Unsuccessful edit. Please, try again later :)")
             }
 
-        })
+        })*/
         .catch(err => {
             console.log("Error SHIT, ", err)
         });

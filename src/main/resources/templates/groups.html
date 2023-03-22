@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
-<div th:replace="~{fragments/head}"></div>
+<html lang="en" xmlns="http://www.w3.org/1999/html"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head}">
 <title>GrouMan View All Groups</title>
+</head>
 <body>
 
 <header>
-    <div th:replace="~{fragments/navbar}"></div>
+    <nav th:replace="~{fragments/navbar}"></nav>
 </header>
-
+<main>
 <div class="container-fluid">
     <h2 class="text-center text-white mt-5">All Cruise Groups</h2>
     <div class="offers row mx-auto d-flex flex-row justify-content-center">
@@ -39,9 +41,10 @@
                 <a class="btn btn-info bg-danger" th:href="@{/groups/details/{id}(id= *{id})}">SOLD OUT</a>
             </div>
 
+        </div>
     </div>
 </div>
-
-<div th:replace="~{fragments/footer}"></div>
+</main>
+<footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>

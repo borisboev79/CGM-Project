@@ -9,10 +9,10 @@
 <body>
 
 <header>
-    <th:block th:include="~{fragments/navbar}"></th:block>
+    <nav th:replace="~{fragments/navbar}"></nav>
 </header>
-
-<div class="container group-container rounded bg-light pt-2" >
+<main>
+<div class="container group-container rounded bg-light pt-3" >
 
     <h3 class="text-center text-dark pb-2">Group Details</h3>
 
@@ -160,7 +160,7 @@
        th:value="${_csrf.token}">
 
 <footer th:replace="~{fragments/footer}"></footer>
-
+</main>
 </body>
 <script type="text/javascript" th:src="@{/js/paxFetch.js}"></script>
 </html>

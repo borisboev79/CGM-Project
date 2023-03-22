@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-
-<div th:replace="~{fragments/head}"></div>
-<title>Crusit GrouMan</title>
-
+<head th:replace="~{fragments/head}">
+<title>Crusit GrouMan 400</title>
+</head>
 
 <body>
 
 <header>
-    <div th:replace="~{fragments/navbar}"></div>
+    <nav th:replace="~{fragments/navbar}"></nav>
 </header>
 <main>
 
@@ -23,6 +22,6 @@
     </div>
 
 </main>
-<div th:replace="~{fragments/footer}"></div>
+<footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>

@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-
-<div th:replace="~{fragments/head}"></div>
+<head th:replace="~{fragments/head}">
 <title>GrouMan Add Guest</title>
-
+</head>
 
 <body>
 
 <header>
-  <div th:replace="~{fragments/navbar}"></div>
+  <nav th:replace="~{fragments/navbar}"></nav>
 </header>
-
+<main>
 
 <div class="container">
   <div class="row mx-auto" th:if="${!cabin.isFull()}">
@@ -176,7 +176,7 @@
 
 
 </div>
-
-<div th:replace="~{fragments/footer}"></div>
+</main>
+<footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>
