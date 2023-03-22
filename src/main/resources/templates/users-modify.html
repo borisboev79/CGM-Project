@@ -77,9 +77,10 @@
 
                 <div class="row">
                     <div class="col-4">
-                        <input th:checked="*{roles.contains('USER')}" type="checkbox" name="roles"
+                        <input th:checked="*{roles.contains('USER')}" type="radio" name="roles"
                                th:errorclass="is-invalid"
-                               th:value="${userRole}">
+                               th:value="${userRole}"
+                        >
                         <span class="text-light"
                               th:text="${userRole}"></span>
                     </div>

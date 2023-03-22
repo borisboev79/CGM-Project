@@ -106,6 +106,7 @@ public class UserController {
         model.addAttribute("userBranch", userModificationDto.getBranch().name());
 
         model.addAttribute("branches", BranchCode.values());
+        model.addAttribute("errorMsg", "Must have role");
 
         model.addAttribute("adminRole", Role.ADMIN);
         model.addAttribute("managerRole", Role.MANAGER);

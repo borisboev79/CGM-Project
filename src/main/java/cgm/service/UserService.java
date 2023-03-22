@@ -90,7 +90,7 @@ public class UserService {
 
         UserEntity user = this.userRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id, "user"));
 
-        if(user == null){
+        if (user == null) {
             return null;
         }
 
@@ -104,36 +104,35 @@ public class UserService {
     }
 
     @Transactional
-    public void modifyUser(UserModificationDto userModificationDto,Long id) {
+    public void modifyUser(UserModificationDto userModificationDto, Long id) {
 
-        UserEntity user = this.userRepository.findById(id).orElseThrow();
+        UserEntity user = this.userRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id, "user"));
 
         List<RoleEntity> roles = userModificationDto.getRoles()
                 .stream()
-                .map(role -> this.roleRepository.findRoleEntityByRole(Role.valueOf(role)).orElseThrow())
+                .map(role -> this.roleRepository.findRoleEntityByRole(Role.valueOf(role)).orElseThrow(() -> new ObjectNotFoundException(id, "roles")))
                 .toList();
 
 
-
-        if(!userModificationDto.getUsername().isBlank()){
+        if (!userModificationDto.getUsername().isBlank()) {
             user.setUsername(userModificationDto.getUsername());
         } else {
             user.setUsername(user.getUsername());
         }
-        if(!userModificationDto.getPassword().equals("********")){
+        if (!userModificationDto.getPassword().equals("********")) {
             user.setPassword(encoder.encode(userModificationDto.getPassword()));
         } else {
             user.setPassword(user.getPassword());
         }
-        if(!userModificationDto.getFirstName().equals(user.getFirstName())){
+        if (!userModificationDto.getFirstName().equals(user.getFirstName())) {
             user.setFirstName(userModificationDto.getFirstName());
         }
-        if(!userModificationDto.getLastName().equals(user.getLastName())){
+        if (!userModificationDto.getLastName().equals(user.getLastName())) {
             user.setLastName(userModificationDto.getLastName());
         }
-        if(!userModificationDto.getBranch().equals(user.getBranch().getCode())){
+        if (!userModificationDto.getBranch().equals(user.getBranch().getCode())) {
             BranchCode branchCode = userModificationDto.getBranch();
-            if(this.branchRepository.findBranchEntityByCode(branchCode).isPresent()) {
+            if (this.branchRepository.findBranchEntityByCode(branchCode).isPresent()) {
                 BranchEntity branch = this.branchRepository.findBranchEntityByCode(branchCode).get();
                 user.setBranch(branch);
             }
