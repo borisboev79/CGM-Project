@@ -134,13 +134,6 @@ public class UserController {
                              @PathVariable Long id
     ) {
 
-
-        UserEntity user = this.userService.findById(id);
-
-        if(user == null){
-            throw new ObjectNotFoundException(id, "user");
-        }
-
         if (bindingResult.hasErrors()) {
             redirectAttributes
                     .addFlashAttribute("userModificationDto", userModificationDto)
