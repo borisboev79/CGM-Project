@@ -3,17 +3,16 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<div th:replace="~{fragments/head}"></div>
+<head th:replace="~{fragments/head}">
 <title>GrouMan Group Details</title>
-
+</head>
 <body>
 
 <header>
-    <div th:replace="~{fragments/navbar}"></div>
+    <th:block th:include="~{fragments/navbar}"></th:block>
 </header>
-<div class="container mb-3"></div>
 
-<div class="container rounded bg-light pt-2">
+<div class="container group-container rounded bg-light pt-2" >
 
     <h3 class="text-center text-dark pb-2">Group Details</h3>
 
@@ -160,7 +159,7 @@
        th:name="${_csrf.headerName}"
        th:value="${_csrf.token}">
 
-<div class="container" th:replace="~{fragments/footer}"></div>
+<footer th:replace="~{fragments/footer}"></footer>
 
 </body>
 <script type="text/javascript" th:src="@{/js/paxFetch.js}"></script>

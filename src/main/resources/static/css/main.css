@@ -4,10 +4,12 @@ body {
      background-repeat: no-repeat;
      background-attachment: fixed;
      background-size: cover;
-     background-color: lightsteelblue;
-      /*  #464646*/
+     background-color: #464646;
  }
 
+main {
+     min-height: calc(100vh - 190px);
+}
 .navbar .logo {
      max-height: 50px;
      padding-right: 100px;
@@ -15,6 +17,10 @@ body {
 
 .container, .container-fluid {
      padding-top: 90px;
+}
+
+.group-container{
+     margin-top: 90px;
 }
 
 .bg-text {
@@ -59,8 +65,10 @@ form.main-form {
      color: white;
 }
 
-.my-footer {
-     position: absolute;
-     bottom: 30px;
+footer {
+     align-content: center;
      width: 100%;
 }
+
+
+
