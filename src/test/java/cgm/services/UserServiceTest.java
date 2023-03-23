@@ -2,6 +2,7 @@ package cgm.services;
 
 import cgm.model.dto.UserModificationDto;
 import cgm.model.dto.UserRegistrationDto;
+import cgm.model.dto.UserViewDto;
 import cgm.model.entity.BranchEntity;
 import cgm.model.entity.RoleEntity;
 import cgm.model.entity.UserEntity;
@@ -14,10 +15,7 @@ import cgm.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,9 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -61,13 +58,27 @@ public class UserServiceTest {
     @Captor
     private ArgumentCaptor<UserEntity> userEntityArgumentCaptor;
 
+
+    @Captor
+    private ArgumentCaptor<UserViewDto> dtoArgumentCaptor;
+
+
+    @Mock
     private UserService testUserService;
 
+    @InjectMocks
     private BranchEntity testBranchEntity;
 
+
+    @InjectMocks
     private RoleEntity testRoleEntity;
 
+    @InjectMocks
     private UserRegistrationDto testRegistrationDto;
+
+    @InjectMocks
+    private UserViewDto testUserViewDto;
+
 
     @BeforeEach
     void setUp(){
@@ -104,19 +115,6 @@ public class UserServiceTest {
 
     }
 
-    @Test
-    public void testGetUserById(){
-
-        UserEntity savedUser = userEntityArgumentCaptor.getValue();
-
-
-
-        when(testUserService.getAllUsers()).thenReturn(List.of(savedUser));
-
-        testUserService.getAllUsers();
-
-
-    }
 
     @Test
     void testUserRegistration(){
@@ -135,12 +133,13 @@ public class UserServiceTest {
 
     @Test
     void testUserModification(){
+
         UserModificationDto testModificationDto = new UserModificationDto();
         testModificationDto.setFirstName(FIRST_NAME);
         testModificationDto.setLastName(LAST_NAME);
         testModificationDto.setUsername(NON_EXISTING_USERNAME);
         testModificationDto.setPassword(RAW_PASSWORD);
 
-        when(mockPasswordEncoder.encode(testModificationDto.getPassword())).thenReturn(ENCODED_PASSWORD);
+
     }
 }

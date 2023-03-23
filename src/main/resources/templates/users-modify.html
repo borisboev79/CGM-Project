@@ -78,7 +78,7 @@
 
                 <div class="row">
                     <div class="col-4">
-                        <input th:checked="*{roles.contains('USER')}" type="radio" name="roles"
+                        <input th:checked="*{roles != null && roles.contains('USER')}" type="checkbox" name="roles"
                                th:errorclass="is-invalid"
                                th:value="${userRole}"
                         >
@@ -87,14 +87,14 @@
                     </div>
 
                     <div class="col-5 px-0">
-                        <input th:checked="*{roles.contains('MANAGER')}" type="checkbox" name="roles"
+                        <input th:checked="*{roles != null && roles.contains('MANAGER')}" type="checkbox" name="roles"
                                th:errorclass="is-invalid"
                                th:value="${managerRole}">
                         <span class="text-light"
                               th:text="${managerRole}"></span>
                     </div>
                     <div class="col-3 px-0">
-                        <input th:checked="*{roles.contains('ADMIN')}" type="checkbox" name="roles"
+                        <input th:checked="*{roles != null && roles.contains('ADMIN')}" type="checkbox" name="roles"
                                th:errorclass="is-invalid"
                                th:value="${adminRole}">
                         <span class="text-light"

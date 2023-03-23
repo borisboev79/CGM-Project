@@ -5,8 +5,9 @@ import cgm.model.entity.UserEntity;
 import cgm.model.enums.Role;
 import cgm.repository.UserRepository;
 import cgm.service.ApplicationUserDetailsService;
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

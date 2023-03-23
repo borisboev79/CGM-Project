@@ -1,8 +1,8 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
-      defer-datasource-initialization: true
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
   sql:
     init:
       mode: never
@@ -12,3 +12,4 @@ mail:
   port: 1025
   username: "admin"
   password: ""
+
