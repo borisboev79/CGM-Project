@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -25,15 +26,18 @@ import static org.mockito.Mockito.when;
 public class ApplicationUserDetailsServiceTest {
 
     private final String EXISTING_USERNAME = "admin";
+    private final String EXISTING_PASSWORD = "topsecret";
+    private final String EXISTING_FIRST_NAME = "Boris";
+    private final String EXISTING_LAST_NAME = "Boev";
     private final String NON_EXISTING_USERNAME = "gosho";
-    private ApplicationUserDetailsService toTest;
+    private ApplicationUserDetailsService mockUserRepo;
 
     @Mock
     private UserRepository mockUserRepository;
 
     @BeforeEach
     void setUp(){
-        toTest = new ApplicationUserDetailsService(mockUserRepository);
+        mockUserRepo = new ApplicationUserDetailsService(mockUserRepository);
 
     }
 
@@ -53,19 +57,19 @@ public class ApplicationUserDetailsServiceTest {
         roles.add(userRole);
 
 
-        UserEntity testUserEntity = UserEntity.builder().username(EXISTING_USERNAME).password("topsecret")
-                        .firstName("Boris").lastName("Boev").roles(roles).build();
+        UserEntity testUserEntity = UserEntity.builder().username(EXISTING_USERNAME).password(EXISTING_PASSWORD)
+                        .firstName(EXISTING_FIRST_NAME).lastName(EXISTING_LAST_NAME).roles(roles).build();
 
-        when(mockUserRepository.findUserEntityByUsername("admin")).thenReturn(Optional.of(testUserEntity));
-        UserDetails adminDetails = toTest.loadUserByUsername("admin");
+        when(mockUserRepository.findUserEntityByUsername(EXISTING_USERNAME)).thenReturn(Optional.of(testUserEntity));
+        UserDetails adminDetails = mockUserRepo.loadUserByUsername(EXISTING_USERNAME);
 
-        Assertions.assertNotNull(adminDetails);
-        Assertions.assertEquals(EXISTING_USERNAME, adminDetails.getUsername());
-        Assertions.assertEquals("topsecret", adminDetails.getPassword());
+        assertNotNull(adminDetails);
+        assertEquals(EXISTING_USERNAME, adminDetails.getUsername());
+        assertEquals(EXISTING_PASSWORD, adminDetails.getPassword());
 
-        Assertions.assertEquals(2, adminDetails.getAuthorities().size());
-        Assertions.assertEquals(roles.get(0).getRole(), Role.ADMIN);
-        Assertions.assertEquals(roles.get(1).getRole(), Role.USER);
+        assertEquals(2, adminDetails.getAuthorities().size());
+        assertEquals(roles.get(0).getRole(), Role.ADMIN);
+        assertEquals(roles.get(1).getRole(), Role.USER);
 
 
     }
@@ -73,7 +77,7 @@ public class ApplicationUserDetailsServiceTest {
     @Test
     void testUserNotFount(){
         assertThrows(UsernameNotFoundException.class, () -> {
-            toTest.loadUserByUsername(NON_EXISTING_USERNAME);
+            mockUserRepo.loadUserByUsername(NON_EXISTING_USERNAME);
         });
     }
 }

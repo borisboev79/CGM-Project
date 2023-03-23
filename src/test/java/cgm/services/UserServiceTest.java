@@ -2,12 +2,15 @@ package cgm.services;
 
 import cgm.model.dto.UserModificationDto;
 import cgm.model.dto.UserRegistrationDto;
+import cgm.model.entity.BranchEntity;
+import cgm.model.entity.RoleEntity;
 import cgm.model.entity.UserEntity;
+import cgm.model.enums.BranchCode;
+import cgm.model.enums.Role;
 import cgm.repository.BranchRepository;
 import cgm.repository.RoleRepository;
 import cgm.repository.UserRepository;
 import cgm.service.UserService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,15 +22,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
-    private final String EXISTING_USERNAME = "admin";
+    private final String NEW_USERNAME = "petrov";
     private final String RAW_PASSWORD = "topsecret";
-    private final String ENCODED_PASSWORD = "topsecret";
+    private final String ENCODED_PASSWORD = "%($)GGPPP3fdfd";
 
     private final String FIRST_NAME = "Boris";
     private final String LAST_NAME = "Boev";
@@ -51,28 +57,54 @@ public class UserServiceTest {
     @Captor
     private ArgumentCaptor<UserEntity> userEntityArgumentCaptor;
 
-    private UserService toTest;
+    private UserService testUserService;
 
     @BeforeEach
     void setUp(){
-        toTest = new UserService(mockUserRepository, mockBranchRepository, mockRoleRepository, mockPasswordEncoder, mockMapper);
+        testUserService = new UserService(mockUserRepository, mockBranchRepository, mockRoleRepository, mockPasswordEncoder, mockMapper);
+
+        //Ако тук създадем някакъв обект, той трябва задължително да се използва във всички тествани методи по-долу. Ако това не стане, тестът ще гръмне
+        // с Unecessary stubbings detected. За да избегнем това, преди такъв обект, който примерно ще ползваме все пак в повечето тестове, пишем
+        // lenient().
+
     }
 
     @Test
     void testUserRegistration(){
 
+        BranchEntity testBranchEntity = new BranchEntity().builder()
+                .name("Head Office")
+                .code(BranchCode.HEAD)
+                .address("Sofia")
+                .email("head@sofia.bg")
+                .build();
+
+        RoleEntity testRoleEntity = new RoleEntity();
+        testRoleEntity.setRole(Role.USER);
+        testRoleEntity.setDescription("User");
+
+
+
         UserRegistrationDto testRegistrationDto = new UserRegistrationDto();
         testRegistrationDto.setFirstName(FIRST_NAME);
         testRegistrationDto.setLastName(LAST_NAME);
-        testRegistrationDto.setUsername(EXISTING_USERNAME);
-        testRegistrationDto.setPassword(mockPasswordEncoder.encode(RAW_PASSWORD));
+        testRegistrationDto.setUsername(NEW_USERNAME);
+        testRegistrationDto.setPassword(RAW_PASSWORD);
+        testRegistrationDto.setBranch(BranchCode.HEAD);
+        testRegistrationDto.setRoles(List.of(Role.USER));
+
 
         when(mockPasswordEncoder.encode(testRegistrationDto.getPassword())).thenReturn(ENCODED_PASSWORD);
+        when(mockBranchRepository.findBranchEntityByCode(testRegistrationDto.getBranch())).thenReturn(Optional.of(testBranchEntity));
+        when(mockRoleRepository.findRoleEntityByRole(testRegistrationDto.getRoles().get(0))).thenReturn(Optional.of(testRoleEntity));
 
-        toTest.registerUser(testRegistrationDto);
+        testUserService.registerUser(testRegistrationDto);
 
         Mockito.verify(mockUserRepository).save(userEntityArgumentCaptor.capture());
-        assertEquals(FIRST_NAME, userEntityArgumentCaptor.getValue().getFirstName());
+
+        UserEntity savedUser = userEntityArgumentCaptor.getValue();
+        assertEquals(FIRST_NAME, savedUser.getFirstName());
+        assertEquals(ENCODED_PASSWORD, savedUser.getPassword());
 
 
 }
