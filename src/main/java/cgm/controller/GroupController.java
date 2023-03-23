@@ -88,7 +88,7 @@ public class GroupController {
 
         String id = String.valueOf(this.groupService.createGroup(groupAddDto, userDetails.getUsername()).getId());
 
-        return String.format("redirect:/groups/add/cabins/%s", id);
+        return String.format("redirect:/cabins/add/%s", id);
 
     }
 

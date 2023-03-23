@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,6 +35,9 @@ public class UserServiceTest {
     private final String NEW_USERNAME = "petrov";
     private final String RAW_PASSWORD = "topsecret";
     private final String ENCODED_PASSWORD = "%($)GGPPP3fdfd";
+
+    private final Long VALID_ID = 1L;
+    private final Long INVALID_ID = 300L;
 
     private final String FIRST_NAME = "Boris";
     private final String LAST_NAME = "Boev";
@@ -59,9 +63,40 @@ public class UserServiceTest {
 
     private UserService testUserService;
 
+    private BranchEntity testBranchEntity;
+
+    private RoleEntity testRoleEntity;
+
+    private UserRegistrationDto testRegistrationDto;
+
     @BeforeEach
     void setUp(){
         testUserService = new UserService(mockUserRepository, mockBranchRepository, mockRoleRepository, mockPasswordEncoder, mockMapper);
+
+        testBranchEntity = BranchEntity.builder()
+                .name("Head Office")
+                .code(BranchCode.HEAD)
+                .address("Sofia")
+                .email("head@sofia.bg")
+                .build();
+
+        testRoleEntity = new RoleEntity();
+        testRoleEntity.setRole(Role.USER);
+        testRoleEntity.setDescription("User");
+
+        testRegistrationDto = new UserRegistrationDto();
+        testRegistrationDto.setFirstName(FIRST_NAME);
+        testRegistrationDto.setLastName(LAST_NAME);
+        testRegistrationDto.setUsername(NEW_USERNAME);
+        testRegistrationDto.setPassword(RAW_PASSWORD);
+        testRegistrationDto.setBranch(BranchCode.HEAD);
+        testRegistrationDto.setRoles(List.of(Role.USER));
+        testRegistrationDto.setId(VALID_ID);
+
+        lenient().when(mockPasswordEncoder.encode(testRegistrationDto.getPassword())).thenReturn(ENCODED_PASSWORD);
+        lenient().when(mockBranchRepository.findBranchEntityByCode(testRegistrationDto.getBranch())).thenReturn(Optional.of(testBranchEntity));
+        lenient().when(mockRoleRepository.findRoleEntityByRole(testRegistrationDto.getRoles().get(0))).thenReturn(Optional.of(testRoleEntity));
+
 
         //Ако тук създадем някакъв обект, той трябва задължително да се използва във всички тествани методи по-долу. Ако това не стане, тестът ще гръмне
         // с Unecessary stubbings detected. За да избегнем това, преди такъв обект, който примерно ще ползваме все пак в повечето тестове, пишем
@@ -70,41 +105,30 @@ public class UserServiceTest {
     }
 
     @Test
+    public void testGetUserById(){
+
+        UserEntity savedUser = userEntityArgumentCaptor.getValue();
+
+
+
+        when(testUserService.getAllUsers()).thenReturn(List.of(savedUser));
+
+        testUserService.getAllUsers();
+
+
+    }
+
+    @Test
     void testUserRegistration(){
-
-        BranchEntity testBranchEntity = new BranchEntity().builder()
-                .name("Head Office")
-                .code(BranchCode.HEAD)
-                .address("Sofia")
-                .email("head@sofia.bg")
-                .build();
-
-        RoleEntity testRoleEntity = new RoleEntity();
-        testRoleEntity.setRole(Role.USER);
-        testRoleEntity.setDescription("User");
-
-
-
-        UserRegistrationDto testRegistrationDto = new UserRegistrationDto();
-        testRegistrationDto.setFirstName(FIRST_NAME);
-        testRegistrationDto.setLastName(LAST_NAME);
-        testRegistrationDto.setUsername(NEW_USERNAME);
-        testRegistrationDto.setPassword(RAW_PASSWORD);
-        testRegistrationDto.setBranch(BranchCode.HEAD);
-        testRegistrationDto.setRoles(List.of(Role.USER));
-
-
-        when(mockPasswordEncoder.encode(testRegistrationDto.getPassword())).thenReturn(ENCODED_PASSWORD);
-        when(mockBranchRepository.findBranchEntityByCode(testRegistrationDto.getBranch())).thenReturn(Optional.of(testBranchEntity));
-        when(mockRoleRepository.findRoleEntityByRole(testRegistrationDto.getRoles().get(0))).thenReturn(Optional.of(testRoleEntity));
 
         testUserService.registerUser(testRegistrationDto);
 
-        Mockito.verify(mockUserRepository).save(userEntityArgumentCaptor.capture());
+        Mockito.verify(mockUserRepository).saveAndFlush(userEntityArgumentCaptor.capture());
 
         UserEntity savedUser = userEntityArgumentCaptor.getValue();
         assertEquals(FIRST_NAME, savedUser.getFirstName());
         assertEquals(ENCODED_PASSWORD, savedUser.getPassword());
+        assertEquals(1, savedUser.getRoles().size());
 
 
 }
