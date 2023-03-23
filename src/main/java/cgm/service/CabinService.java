@@ -1,28 +1,33 @@
 package cgm.service;
 
+import cgm.model.ObjectNotFoundException;
 import cgm.model.dto.CabinAddDto;
+import cgm.model.entity.BranchEntity;
 import cgm.model.entity.Cabin;
 import cgm.model.entity.CruiseGroup;
-import cgm.model.entity.Guest;
 import cgm.repository.CabinRepository;
 import cgm.repository.GroupRepository;
+import cgm.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CabinService {
     private final CabinRepository cabinRepository;
     private final GroupRepository groupRepository;
+    private final UserRepository userRepository;
     private final ModelMapper mapper;
 
     @Autowired
-    public CabinService(CabinRepository cabinRepository, GroupRepository groupRepository, ModelMapper mapper) {
+    public CabinService(CabinRepository cabinRepository, GroupRepository groupRepository, UserRepository userRepository, ModelMapper mapper) {
         this.cabinRepository = cabinRepository;
         this.groupRepository = groupRepository;
+        this.userRepository = userRepository;
         this.mapper = mapper;
     }
 
@@ -47,18 +52,19 @@ public class CabinService {
             group.setSoldOut(false);
             this.groupRepository.save(group);
         }
-
-
     }
 
 
     public Cabin findById(Long id) {
-        return this.cabinRepository.findById(id).orElse(null);
+        return this.cabinRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id, "cabin"));
     }
 
-    public void closeCabin(Cabin cabinToClose) {
+    public void closeCabin(Cabin cabinToClose, String username) {
+
+        BranchEntity addedBy = Objects.requireNonNull(this.userRepository.findUserEntityByUsername(username).orElse(null)).getBranch();
 
         cabinToClose.setFull(true);
+        cabinToClose.setAddedBy(addedBy);
 
         this.cabinRepository.save(cabinToClose);
     }

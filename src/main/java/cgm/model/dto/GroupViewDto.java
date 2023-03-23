@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class GroupViewDto {
 
+    private Long id;
     private String name;
 
     private Long duration;

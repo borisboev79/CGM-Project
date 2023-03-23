@@ -5,7 +5,7 @@ import cgm.model.CurrentUser;
 import cgm.model.ObjectNotFoundException;
 import cgm.model.dto.CabinAddDto;
 import cgm.model.dto.GroupAddDto;
-import cgm.model.entity.CruiseGroup;
+import cgm.model.dto.GroupViewDto;
 import cgm.model.entity.CruiseLine;
 import cgm.model.enums.Transportation;
 import cgm.service.CruiseLineService;
@@ -49,7 +49,7 @@ public class GroupController {
             model.addAttribute("firstName", currentUser.getFirstName());
         }
 
-        List<CruiseGroup> groups = this.groupService.getAllGroups();
+        List<GroupViewDto> groups = this.groupService.getAllGroups();
 
         model.addAttribute("groups", groups);
 
@@ -101,7 +101,7 @@ public class GroupController {
             model.addAttribute("firstName", currentUser.getFirstName());
         }
 
-        CruiseGroup cruiseGroup = this.groupService.findById(id);
+        GroupViewDto cruiseGroup = this.groupService.findById(id);
 
         if (cruiseGroup == null) {
             throw new ObjectNotFoundException(id, "group");
@@ -118,7 +118,7 @@ public class GroupController {
             model.addAttribute("firstName", currentUser.getFirstName());
         }
 
-        List<CruiseGroup> groups = this.groupService.getAllGroups();
+        List<GroupViewDto> groups = this.groupService.getAllGroups();
 
         model.addAttribute("groups", groups);
 

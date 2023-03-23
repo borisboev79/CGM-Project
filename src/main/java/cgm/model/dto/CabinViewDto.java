@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CabinViewDto {
 
-
+    private Long id;
     private String cabinCode;
 
     private CabinType type;
@@ -31,7 +31,7 @@ public class CabinViewDto {
 
     private int paxNumber;
 
-    private BranchCode addedBy;
+    private BranchCode addedByCode;
     private boolean isFull;
 
 

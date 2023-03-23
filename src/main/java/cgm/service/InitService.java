@@ -5,7 +5,6 @@ import cgm.model.enums.BranchCode;
 import cgm.model.enums.Role;
 import cgm.repository.*;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,7 @@ public class InitService {
                        UserRepository userRepository,
                        BranchRepository branchRepository,
                        PasswordEncoder passwordEncoder,
-                       @Value("${app.default.password}") String defaultPassword,
+                      // @Value("${app.default.password}") String defaultPassword,
                        CruiseLineRepository cruiseLineRepository,
                        ShipRepository shipRepository) {
 

@@ -1,6 +1,9 @@
 package cgm.service;
 
+import cgm.model.ObjectNotFoundException;
+import cgm.model.dto.CabinViewDto;
 import cgm.model.dto.GroupAddDto;
+import cgm.model.dto.GroupViewDto;
 import cgm.model.entity.Cabin;
 import cgm.model.entity.CruiseGroup;
 import cgm.repository.GroupRepository;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -51,29 +55,48 @@ public class GroupService {
         return date.plusDays(1).atStartOfDay(zoneId).toInstant();
     }
 
-    public List<CruiseGroup> getAllGroups() {
-        return this.groupRepository.findAll();
+    public List<GroupViewDto> getAllGroups() {
+
+        List<GroupViewDto> groups = new ArrayList<>();
+
+        for (CruiseGroup group : this.groupRepository.findAll()) {
+
+            List<CabinViewDto> cabins = group.getCabins()
+                    .stream()
+                    .map(cabin -> mapper.map(cabin, CabinViewDto.class))
+                    .toList();
+
+            GroupViewDto groupView = this.mapper.map(group, GroupViewDto.class);
+            groupView.setCabins(cabins);
+
+            groups.add(groupView);
+        }
+
+        return groups;
     }
 
-    public CruiseGroup findById(Long id) {
-        return this.groupRepository.findById(id).orElse(null);
+
+    public GroupViewDto findById(Long id) {
+
+        CruiseGroup cruiseGroup = this.groupRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id, "group"));
+
+        return mapper.map(cruiseGroup, GroupViewDto.class);
+
     }
 
     public void checkAvailability(CruiseGroup cruiseGroup) {
         List<Cabin> freeCabins = cruiseGroup.getCabins().stream().filter(cabin -> !cabin.isFull()).toList();
-        if(freeCabins.isEmpty()){
+        if (freeCabins.isEmpty()) {
             cruiseGroup.setSoldOut(true);
             this.groupRepository.save(cruiseGroup);
         }
     }
 
     @Transactional
-    public void deleteGroupById(Long id){
-        CruiseGroup groupToDelete = this.groupRepository.findById(id).orElse(null);
+    public void deleteGroupById(Long id) {
+        CruiseGroup groupToDelete = this.groupRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id, "group"));
 
-        if(groupToDelete != null) {
-            this.groupRepository.delete(groupToDelete);
-            System.out.println(groupToDelete);
-        }
+        this.groupRepository.delete(groupToDelete);
     }
+
 }

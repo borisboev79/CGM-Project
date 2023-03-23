@@ -21,7 +21,8 @@
              th:object="${cruiseGroup}">
 
             <div class="card-body pb-1">
-                <h5 class="card-title" th:text="*{name}"></h5>
+                <h5 class="card-title" th:classappend="text-primary" th:text="*{name}"></h5>
+                <h5 class="card-title" th:text="*{shipName}"></h5>
                 <h5 class="card-title" th:text="*{duration + ' days'}"></h5>
             </div>
             <ul class="offer-details list-group list-group-flush">
@@ -66,7 +67,7 @@
             <img th:src="${cruiseGroup.imageUrl}" class="card-img-top" alt="Group image">
             <div class="card-text">
                 <span>Group Added By: <th:block
-                        th:text="${cruiseGroup.getEmployee().getFirstName() + ' ' + cruiseGroup.getEmployee().getLastName()}"/></span>
+                        th:text="${cruiseGroup.getEmployee().firstName + ' ' + cruiseGroup.getEmployee().lastName}"/></span>
             </div>
 
         </div>
@@ -138,7 +139,7 @@
                     <td style="font-weight: bold" th:text="*{'€' + totalPrice}"></td>
                     <td th:text="*{maxOccupancy}"></td>
                     <td th:text="*{paxNumber}"></td>
-                    <td th:text="*{addedBy == null} ? 'For Sale' : *{addedBy.code}"></td>
+                    <td th:text="*{addedByCode == null} ? 'For Sale' : *{addedByCode}"></td>
 
                     <td th:if="${!cabin.full}"><a class="btn btn-info btn-sm"
                                                   th:href="@{/guests/add/{id}(id = *{id})}">Add guests</a></td>

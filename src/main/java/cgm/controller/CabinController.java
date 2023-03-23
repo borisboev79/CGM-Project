@@ -3,8 +3,8 @@ package cgm.controller;
 import cgm.model.CurrentUser;
 import cgm.model.ObjectNotFoundException;
 import cgm.model.dto.CabinAddDto;
+import cgm.model.dto.GroupViewDto;
 import cgm.model.entity.Cabin;
-import cgm.model.entity.CruiseGroup;
 import cgm.model.enums.CabinType;
 import cgm.service.CabinService;
 import cgm.service.GroupService;
@@ -43,7 +43,7 @@ public class CabinController {
 
         model.addAttribute("firstName", currentUser.getFirstName());
 
-        CruiseGroup currentGroup = this.groupService.findById(id);
+        GroupViewDto currentGroup = this.groupService.findById(id);
 
         if (currentGroup == null) {
             throw new ObjectNotFoundException(id, "group");
@@ -62,7 +62,7 @@ public class CabinController {
                             RedirectAttributes redirectAttributes,
                             @PathVariable Long id) {
 
-        CruiseGroup currentGroup = this.groupService.findById(id);
+        GroupViewDto currentGroup = this.groupService.findById(id);
 
         if (currentGroup == null) {
             throw new ObjectNotFoundException(id, "group");
@@ -86,7 +86,7 @@ public class CabinController {
 
 
     @GetMapping("/close/{id}")
-    public String closeCabin(@PathVariable Long id) {
+    public String closeCabin(@PathVariable Long id, @AuthenticationPrincipal CurrentUser currentUser) {
 
         final Cabin cabinToClose = this.cabinService.findById(id);
 
@@ -96,7 +96,7 @@ public class CabinController {
 
         Long groupId = cabinToClose.getCruiseGroup().getId();
 
-        this.cabinService.closeCabin(cabinToClose);
+        this.cabinService.closeCabin(cabinToClose, currentUser.getUsername());
 
         this.groupService.checkAvailability(cabinToClose.getCruiseGroup());
 

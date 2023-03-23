@@ -1,6 +1,7 @@
 package cgm.controller;
 
 import cgm.model.dto.GroupAddDto;
+import cgm.model.dto.GroupViewDto;
 import cgm.model.entity.CruiseGroup;
 import cgm.model.entity.CruiseLine;
 import cgm.service.CruiseLineService;
@@ -38,8 +39,8 @@ public class GroupControllerIntegrationTest {
     @Test
     public void testGetAllGroups() throws Exception {
         // Mock the service layer to return a list of CruiseGroup objects
-        List<CruiseGroup> groups = new ArrayList<>();
-        groups.add(new CruiseGroup());
+        List<GroupViewDto> groups = new ArrayList<>();
+        groups.add(new GroupViewDto());
         when(groupService.getAllGroups()).thenReturn(groups);
 
         // Make a GET request to /groups/all
@@ -85,7 +86,7 @@ public class GroupControllerIntegrationTest {
     @Test
     public void testGetDetails() throws Exception {
         // Mock the service layer to return a CruiseGroup object
-        CruiseGroup group = new CruiseGroup();
+        GroupViewDto group = new GroupViewDto();
         group.setId(1L);
         when(groupService.findById(1L)).thenReturn(group);
 
@@ -99,8 +100,8 @@ public class GroupControllerIntegrationTest {
     @Test
     public void testGetGroupsDelete() throws Exception {
         // Mock the service layer to return a list of CruiseGroup objects
-        List<CruiseGroup> groups = new ArrayList<>();
-        groups.add(new CruiseGroup());
+        List<GroupViewDto> groups = new ArrayList<>();
+        groups.add(new GroupViewDto());
         when(groupService.getAllGroups()).thenReturn(groups);
 
         // Make a GET request to /groups/delete
