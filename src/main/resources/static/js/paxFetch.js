@@ -7,13 +7,23 @@ const fetchPax = async (id) => {
             'Content-type': 'application/json'
         }
     })
-        .catch(err => {
-            console.log("Error SHIT, ", err)
+        .then(resp => {
+            if (resp.status !== 200) {
+                throw new Error("No passengers were found in this group!");
+            }
+            return resp.json()
         })
-    const resp = await response.json();
-    resp.forEach(pax => {
-        tBody.appendChild(createTR(pax))
-    })
+        .catch(err => {
+            return { 'error': err.message};
+        });
+
+    if (!response.error) {
+        response.forEach(pax => {
+            tBody.appendChild(createTR(pax));
+        })
+    } else {
+        tBody.appendChild(createTrError(response.error));
+    }
     showHideContainer(true);
 }
 
@@ -47,8 +57,13 @@ const createTR = (pax) => {
         const tdSaveBtn = createTD()
         const btnSave = createTDButton(async () => {
             const response = await sendUpdate(trData)
+            if(!response.error) {
                 pax = {...response}
                 toggleCallback(response)
+            } else {
+                alert(response.error)
+                toggleCallback()
+            }
         }, "Save")
 
         tdSaveBtn.appendChild(btnSave)
@@ -70,7 +85,6 @@ const createTR = (pax) => {
                 egn.textContent = responseData.egn
                 passport.textContent = responseData.passportNumber
             }
-            console.log("fullName", fullName)
             tr.replaceChild(fullName, editFullName.td)
             tr.replaceChild(birthDate, editBirthDate.td)
             tr.replaceChild(email, editEmail.td)
@@ -160,10 +174,22 @@ const createTR = (pax) => {
     tr.appendChild(tdEdit)
     const tdDelete = createTD()
     tdDelete.appendChild(createTDButton(async () => {
-        await sendDelete(pax.id, tBody, tr)
+        if (confirm("Do you really want to delete this passenger?")) {
+            await sendDelete(pax.id, tBody, tr)
+        }
     }, "Delete")).classList.add("bg-danger")
     tr.appendChild(tdDelete)
 
+    return tr
+}
+
+const createTrError = (err) => {
+    const tr = document.createElement("tr")
+    const td = document.createElement("td")
+    tr.classList.add("bg-danger", "text-white", "text-center")
+    td.textContent = err
+    td.setAttribute("colspan", "11")
+    tr.appendChild(td)
     return tr
 }
 
@@ -218,8 +244,7 @@ function validateEgn(value)
 function dateConverter(value) {
     const dateParts = value.split("/")
     const formattedDate = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2]
-    const date = new Date(formattedDate)
-    return date
+    return new Date(formattedDate)
 }
 
 async function sendUpdate(data) {
@@ -227,7 +252,7 @@ async function sendUpdate(data) {
     const csrfHeaderName = document.getElementById("csrf").getAttribute("name")
     const csrfHeaderToken = document.getElementById("csrf").getAttribute("value")
 
-    const resp = await fetch(`${hostName}/api/guests/edit`, {
+    return await fetch(`${hostName}/api/guests/edit`, {
         method: "PUT",
         body: JSON.stringify(data),
         headers: {
@@ -235,24 +260,22 @@ async function sendUpdate(data) {
             [csrfHeaderName]: csrfHeaderToken
         }
     })
-        /*.then(resp => {
+        .then(resp => {
             if(resp.status !== 200) {
-                alert("Unsuccessful edit. Please, try again later :)")
+                throw new Error("Unsuccessful update of passenger details. Please, try again later.")
             }
-
-        })*/
+            return resp.json()
+        })
         .catch(err => {
-            console.log("Error SHIT, ", err)
+            return { 'error': err.message }
         });
-    const jsonResp = await resp.json();
-    return jsonResp;
 }
 
 async function sendDelete(id, parentNode, childNode) {
     const csrfHeaderName = document.getElementById("csrf").getAttribute("name")
     const csrfHeaderToken = document.getElementById("csrf").getAttribute("value")
 
-    const resp = await fetch(`${hostName}/api/guests/delete/${id}`, {
+    await fetch(`${hostName}/api/guests/delete/${id}`, {
         method: "DELETE",
         headers: {
             'Content-type': 'application/json',
@@ -260,14 +283,14 @@ async function sendDelete(id, parentNode, childNode) {
         }
     })
         .then(r => {
-            if(r.status === 200) {
-                parentNode.removeChild(childNode)
-            } else {
-                console.log("Something happened")
+            if(r.status !== 200) {
+                throw new Error("Error deleting passenger! They may have been already deleted.")
             }
+            parentNode.removeChild(childNode)
+            return
         })
         .catch(err => {
-            console.log("Error SHIT, ", err)
+            alert(err.message)
         });
 }
 

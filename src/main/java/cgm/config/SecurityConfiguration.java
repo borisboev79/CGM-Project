@@ -45,7 +45,7 @@ public class SecurityConfiguration {
                 requestMatchers("/groups", "/groups/add", "/groups/delete", "auth/modify").hasRole(Role.ADMIN.name()).
                 anyRequest().authenticated().
 
-                and().
+        and().
                 formLogin().
                 loginPage("/auth/login").
                 usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY).

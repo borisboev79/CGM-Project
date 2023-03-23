@@ -79,9 +79,6 @@ public class GuestService {
 
     @Transactional
     public GuestViewDto editGuest(GuestViewDto guestViewDto) {
-        /*if(guestViewDto.getId() != 10000) {
-            throw new ObjectNotFoundException(100L, "test");
-        }*/
 
         Guest guest = this.guestRepository.findById(guestViewDto.getId())
                 .orElseThrow(() -> new ObjectNotFoundException(guestViewDto.getId(), "guest"));
@@ -165,19 +162,24 @@ public class GuestService {
 
     public List<GuestViewDto> getAllGuests(Long id) {
 
-        List<GuestViewDto> guestViews = new ArrayList<>();
+       // List<GuestViewDto> guestViews = new ArrayList<>();
 
         List<Guest> groupGuests = this.guestRepository.findAllByCabin_CruiseGroup_Id(id)
-                .orElseThrow(() -> new ObjectNotFoundException(id, "cabin"))
-                .stream().toList();
+                .orElseThrow(() -> new ObjectNotFoundException(id, "cabin"));
 
-        for (Guest groupGuest : groupGuests) {
+       /* for (Guest groupGuest : groupGuests) {
             GuestViewDto guestView = mapper.map(groupGuest, GuestViewDto.class);
             guestView.setCabinNumber(groupGuest.getCabin().getId());
             guestViews.add(guestView);
-        }
+        }*/
 
-        return guestViews;
+       return groupGuests.stream().map(guest -> {
+            GuestViewDto guestView = mapper.map(guest, GuestViewDto.class);
+            guestView.setCabinNumber(guest.getCabin().getId());
+            return guestView;
+        }).toList();
+
+      //  return guestViews;
     }
 
     private Instant dateToInstant(LocalDate date) {
