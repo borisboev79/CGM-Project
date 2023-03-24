@@ -23,10 +23,11 @@ spring:
       filter:
         enabled: true
 
+hostName: http://localhost:8080
+
 app:
   default:
     password: topsecret
-
 
 mail:
   host: localhost

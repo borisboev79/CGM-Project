@@ -29,6 +29,7 @@ public class RegistrationControllerIT {
     @WithMockUser("admin")
     void testRegistration() throws Exception {
         mockMvc.perform(post("http://localhost:8080/users/register")
+
                         .param("id", "1")
                         .param("username", "kireto")
                         .param("password", "topsecret")

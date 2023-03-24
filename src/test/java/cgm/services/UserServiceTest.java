@@ -12,6 +12,7 @@ import cgm.repository.BranchRepository;
 import cgm.repository.RoleRepository;
 import cgm.repository.UserRepository;
 import cgm.service.UserService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +25,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -58,31 +61,26 @@ public class UserServiceTest {
     @Captor
     private ArgumentCaptor<UserEntity> userEntityArgumentCaptor;
 
-
-    @Captor
-    private ArgumentCaptor<UserViewDto> dtoArgumentCaptor;
-
-
-    @Mock
+    @InjectMocks
     private UserService testUserService;
 
-    @InjectMocks
+
     private BranchEntity testBranchEntity;
 
 
-    @InjectMocks
     private RoleEntity testRoleEntity;
 
-    @InjectMocks
+
     private UserRegistrationDto testRegistrationDto;
 
-    @InjectMocks
-    private UserViewDto testUserViewDto;
+
+    private UserViewDto userViewDto;
+
+    private UserEntity userEntity;
 
 
     @BeforeEach
-    void setUp(){
-        testUserService = new UserService(mockUserRepository, mockBranchRepository, mockRoleRepository, mockPasswordEncoder, mockMapper);
+    void setUp() {
 
         testBranchEntity = BranchEntity.builder()
                 .name("Head Office")
@@ -104,6 +102,24 @@ public class UserServiceTest {
         testRegistrationDto.setRoles(List.of(Role.USER));
         testRegistrationDto.setId(VALID_ID);
 
+        userEntity = UserEntity.builder()
+                .username(NEW_USERNAME)
+                .password(mockPasswordEncoder.encode(RAW_PASSWORD))
+                .firstName(FIRST_NAME)
+                .lastName(LAST_NAME)
+                .branch(testBranchEntity)
+                .roles(List.of(testRoleEntity))
+                .build();
+
+        userViewDto = UserViewDto.builder()
+                .username(NEW_USERNAME)
+                .password(ENCODED_PASSWORD)
+                .firstName(FIRST_NAME)
+                .lastName(LAST_NAME)
+                .branch("SOFR")
+                .roles("USER")
+                .build();
+
         lenient().when(mockPasswordEncoder.encode(testRegistrationDto.getPassword())).thenReturn(ENCODED_PASSWORD);
         lenient().when(mockBranchRepository.findBranchEntityByCode(testRegistrationDto.getBranch())).thenReturn(Optional.of(testBranchEntity));
         lenient().when(mockRoleRepository.findRoleEntityByRole(testRegistrationDto.getRoles().get(0))).thenReturn(Optional.of(testRoleEntity));
@@ -117,7 +133,7 @@ public class UserServiceTest {
 
 
     @Test
-    void testUserRegistration(){
+    void testUserRegistration() {
 
         testUserService.registerUser(testRegistrationDto);
 
@@ -129,10 +145,20 @@ public class UserServiceTest {
         assertEquals(1, savedUser.getRoles().size());
 
 
-}
+    }
 
     @Test
-    void testUserModification(){
+    void testGetAllUsers() {
+        lenient().when(mockUserRepository.findAll()).thenReturn(List.of(userEntity));
+        lenient().when(mockMapper.map(userEntity, UserViewDto.class)).thenReturn(userViewDto);
+
+        Assertions.assertEquals(userEntity.getLastName(), userViewDto.getLastName());
+
+    }
+
+
+    @Test
+    void testUserModification() {
 
         UserModificationDto testModificationDto = new UserModificationDto();
         testModificationDto.setFirstName(FIRST_NAME);

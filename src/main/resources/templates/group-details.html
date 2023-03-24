@@ -163,5 +163,8 @@
 <footer th:replace="~{fragments/footer}"></footer>
 
 </body>
+<script th:inline="javascript">
+const hostName=/*[[${@environment.getProperty('hostName')}]]*/ 'http://localhost:8080';
+</script>
 <script type="text/javascript" th:src="@{/js/paxFetch.js}"></script>
 </html>

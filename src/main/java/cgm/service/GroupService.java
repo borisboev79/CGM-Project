@@ -6,6 +6,7 @@ import cgm.model.dto.GroupAddDto;
 import cgm.model.dto.GroupViewDto;
 import cgm.model.entity.Cabin;
 import cgm.model.entity.CruiseGroup;
+import cgm.model.entity.Ship;
 import cgm.repository.GroupRepository;
 import cgm.repository.ShipRepository;
 import cgm.repository.UserRepository;
@@ -38,12 +39,13 @@ public class GroupService {
     public CruiseGroup createGroup(GroupAddDto groupAddDto, String principalUsername) {
 
         CruiseGroup group = mapper.map(groupAddDto, CruiseGroup.class);
+        Ship ship = this.shipRepository.findShipByName(groupAddDto.getShip()).orElseThrow();
 
         group.setStartDate(dateToInstant(groupAddDto.getStartDate()));
         group.setEndDate(dateToInstant(groupAddDto.getEndDate()));
         group.setDuration(groupAddDto.getEndDate().toEpochDay() - groupAddDto.getStartDate().toEpochDay());
         group.setEmployee(this.userRepository.findUserEntityByUsername(principalUsername).orElseThrow());
-        group.setShip(this.shipRepository.findShipByName(groupAddDto.getShip()).orElseThrow());
+        group.setShip(ship);
 
         this.groupRepository.saveAndFlush(group);
 

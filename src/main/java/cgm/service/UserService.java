@@ -67,9 +67,7 @@ public class UserService {
 
     public List<UserViewDto> getAllUsers() {
 
-        List<UserViewDto> userViews = new ArrayList<>();
-
-        this.userRepository.findAll().forEach(user -> {
+        return this.userRepository.findAll().stream().map(user -> {
 
             UserViewDto userViewDto = new UserViewDto();
 
@@ -79,10 +77,8 @@ public class UserService {
                     .map(RoleEntity::toString)
                     .collect(Collectors.joining(", ")));
 
-            userViews.add(userViewDto);
-        });
-
-        return userViews;
+            return userViewDto;
+        }).toList();
     }
 
 

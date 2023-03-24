@@ -1,4 +1,3 @@
-const hostName = "http://localhost:8080";
 const tBody = document.getElementById("pax-info")
 const fetchPax = async (id) => {
     const response = await fetch(`${hostName}/api/guests/${id}`, {
