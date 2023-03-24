@@ -44,7 +44,7 @@ public class GroupAddDto {
     @FutureOrPresent(message = "End date cannot be in the past.")
     private LocalDate endDate;
 
-    @Size(min = 10)
+    @Size(min = 10, max = 1000)
     @NotBlank
     private String itinerary;
 

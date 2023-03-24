@@ -26,7 +26,7 @@ public class UserEntity extends BaseEntity {
     @Column(name="last-name", nullable = false)
     private String lastName;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private List<RoleEntity> roles;
 
     @ManyToOne(optional = false)

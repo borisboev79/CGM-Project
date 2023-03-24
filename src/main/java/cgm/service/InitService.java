@@ -5,6 +5,7 @@ import cgm.model.enums.BranchCode;
 import cgm.model.enums.Role;
 import cgm.repository.*;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class InitService {
     private final CruiseLineRepository cruiseLineRepository;
     private final ShipRepository shipRepository;
 
+    @Autowired
     public InitService(RoleRepository roleRepository,
                        UserRepository userRepository,
                        BranchRepository branchRepository,
@@ -61,6 +63,7 @@ public class InitService {
 
     private void initBranches() {
         if (branchRepository.count() == 0) {
+
             List<BranchEntity> branches = List.of(
                     BranchEntity.builder().name("Head Office").code(BranchCode.HEAD).address("София, пл. Папа Йоан Павел II №1, ет.7").email("products@usitcolours.bg").build(),
                     BranchEntity.builder().name("Blagoevgrad").code(BranchCode.BLGD).address("Благоевград, ул. Крали Марко 1").email("blgd@usitcolours.bg").build(),
@@ -82,12 +85,13 @@ public class InitService {
     }
 
     private void initAdmin() {
+
         UserEntity adminUser = UserEntity.builder()
                 .username("admin")
                 .password(passwordEncoder.encode("topsecret"))
                 .firstName("Boris")
                 .lastName("Boev")
-                .branch(this.branchRepository.findByName("Head office").orElseThrow())
+                .branch(this.branchRepository.findByName("Head Office").orElseThrow())
                 .roles(this.roleRepository.findAll()).build();
 
         this.userRepository.save(adminUser);
@@ -103,7 +107,7 @@ public class InitService {
                 .password(passwordEncoder.encode("topsecret"))
                 .firstName("Boryana")
                 .lastName("Veselinova")
-                .branch(this.branchRepository.findByName("Sofia central").orElseThrow())
+                .branch(this.branchRepository.findBranchEntityByCode(BranchCode.BLGD).orElseThrow())
                 .roles(List.of(managerRole))
                 .build();
 

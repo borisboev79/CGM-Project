@@ -27,7 +27,7 @@ public class BranchEntity extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "branch", targetEntity = UserEntity.class, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "branch", targetEntity = UserEntity.class, fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private Set<UserEntity> employees;
 
     @Override

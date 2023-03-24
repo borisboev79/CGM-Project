@@ -2,6 +2,7 @@ package cgm.model.entity;
 
 import cgm.model.enums.Transportation;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -32,7 +33,7 @@ public class CruiseGroup extends BaseEntity {
     @Column
     private Long duration;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, length = 1000)
     private String itinerary;
 
     @Column(nullable = false, name ="image-url")

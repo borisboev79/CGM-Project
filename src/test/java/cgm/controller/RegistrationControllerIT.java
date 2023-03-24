@@ -35,10 +35,10 @@ public class RegistrationControllerIT {
                         .param("firstName", "Kiril")
                         .param("lastName", "Lazarov")
                         .param("userRole", String.valueOf(List.of(Role.USER)))
-                        .param("branch.name", String.valueOf(BranchCode.SOFR))
+                        .param("branch", BranchCode.SOFR.name())
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("http://localhost:8080"));
+                .andExpect(redirectedUrl("/users/register"));
 
 
     }

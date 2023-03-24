@@ -2,6 +2,7 @@ package cgm.model.entity;
 
 import cgm.model.enums.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Getter
@@ -16,7 +17,8 @@ public class RoleEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(columnDefinition = "TEXT")
+    @Column
+    @Size(max = 100)
     private String description;
 
     @Override
