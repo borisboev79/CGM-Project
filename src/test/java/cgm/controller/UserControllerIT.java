@@ -1,10 +1,13 @@
 package cgm.controller;
 
+import cgm.model.dto.UserModificationDto;
 import cgm.model.dto.UserRegistrationDto;
+import cgm.model.entity.UserEntity;
 import cgm.model.enums.BranchCode;
 import cgm.model.enums.Role;
 import cgm.repository.BranchRepository;
 import cgm.repository.UserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +19,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class UserControllerIT {
 
-    private final String EXISTING_USERNAME = "bocho";
-    private final String EXISTING_PASSWORD = "topsecret";
-    private final String EXISTING_FIRST_NAME = "Boris";
-    private final String EXISTING_LAST_NAME = "Boev";
-    private final String NON_EXISTING_USERNAME = "gosho";
+    private final String USERNAME = "kireto";
+    private final String PASSWORD = "topsecret";
+    private final String FIRST_NAME = "Kiril";
+    private final String LAST_NAME = "Lazarov";
+    private final String NEW_LASTNAME = "Karamelski";
     @Autowired
     private MockMvc mockMvc;
 
@@ -37,32 +39,6 @@ public class UserControllerIT {
 
     @Autowired
     private UserRepository userRepository;
-
-    @BeforeEach
-    void setUp() {
-    /*List<RoleEntity> roles = new ArrayList<>();
-
-    RoleEntity adminRole = new RoleEntity();
-        adminRole.setRole(Role.ADMIN);
-        adminRole.setDescription("Admin role");
-        roles.add(adminRole);
-
-    RoleEntity userRole = new RoleEntity();
-        userRole.setRole(Role.USER);
-        userRole.setDescription("User role");
-        roles.add(userRole);
-
-
-   UserEntity admin = UserEntity.builder().username(EXISTING_USERNAME).password(EXISTING_PASSWORD)
-            .firstName(EXISTING_FIRST_NAME).lastName(EXISTING_LAST_NAME).roles(roles).build();
-
-   userRepository.saveAndFlush(admin);
-
-    UserDetails userDetails = userDetailsService.loadUserByUsername(EXISTING_USERNAME);
-
-  */
-
-    }
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
@@ -84,10 +60,10 @@ public class UserControllerIT {
         mockMvc.perform(post("http://localhost:8080/users/register")
 
                         .param("id", "1")
-                        .param("username", "kireto")
-                        .param("password", "topsecret")
-                        .param("firstName", "Kiril")
-                        .param("lastName", "Lazarov")
+                        .param("username", USERNAME)
+                        .param("password", PASSWORD)
+                        .param("firstName", FIRST_NAME)
+                        .param("lastName", LAST_NAME)
                         .param("userRole", String.valueOf(List.of(Role.USER)))
                         .param("branch", BranchCode.SOFR.name())
                         .with(csrf()))
@@ -101,10 +77,10 @@ public class UserControllerIT {
     void testRegistration() throws Exception {
 
         UserRegistrationDto user = UserRegistrationDto.builder()
-                .firstName("Kiril")
-                .lastName("Lazarov")
-                .username("kireto")
-                .password("topsecret")
+                .firstName(FIRST_NAME)
+                .lastName(LAST_NAME)
+                .username(USERNAME)
+                .password(PASSWORD)
                 .branch(BranchCode.HEAD)
                 .roles(List.of(Role.USER))
                 .build();
@@ -143,6 +119,53 @@ public class UserControllerIT {
                 .andExpect(model().attributeExists("managerRole"))
                 .andExpect(model().attributeExists("userRole"))
                 .andExpect(view().name("users-modify"));
+
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void testModifyUser() throws Exception {
+
+        UserModificationDto userModificationDto = UserModificationDto.builder()
+                .id(1L)
+                .firstName(FIRST_NAME)
+                .lastName(NEW_LASTNAME)
+                .username("")
+                .password(PASSWORD)
+                .roles(List.of("USER"))
+                .branch(BranchCode.HEAD)
+                .build();
+
+
+        mockMvc.perform(put("/users/modify/1").flashAttr("userModificationDto", userModificationDto)
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/users/all"));
+
+        UserEntity user = userRepository.findById(1L).orElseThrow();
+        Assertions.assertEquals(user.getLastName(), NEW_LASTNAME);
+
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void testModifyUserError() throws Exception {
+
+        UserModificationDto userModificationDto = UserModificationDto.builder()
+                .id(1L)
+                .firstName("")
+                .lastName(NEW_LASTNAME)
+                .username(USERNAME)
+                .password(PASSWORD)
+                .roles(List.of("USER"))
+                .branch(BranchCode.HEAD)
+                .build();
+
+
+        mockMvc.perform(put("/users/modify/1").flashAttr("userModificationDto", userModificationDto)
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/users/errors/1"));
 
     }
 
