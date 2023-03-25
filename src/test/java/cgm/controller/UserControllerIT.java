@@ -1,35 +1,34 @@
 package cgm.controller;
 
 import cgm.model.dto.UserRegistrationDto;
-import cgm.model.entity.BranchEntity;
 import cgm.model.enums.BranchCode;
 import cgm.model.enums.Role;
-
-
 import cgm.repository.BranchRepository;
 import cgm.repository.UserRepository;
-import cgm.service.ApplicationUserDetailsService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class RegistrationControllerIT {
+public class UserControllerIT {
+
+    private final String EXISTING_USERNAME = "bocho";
+    private final String EXISTING_PASSWORD = "topsecret";
+    private final String EXISTING_FIRST_NAME = "Boris";
+    private final String EXISTING_LAST_NAME = "Boev";
+    private final String NON_EXISTING_USERNAME = "gosho";
     @Autowired
     private MockMvc mockMvc;
 
@@ -39,8 +38,31 @@ public class RegistrationControllerIT {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    @BeforeEach
+    void setUp() {
+    /*List<RoleEntity> roles = new ArrayList<>();
+
+    RoleEntity adminRole = new RoleEntity();
+        adminRole.setRole(Role.ADMIN);
+        adminRole.setDescription("Admin role");
+        roles.add(adminRole);
+
+    RoleEntity userRole = new RoleEntity();
+        userRole.setRole(Role.USER);
+        userRole.setDescription("User role");
+        roles.add(userRole);
+
+
+   UserEntity admin = UserEntity.builder().username(EXISTING_USERNAME).password(EXISTING_PASSWORD)
+            .firstName(EXISTING_FIRST_NAME).lastName(EXISTING_LAST_NAME).roles(roles).build();
+
+   userRepository.saveAndFlush(admin);
+
+    UserDetails userDetails = userDetailsService.loadUserByUsername(EXISTING_USERNAME);
+
+  */
+
+    }
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
@@ -54,8 +76,6 @@ public class RegistrationControllerIT {
                 .andExpect(model().attributeExists("userRole"))
                 .andExpect(view().name("users-register"));
     }
-
-
 
     @Test
     @WithMockUser("admin")
@@ -95,6 +115,34 @@ public class RegistrationControllerIT {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void testGetUsersList() throws Exception {
+
+
+        mockMvc.perform(get("/users/all"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("allUsers"))
+                .andExpect(view().name("users-all"));
+
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void testModifyUserGet() throws Exception {
+
+        mockMvc.perform(get("/users/modify/1"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("userModificationDto"))
+                .andExpect(model().attributeExists("userBranch"))
+                .andExpect(model().attributeExists("branches"))
+                .andExpect(model().attributeExists("errorMsg"))
+                .andExpect(model().attributeExists("adminRole"))
+                .andExpect(model().attributeExists("managerRole"))
+                .andExpect(model().attributeExists("userRole"))
+                .andExpect(view().name("users-modify"));
 
     }
 

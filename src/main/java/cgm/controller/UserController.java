@@ -85,7 +85,9 @@ public class UserController {
     @GetMapping("/all")
     public String getUsersList(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
 
-        model.addAttribute("firstName", currentUser.getFirstName());
+        if(currentUser != null) {
+            model.addAttribute("firstName", currentUser.getFirstName());
+        }
 
         List<UserViewDto> allUsers = this.userService.getAllUsers();
 
@@ -100,7 +102,9 @@ public class UserController {
     @GetMapping("/modify/{id}")
     public String getModifyUser(@PathVariable Long id, @AuthenticationPrincipal CurrentUser currentUser, Model model) {
 
-        model.addAttribute("firstName", currentUser.getFirstName());
+        if(currentUser != null) {
+            model.addAttribute("firstName", currentUser.getFirstName());
+        }
 
         UserModificationDto userModificationDto = this.userService.getUserById(id);
 
@@ -169,6 +173,5 @@ public class UserController {
 
         return "redirect:/users/all";
     }
-
 
 }
