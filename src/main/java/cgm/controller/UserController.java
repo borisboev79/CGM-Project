@@ -48,8 +48,10 @@ public class UserController {
     @GetMapping("/register")
     private String getRegisterUser(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
 
-        model.addAttribute("firstName", currentUser.getFirstName());
-        model.addAttribute("principalBranch", currentUser.getBranch());
+        if(currentUser != null) {
+            model.addAttribute("firstName", currentUser.getFirstName());
+            model.addAttribute("principalBranch", currentUser.getBranch());
+        }
 
         model.addAttribute("branches", BranchCode.values());
 
