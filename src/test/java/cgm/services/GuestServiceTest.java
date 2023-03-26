@@ -164,6 +164,8 @@ public class GuestServiceTest {
         when(testGroupRepository.findById(cabin.getId())).thenReturn(Optional.of(group));
         when(testMapper.map(guestAddDto, Guest.class)).thenReturn(guest);
 
+        //thenCallRealMethod();
+
     }
 
     @Test

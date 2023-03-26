@@ -172,10 +172,13 @@ const createTR = (pax) => {
     tdEdit.appendChild(btnEdit)
     tr.appendChild(tdEdit)
     const tdDelete = createTD()
-    tdDelete.appendChild(createTDButton(async () => {
-        if (confirm("Do you really want to delete this passenger?")) {
+    tdDelete.appendChild(createTDButton( async () => {
+
+        const decision =  await confirmDialog()
+        if (decision) {
             await sendDelete(pax.id, tBody, tr)
         }
+
     }, "Delete")).classList.add("bg-danger")
     tr.appendChild(tdDelete)
 
@@ -291,6 +294,66 @@ async function sendDelete(id, parentNode, childNode) {
         .catch(err => {
             alert(err.message)
         });
+}
+
+async function confirmDialog() {
+    const confirmContainer = document.createElement("div")
+    confirmContainer.classList.add("confirm-container")
+
+    const confirmBox = document.createElement("div")
+    confirmBox.classList.add("confirm-box")
+
+    const confirmText = document.createElement("div")
+    confirmText.classList.add("text-white", "text-center")
+    confirmText.textContent = "Are you fucking sure? PASSENGERS are MONEY!"
+
+
+    confirmBox.appendChild(confirmText)
+    const btnContainer = document.createElement("div")
+    btnContainer.classList.add("confirm-btn-container")
+
+    const btnConfirm = document.createElement("button")
+    btnConfirm.textContent = "Yes"
+    btnConfirm.classList.add("btn", "btn-info", "btn-md")
+
+    const btnCancel = document.createElement("button")
+    btnCancel.textContent = "Cancel"
+    btnCancel.classList.add("btn", "btn-info", "btn-md")
+
+    const waitPromise = new Promise((resolve, reject) => {
+        btnConfirm.addEventListener('click', resolve)
+        btnCancel.addEventListener('click', reject)
+    })
+
+    function onConfirmCancel() {
+        confirmContainer.classList.add("confirm-container-out")
+        setTimeout(() => {
+            document.body.removeChild(confirmContainer)
+        }, 200)
+
+    }
+
+    async function waitResponse() {
+        return await waitPromise
+            .then(() => {
+                onConfirmCancel()
+                return true
+            })
+            .catch(() => {
+                onConfirmCancel()
+                return false
+            })
+    }
+
+    btnContainer.appendChild(btnConfirm)
+    btnContainer.appendChild(btnCancel)
+
+    confirmBox.appendChild(btnContainer)
+
+    confirmContainer.appendChild(confirmBox)
+
+    document.body.appendChild(confirmContainer)
+    return await waitResponse()
 }
 
 

@@ -71,4 +71,67 @@ footer {
 }
 
 
+/*CONFIRM SCREEN STYLING*/
+
+@-webkit-keyframes expand-confirm-animation {
+     from {
+          top: -100%
+     }
+     to {
+          top: 0;
+     }
+}
+
+@-webkit-keyframes collapse-confirm-animation {
+     from {
+          top: 0
+     }
+     to {
+          top: -100%;
+     }
+}
+
+.confirm-container {
+     position: absolute;
+     z-index: 100000000000;
+     bottom: 0;
+     left: 0;
+     right: 0;
+     width: 100%;
+     height: 100%;
+     background-color: rgba(211, 211, 211, 0.5);
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     animation-name: expand-confirm-animation;
+     animation-duration: 200ms;
+}
+
+.confirm-box{
+     width: 30%;
+     height: 20%;
+     display: flex;
+     flex-direction: column;
+     background-color: darkgrey;
+     justify-content: center;
+     align-items: center;
+     border-radius: 15px;
+     border: 1px solid black;
+}
+
+.confirm-btn-container {
+     width: 100%;
+     display: flex;
+     justify-content: space-around;
+     padding: 1rem;
+}
+
+.confirm-container-out {
+     animation-name: collapse-confirm-animation;
+     animation-duration: 200ms;
+}
+
+
+
+
 
