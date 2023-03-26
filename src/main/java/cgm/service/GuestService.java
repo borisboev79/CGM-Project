@@ -40,7 +40,7 @@ public class GuestService {
     }
 
     public void addGuest(GuestAddDto guestAddDto, Long id) {
-        Cabin cabin = this.cabinRepository.findById(id).orElseThrow();
+            Cabin cabin = this.cabinRepository.findById(id).orElseThrow();
         CruiseGroup group = this.groupRepository.findById(cabin.getCruiseGroup().getId()).orElseThrow();
 
         Guest guest = this.mapper.map(guestAddDto, Guest.class);
@@ -162,24 +162,14 @@ public class GuestService {
 
     public List<GuestViewDto> getAllGuests(Long id) {
 
-       // List<GuestViewDto> guestViews = new ArrayList<>();
-
         List<Guest> groupGuests = this.guestRepository.findAllByCabin_CruiseGroup_Id(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id, "cabin"));
-
-       /* for (Guest groupGuest : groupGuests) {
-            GuestViewDto guestView = mapper.map(groupGuest, GuestViewDto.class);
-            guestView.setCabinNumber(groupGuest.getCabin().getId());
-            guestViews.add(guestView);
-        }*/
 
        return groupGuests.stream().map(guest -> {
             GuestViewDto guestView = mapper.map(guest, GuestViewDto.class);
             guestView.setCabinNumber(guest.getCabin().getId());
             return guestView;
         }).toList();
-
-      //  return guestViews;
     }
 
     private Instant dateToInstant(LocalDate date) {
