@@ -305,7 +305,7 @@ async function confirmDialog() {
 
     const confirmText = document.createElement("div")
     confirmText.classList.add("text-white", "text-center")
-    confirmText.textContent = "Are you fucking sure? PASSENGERS are MONEY!"
+    confirmText.textContent = "Are you sure you want to delete passenger?"
 
 
     confirmBox.appendChild(confirmText)
@@ -313,8 +313,8 @@ async function confirmDialog() {
     btnContainer.classList.add("confirm-btn-container")
 
     const btnConfirm = document.createElement("button")
-    btnConfirm.textContent = "Yes"
-    btnConfirm.classList.add("btn", "btn-info", "btn-md")
+    btnConfirm.textContent = "Yes, delete!"
+    btnConfirm.classList.add("btn", "btn-info", "btn-md", "bg-danger")
 
     const btnCancel = document.createElement("button")
     btnCancel.textContent = "Cancel"
