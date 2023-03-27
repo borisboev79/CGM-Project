@@ -101,13 +101,15 @@ public class GuestService {
 
         guest = this.guestRepository.save(guest);
 
-        return this.mapper.map(guest, GuestViewDto.class);
+        GuestViewDto guestViewDtoEdited = this.mapper.map(guest, GuestViewDto.class);
+
+        return guestViewDtoEdited;
 
     }
 
     public void deleteGuest(Long id) {
 
-        Guest guest = this.guestRepository.findById(id).orElseThrow(ObjectNotFoundException::new);
+        Guest guest = this.guestRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id, "guest"));
         CruiseGroup group = guest.getCabin().getCruiseGroup();
         Cabin cabin = guest.getCabin();
 

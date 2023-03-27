@@ -1,11 +1,9 @@
 package cgm.services;
 
 import cgm.model.dto.GuestAddDto;
+import cgm.model.dto.GuestViewDto;
 import cgm.model.entity.*;
-import cgm.model.enums.BranchCode;
-import cgm.model.enums.CabinType;
-import cgm.model.enums.Role;
-import cgm.model.enums.Transportation;
+import cgm.model.enums.*;
 import cgm.repository.CabinRepository;
 import cgm.repository.GroupRepository;
 import cgm.repository.GuestRepository;
@@ -16,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -24,7 +23,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class GuestServiceTest {
@@ -39,6 +39,7 @@ public class GuestServiceTest {
     private GroupRepository testGroupRepository;
     @Mock
     private ModelMapper testMapper;
+
     @InjectMocks
     private GuestService testGuestService;
     @Captor
@@ -49,6 +50,9 @@ public class GuestServiceTest {
 
     @Captor
     private ArgumentCaptor<CruiseGroup> groupArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<GuestViewDto> guestViewDtoArgumentCaptor;
 
     private RoleEntity role;
 
@@ -68,6 +72,8 @@ public class GuestServiceTest {
     private Guest guest;
 
     private GuestAddDto guestAddDto;
+
+    private GuestViewDto guestViewDto;
 
 
     @BeforeEach
@@ -159,12 +165,21 @@ public class GuestServiceTest {
                 .build();
         guest.setId(COMMON_ID);
 
+        guestViewDto = GuestViewDto.builder()
+                .fullName("Penka Georgieva")
+                .email("penka@gmail.com")
+                .birthDate(Instant.now().minus(10000, ChronoUnit.DAYS))
+                .phone("123456789")
+                .passportNumber("123456789")
+                .EGN("1111111111")
+                .id(COMMON_ID)
+                .build();
 
-        when(testCabinRepository.findById(COMMON_ID)).thenReturn(Optional.of(cabin));
-        when(testGroupRepository.findById(cabin.getId())).thenReturn(Optional.of(group));
-        when(testMapper.map(guestAddDto, Guest.class)).thenReturn(guest);
 
-        //thenCallRealMethod();
+        lenient().when(testCabinRepository.findById(COMMON_ID)).thenReturn(Optional.of(cabin));
+        lenient().when(testGroupRepository.findById(cabin.getId())).thenReturn(Optional.of(group));
+        lenient().when(testMapper.map(guestAddDto, Guest.class)).thenReturn(guest);
+        lenient().when(testGuestRepository.findById(COMMON_ID)).thenReturn(Optional.of(guest));
 
     }
 
@@ -198,8 +213,31 @@ public class GuestServiceTest {
     @Test
     public void testEditGuest() {
 
+        Guest editedGuest = Guest.builder()
+                .fullName("Penka Georgieva")
+                .email("penka@gmail.com")
+                .birthDate(Instant.now().minus(10000, ChronoUnit.DAYS))
+                .phone("123456789")
+                .passportNumber("123456789")
+                .EGN("1111111111")
+                .ageGroup(AgeGroup.ADULT)
+                .cabin(cabin)
+                .build();
 
-        this.testGuestService.addGuest(guestAddDto, 1L);
+
+        when(testGuestRepository.save(guest)).thenReturn(editedGuest);
+        when(testMapper.map(editedGuest, GuestViewDto.class)).thenReturn(guestViewDto);
+
+        this.testGuestService.editGuest(guestViewDto);
+
+        Mockito.verify(testGuestRepository).save(guestArgumentCaptor.capture());
+
+
+
+        assertEquals(guestViewDto.getFullName(), guestArgumentCaptor.getValue().getFullName());
+        assertEquals(guestViewDto.getEmail(), guestArgumentCaptor.getValue().getEmail());
+        assertEquals(guestViewDto.getEGN(), guestArgumentCaptor.getValue().getEGN());
+
 
 
     }
