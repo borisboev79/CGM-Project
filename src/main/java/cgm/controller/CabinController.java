@@ -73,7 +73,7 @@ public class CabinController {
                     .addFlashAttribute("cabinAddDto", cabinAddDto)
                     .addFlashAttribute("org.springframework.validation.BindingResult.cabinAddDto", bindingResult);
 
-            return String.format("redirect:/groups/add/cabins/%s", id);
+            return String.format("redirect:/cabins/add/%s", id);
         }
 
 
