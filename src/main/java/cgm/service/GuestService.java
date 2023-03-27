@@ -101,9 +101,7 @@ public class GuestService {
 
         guest = this.guestRepository.save(guest);
 
-        GuestViewDto guestViewDtoEdited = this.mapper.map(guest, GuestViewDto.class);
-
-        return guestViewDtoEdited;
+        return this.mapper.map(guest, GuestViewDto.class);
 
     }
 
