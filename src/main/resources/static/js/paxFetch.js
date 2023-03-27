@@ -54,14 +54,14 @@ const createTR = (pax) => {
         const editPassport = createEditableTD(pax.passportNumber, tr, passport, "passportNumber", validatePassport)
 
         const tdSaveBtn = createTD()
+        tdSaveBtn.classList.add("position-relative")
         const btnSave = createTDButton(async () => {
             const response = await sendUpdate(trData)
             if(!response.error) {
                 pax = {...response}
                 toggleCallback(response)
             } else {
-                alert(response.error)
-                toggleCallback()
+                alertBox(response.error, tdSaveBtn, toggleCallback)
             }
         }, "Save")
 
@@ -172,11 +172,12 @@ const createTR = (pax) => {
     tdEdit.appendChild(btnEdit)
     tr.appendChild(tdEdit)
     const tdDelete = createTD()
+    tdDelete.classList.add("position-relative")
     tdDelete.appendChild(createTDButton( async () => {
 
         const decision =  await confirmDialog()
         if (decision) {
-            await sendDelete(pax.id, tBody, tr)
+            await sendDelete(pax.id, tBody, tr, tdDelete)
         }
 
     }, "Delete")).classList.add("bg-danger")
@@ -273,7 +274,7 @@ async function sendUpdate(data) {
         });
 }
 
-async function sendDelete(id, parentNode, childNode) {
+async function sendDelete(id, parentNode, childNode, alertChild) {
     const csrfHeaderName = document.getElementById("csrf").getAttribute("name")
     const csrfHeaderToken = document.getElementById("csrf").getAttribute("value")
 
@@ -292,7 +293,7 @@ async function sendDelete(id, parentNode, childNode) {
             return
         })
         .catch(err => {
-            alert(err.message)
+            alertBox(err.message, alertChild)
         });
 }
 
@@ -354,6 +355,28 @@ async function confirmDialog() {
 
     document.body.appendChild(confirmContainer)
     return await waitResponse()
+}
+
+function alertBox(text, container, callBack) {
+    const tooltip = document.createElement("div")
+    tooltip.classList.add("error-tooltip")
+
+    const tooltipText = document.createElement("span")
+    tooltipText.classList.add("text-white", "text-center")
+    tooltipText.textContent = text
+
+    tooltip.appendChild(tooltipText)
+
+    setTimeout(() => {
+        tooltip.classList.add("error-out")
+        setTimeout(() => {
+            tooltip.classList.remove("error-out")
+            container.removeChild(tooltip)
+            callBack && callBack()
+        }, 300)
+    }, 3000)
+
+    container.appendChild(tooltip)
 }
 
 

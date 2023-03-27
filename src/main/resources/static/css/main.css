@@ -84,10 +84,10 @@ footer {
 
 @-webkit-keyframes collapse-confirm-animation {
      from {
-          top: 0
+          opacity: 1
      }
      to {
-          top: -100%;
+          opacity: 0;
      }
 }
 
@@ -129,6 +129,43 @@ footer {
 .confirm-container-out {
      animation-name: collapse-confirm-animation;
      animation-duration: 200ms;
+}
+
+@-webkit-keyframes alert-in-animation {
+     from {opacity: 0;}
+     to {opacity: 1;}
+}
+
+@-webkit-keyframes alert-out-animation {
+     from {
+          right: 10px;
+          opacity: 1;
+     }
+     to {
+          right: -80%;
+          opacity: 0;
+     }
+
+}
+
+.error-tooltip {
+     position: absolute;
+     z-index: 10;
+     bottom: 105%;
+     right: -5px;
+     display: inline-block;
+     background-color: crimson;
+     padding: 5px 10px;
+     border-radius: 5px;
+     border: 1px solid crimson;
+     white-space: nowrap;
+     animation-name: alert-in-animation;
+     animation-duration: 200ms;
+}
+
+.error-out {
+     animation-name: alert-out-animation;
+     animation-duration: 300ms;
 }
 
 
