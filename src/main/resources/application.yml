@@ -27,7 +27,7 @@ hostName: http://localhost:8080
 
 app:
   default:
-    password: topsecret
+    password: ${topsecret}
 
 mail:
   host: localhost

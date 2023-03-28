@@ -6,6 +6,7 @@ import cgm.model.enums.Role;
 import cgm.repository.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,8 @@ import java.util.List;
 
 @Service
 public class InitService {
+
+    private final String DEFAULT_PASSWORD = "topsecret";
 
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
@@ -27,7 +30,6 @@ public class InitService {
                        UserRepository userRepository,
                        BranchRepository branchRepository,
                        PasswordEncoder passwordEncoder,
-                      // @Value("${app.default.password}") String defaultPassword,
                        CruiseLineRepository cruiseLineRepository,
                        ShipRepository shipRepository) {
 
@@ -68,7 +70,15 @@ public class InitService {
                     BranchEntity.builder().name("Head Office").code(BranchCode.HEAD).address("София, пл. Папа Йоан Павел II №1, ет.7").email("products@usitcolours.bg").build(),
                     BranchEntity.builder().name("Blagoevgrad").code(BranchCode.BLGD).address("Благоевград, ул. Крали Марко 1").email("blgd@usitcolours.bg").build(),
                     BranchEntity.builder().name("Burgas").code(BranchCode.BUR).address("Бургас, ул. Цар Петър 20 (до Операта)").email("burgas@usitcolours.bg").build(),
-                    BranchEntity.builder().name("Sofia central").code(BranchCode.SOFR).address("София, бул. Васил Левски №35").email("sofia@usitcolours.bg").build()
+                    BranchEntity.builder().name("Sofia central").code(BranchCode.SOFR).address("София, бул. Васил Левски №35").email("sofia@usitcolours.bg").build(),
+                    BranchEntity.builder().name("Varna Mall").code(BranchCode.MALL).address("Варна, бул. Владислав Варненчик №186, партер").email("varnamall@usitcolours.bg").build(),
+                    BranchEntity.builder().name("Mall Sofia").code(BranchCode.MOS).address("София, бул. Ал. Стамболийски №101, ниво 0").email("sofiamall@usitcolours.bg").build(),
+                    BranchEntity.builder().name("Usit Online").code(BranchCode.ONL).address("София, бул. Васил Левски №35").email("online@usitcolours.bg").build(),
+                    BranchEntity.builder().name("Plovdiv").code(BranchCode.PDV).address("Пловдив, ул. Железарска №2").email("plovdiv@usitcolours.bg").build(),
+                    BranchEntity.builder().name("Ruse").code(BranchCode.RUS).address("Русе, ул. Петко Д. Петков №6, партер").email("ruse@usitcolours.bg").build(),
+                    BranchEntity.builder().name("Studentski grad").code(BranchCode.STG).address("София, ул. 8 декември №25 (срещу Поликлиниката)").email("studgrad@usitcolours.bg").build(),
+                    BranchEntity.builder().name("Varna").code(BranchCode.VAR).address("Варна, бул. Цар Освободител №11").email("varna@usitcolours.bg").build(),
+                    BranchEntity.builder().name("Veliko Tarnovo").code(BranchCode.VLT).address("Велико Търново, ул. Марно Поле №9B (над парка)").email("tarnovo@usitcolours.bg").build()
             );
             this.branchRepository.saveAllAndFlush(branches);
         }
@@ -88,7 +98,7 @@ public class InitService {
 
         UserEntity adminUser = UserEntity.builder()
                 .username("admin")
-                .password(passwordEncoder.encode("topsecret"))
+                .password(passwordEncoder.encode(DEFAULT_PASSWORD))
                 .firstName("Boris")
                 .lastName("Boev")
                 .branch(this.branchRepository.findByName("Head Office").orElseThrow())
@@ -104,7 +114,7 @@ public class InitService {
 
         UserEntity managerUser = UserEntity.builder()
                 .username("manager")
-                .password(passwordEncoder.encode("topsecret"))
+                .password(passwordEncoder.encode(DEFAULT_PASSWORD))
                 .firstName("Boryana")
                 .lastName("Veselinova")
                 .branch(this.branchRepository.findBranchEntityByCode(BranchCode.BLGD).orElseThrow())
@@ -121,7 +131,7 @@ public class InitService {
 
         UserEntity normalUser = UserEntity.builder()
                 .username("user")
-                .password(passwordEncoder.encode("topsecret"))
+                .password(passwordEncoder.encode(DEFAULT_PASSWORD))
                 .firstName("Ivaylo")
                 .lastName("Ivanov")
                 .branch(this.branchRepository.findByName("Sofia central").orElseThrow())
