@@ -1,5 +1,6 @@
 package cgm.services;
 
+import cgm.model.ObjectNotFoundException;
 import cgm.model.dto.GuestAddDto;
 import cgm.model.dto.GuestViewDto;
 import cgm.model.entity.*;
@@ -164,6 +165,7 @@ public class GuestServiceTest {
                 .EGN("9912129999")
                 .build();
         guest.setId(COMMON_ID);
+        guest.setCabin(cabin);
 
         guestViewDto = GuestViewDto.builder()
                 .fullName("Penka Georgieva")
@@ -238,10 +240,24 @@ public class GuestServiceTest {
         assertEquals(guestViewDto.getEmail(), guestArgumentCaptor.getValue().getEmail());
         assertEquals(guestViewDto.getEGN(), guestArgumentCaptor.getValue().getEGN());
 
+    }
+
+    @Test
+    public void testDeleteGuest() {
+
+        this.testGuestService.deleteGuest(COMMON_ID);
+
+        Mockito.verify(testGuestRepository).saveAndFlush(guestArgumentCaptor.capture());
+        Mockito.verify(testCabinRepository).saveAndFlush(cabinArgumentCaptor.capture());
+        Mockito.verify(testGroupRepository).saveAndFlush(groupArgumentCaptor.capture());
+
+        Mockito.verify(testGuestRepository).delete(guestArgumentCaptor.capture());
+
+        assertEquals(0, testGuestRepository.count());
+        assertEquals("Penka Ivanova", guestArgumentCaptor.getValue().getFullName());
 
 
     }
-
 
 }
 
