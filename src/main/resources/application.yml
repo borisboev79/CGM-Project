@@ -7,9 +7,11 @@ logging:
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    password: 1234
-    url: jdbc:mysql://localhost:3306/cruisegroups?useSSL=false&createDatabaseIfNotExist=true
-    username: root
+
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/cruisegroups?useSSL=false&createDatabaseIfNotExist=true
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:1234}
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -32,7 +34,7 @@ app:
 mail:
   host: localhost
   port: 1025
-  username: "admin"
+  username: admin
   password: ""
 
 
