@@ -27,14 +27,10 @@ spring:
 
 hostName: http://localhost:8080
 
-app:
-  default:
-    password: ${topsecret}
-
 mail:
-  host: localhost
-  port: 1025
-  username: admin
-  password: ""
+  host: ${MAIL_HOST:localhost}
+  port: ${MAIL_PORT:1025}
+  username: ${MAIL_USER:admin}
+  password: ${MAIL_PASS:}
 
 
