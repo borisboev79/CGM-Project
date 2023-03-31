@@ -17,15 +17,17 @@
             </li>
 
             <li class="nav-item dropdown" sec:authorize="hasRole('ADMIN')">
-                <a class="nav-link dropdown-toggle" th:text="#{navbar_manage_application}" href="/" id="navbarDropdown" role="button"
+                <a class="nav-link dropdown-toggle" th:text="#{navbar_manage_application}" href="/" id="navbarDropdown"
+                   role="button"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Manage Application
                 </a>
                 <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" style="color: cornflowerblue" th:text="#{navbar_add_group}" th:href="@{/groups/add}">Add Group</a>
-                    <a class="dropdown-item" style="color: cornflowerblue" th:href="@{/groups/delete}">Delete Group</a>
+                    <a class="dropdown-item" style="color: cornflowerblue" th:text="#{navbar_add_group}"
+                       th:href="@{/groups/add}">Add Group</a>
+                    <a class="dropdown-item" style="color: cornflowerblue" th:text="#{navbar_delete_group}" th:href="@{/groups/delete}">Delete Group</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" style="color: cornflowerblue" th:href="@{/users/all}">Modify User</a>
+                    <a class="dropdown-item" style="color: cornflowerblue" th:text="#{navbar_modify_user}" th:href="@{/users/all}">Modify User</a>
                 </div>
             </li>
 
@@ -39,30 +41,30 @@
                         <span th:text="${firstName != null}? ${firstName}:'user'"></span>
                     </div>
                     <form th:method="post" th:action="@{/auth/logout}">
-                        <input class="btn btn-link nav-link" type="submit" value="Logout"></form>
+                        <input class="btn btn-link nav-link" type="submit" th:value="#{navbar_logout}"></form>
                 </div>
             </li>
 
             <li class="nav-item" sec:authorize="!isAuthenticated()">
-                <a class="nav-link" th:href="@{/auth/login}">Login</a>
+                <a class="nav-link" th:href="@{/auth/login}"><th:block th:text="#{navbar_login}"/></a>
             </li>
 
-            <li class="nav-item">
-                <div class="form-inline my-2 my-lg-2 pl-1">
 
-                    <form th:method="get">
-                        <label class="text-white" for="lang"></label>
-                        <select
-                                onchange="this.form.submit()"
-                                id="lang"
-                                name="lang">
-                            <option value="en_US" th:selected="${#locale.toString()} == 'en_US'">EN</option>
-                            <option value="bg_BG" th:selected="${#locale.toString()} == 'bg_BG'">BG</option>
-                        </select>
-                    </form>
+            <li class="justify-content-end p-1" style="min-width: 5rem">
 
+                <form class="float-right" th:method="get">
 
-                </div>
+                    <input hidden id="lang" name="lang" th:value="bg_BG">
+                    <input class="btn btn-link nav-link" type="submit" value="БГ">
+                </form>
+                </form>
+                <form class="float-right" th:method="get">
+                    <div>
+                        <input hidden id="lang" name="lang" th:value="en_US">
+                        <input class="btn btn-link nav-link" type="submit" value="EN">
+                    </div>
+                </form>
+
             </li>
 
 
