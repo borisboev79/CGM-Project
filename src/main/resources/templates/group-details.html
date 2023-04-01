@@ -14,7 +14,7 @@
 <main>
 <div class="container group-container rounded bg-light pt-3" >
 
-    <h3 class="text-center text-dark pb-2">Group Details</h3>
+    <h3 class="text-center text-dark pb-2"><th:block th:text="#{groups_heading}"/></h3>
 
     <div class="row">
         <div class="col lg-6 justify-content-center"
@@ -27,37 +27,35 @@
             </div>
             <ul class="offer-details list-group list-group-flush">
                 <li class="list-group-item">
-                    <div class="card-text" th:unless="*{soldOut}"><strong>• Group total:
+                    <div class="card-text" th:unless="*{soldOut}"><strong>• <th:block th:text="#{groups_total}"/>:
                         <th:block
                                 th:text="*{totalPax}"/>
                     </strong>
-                        / Sold beds: <strong>
+                        / <th:block th:text="#{groups_sold}"/>: <strong>
                             <th:block
                                     th:text="*{soldPax}"/>
                         </strong>
-                        / Available beds: <strong>
+                        / <th:block th:text="#{groups_available}"/>: <strong>
                             <th:block
                                     th:text="*{totalPax - soldPax}"/>
                         </strong>
                     </div>
-                    <div class="card-text text-danger" th:if="*{soldOut}"><strong>• GROUP SOLD OUT</strong>
+                    <div class="card-text text-danger" th:if="*{soldOut}"><strong>• <th:block th:text="#{groups_sold_out}"/></strong>
                     </div>
-                    <div class="card-text"><span>• Transport: <th:block th:text="*{transportation.label}"/></span></div>
-                    <div class="card-text"><span>• Departure: <th:block
+                    <div class="card-text"><span>• <th:block th:text="#{groups_transport}"/>: <th:block th:text="*{transportation.label}"/></span></div>
+                    <div class="card-text"><span>• <th:block th:text="#{groups_departure}"/>: <th:block
                             th:text="*{#dates.format(startDate, 'dd MMM yyyy')}"/></span></div>
-                    <div class="card-text"><span>• Return: <th:block
+                    <div class="card-text"><span>• <th:block th:text="#{groups_return}"/>: <th:block
                             th:text="*{#dates.format(endDate, 'dd MMM yyyy')}"/></span></div>
-                    <div class="card-text"><span>• Itinerary: <th:block th:text="*{itinerary}"/> days</span></div>
+                    <div class="card-text">• <th:block th:text="#{groups_itinerary}"/>: <th:block th:text="*{itinerary}"/> </div>
                 </li>
             </ul>
             <div class="card-body">
                 <a class="btn btn-info btn-lg" sec:authorize="hasRole('ADMIN')"
-                   th:href="@{/cabins/add/{id}(id = ${cruiseGroup.id})}">Add Cabins</a>
-                <button th:onclick="fetchPax([[${cruiseGroup.id}]])" class="btn btn-info btn-lg" id="show-pax-btn">Show
-                    All Passengers
+                   th:href="@{/cabins/add/{id}(id = ${cruiseGroup.id})}"><th:block th:text="#{groups_add_cabins}"/></a>
+                <button th:onclick="fetchPax([[${cruiseGroup.id}]])" class="btn btn-info btn-lg" id="show-pax-btn"><th:block th:text="#{groups_show_all_passengers}"/>
                 </button>
-                    <button th:onclick="showHideContainer()" class="btn btn-info btn-lg d-none" id="hide-pax-btn">Hide
-                    Passengers
+                    <button th:onclick="showHideContainer()" class="btn btn-info btn-lg d-none" id="hide-pax-btn"><th:block th:text="#{groups_hide_passengers}"/>
                 </button>
             </div>
         </div>
@@ -66,7 +64,7 @@
         <div class="col-lg-6">
             <img th:src="${cruiseGroup.imageUrl}" class="card-img-top" alt="Group image">
             <div class="card-text">
-                <span>Group Added By: <th:block
+                <span><th:block th:text="#{groups_added}"/>: <th:block
                         th:text="${cruiseGroup.getEmployee().firstName + ' ' + cruiseGroup.getEmployee().lastName}"/></span>
             </div>
 
@@ -77,20 +75,20 @@
     <div class="row py-2 d-none" id="pax-list">
 
         <div class="col">
-            <h4 class="text-center">Passenger List</h4>
+            <h4 class="text-center"><th:block th:text="#{groups_passenger_list}"/></h4>
             <table class="table-responsive-xl table-striped table-light text-center w-100">
                 <thead class="w-100">
                 <tr class="w-100">
-                    <th scope="col">Cabin No.</th>
-                    <th scope="col">Cabin Code</th>
-                    <th scope="col">Cabin type</th>
-                    <th scope="col">Full Name</th>
-                    <th scope="col">Birth Date</th>
-                    <th scope="col">Age</th>
+                    <th scope="col"><th:block th:text="#{cabin_no}"/></th>
+                    <th scope="col"><th:block th:text="#{cabin_code}"/></th>
+                    <th scope="col"><th:block th:text="#{cabin_type}"/></th>
+                    <th scope="col"><th:block th:text="#{cabin_full_name}"/></th>
+                    <th scope="col"><th:block th:text="#{cabin_birth_date}"/></th>
+                    <th scope="col"><th:block th:text="#{cabin_age}"/></th>
                     <th scope="col">Email</th>
-                    <th scope="col">Phone</th>
-                    <th scope="col">EGN</th>
-                    <th scope="col">Passport</th>
+                    <th scope="col"><th:block th:text="#{cabin_phone}"/></th>
+                    <th scope="col"><th:block th:text="#{cabin_egn}"/></th>
+                    <th scope="col"><th:block th:text="#{cabin_passport}"/></th>
                     <th scope="col"></th>
                 </tr>
                 </thead>
@@ -109,19 +107,19 @@
         <div class="col">
 
             <table class="table-responsive-lg mx-auto mb-3 table-striped table-light text-center" style="width: 100%;">
-                <tr><h4 class="text-center">Cabins in group</h4></tr>
+                <tr><h4 class="text-center"><th:block th:text="#{groups_cabins}"/></h4></tr>
                 <thead>
                 <tr>
-                    <th scope="col">Cabin Code</th>
-                    <th scope="col">Cabin type</th>
-                    <th scope="col">ADT Price</th>
-                    <th scope="col">CHD Price</th>
-                    <th scope="col">Extra ADT</th>
-                    <th scope="col">Lead Pax</th>
-                    <th scope="col">Total Price</th>
-                    <th scope="col">Max Guests</th>
-                    <th scope="col">Booked Guests</th>
-                    <th scope="col">Booked By</th>
+                    <th scope="col"><th:block th:text="#{cabin_code}"/></th>
+                    <th scope="col"><th:block th:text="#{cabin_type}"/></th>
+                    <th scope="col"><th:block th:text="#{cabin_adt}"/></th>
+                    <th scope="col"><th:block th:text="#{cabin_chd}"/></th>
+                    <th scope="col"><th:block th:text="#{cabin_extra}"/></th>
+                    <th scope="col"><th:block th:text="#{cabin_lead}"/></th>
+                    <th scope="col"><th:block th:text="#{cabin_total}"/></th>
+                    <th scope="col"><th:block th:text="#{cabin_max}"/></th>
+                    <th scope="col"><th:block th:text="#{cabin_booked}"/></th>
+                    <th scope="col"><th:block th:text="#{cabin_by_office}"/></th>
 
 
                     <th scope="col"></th>
@@ -139,11 +137,11 @@
                     <td style="font-weight: bold" th:text="*{'€' + totalPrice}"></td>
                     <td th:text="*{maxOccupancy}"></td>
                     <td th:text="*{paxNumber}"></td>
-                    <td th:text="*{addedByCode == null} ? 'For Sale' : *{addedByCode}"></td>
+                    <td th:text="*{addedByCode == null} ? #{cabin_for_sale} : *{addedByCode}"></td>
 
                     <td th:if="${!cabin.full}"><a class="btn btn-info btn-sm"
-                                                  th:href="@{/guests/add/{id}(id = *{id})}">Add guests</a></td>
-                    <td th:if="${cabin.full}" class="table-danger">Cabin SOLD</td>
+                                                  th:href="@{/guests/add/{id}(id = *{id})}"><th:block th:text="#{cabin_add_guest}"/></a></td>
+                    <td th:if="${cabin.full}" class="table-danger"><th:block th:text="#{cabin_sold}"/></td>
                 </tr>
 
                 </tbody>

@@ -16,9 +16,9 @@
 
     <div class="container bg-blur text-center rounded mt-5" style="width: fit-content">
         <div class="card" style="width: 50rem; background-color:#092f47">
-            <div class="h4 card-header" style="color: lightgray" sec:authorize="!isAuthenticated()">Welcome to Crusit Group Management Application</div>
-            <h5 class="text-light" sec:authorize="!isAuthenticated()"> <a style="color:deepskyblue" th:href="@{/auth/login}">Login</a>
-                if you have an account or ask your manager to make one for you.</h5>
+            <div class="h4 card-header" style="color: lightgray" sec:authorize="!isAuthenticated()"><th:block th:text="#{index_welcome_auth}"/> Crusit Group Management Application</div>
+            <h5 class="text-light" sec:authorize="!isAuthenticated()"> <a style="color:deepskyblue" th:href="@{/auth/login}"><th:block th:text="#{navbar_login}"/></a>
+                <th:block th:text="#{index_welcome_not_auth}"/></h5>
 
             <div class="h5 card-header" style="color: lightgray" sec:authorize="isAuthenticated()"><th:block th:text="#{index_welcome_auth}"/> GrouMan,
                 <h3 class="text-center text-white mt-3" th:text="${firstName + ' ' + lastName + ' (' + branch.name + ')'}"/>
