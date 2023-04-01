@@ -14,7 +14,7 @@
 
 <main>
 <div class="container">
-    <h2 class="text-center text-white">Add Cabins to</h2>
+    <h2 class="text-center text-white"><th:block th:text="#{cabin_add_title}"/></h2>
     <h4 class="text-center text-white" th:text="${currentGroup.name}"/>
     <form th:method="POST"
           th:action="@{/cabins/add/{id}(id= ${currentGroup.id})}"
@@ -24,25 +24,25 @@
         <div class="row">
 
             <div class="form-group col-md-6 mb-3">
-                <label class="text-white font-weight-bold" for="cabinCode">Cabin Code</label>
+                <label class="text-white font-weight-bold" for="cabinCode"><th:block th:text="#{cabin_code}"/></label>
                 <input id="cabinCode" type="text" class="form-control"
                        name="cabinCode"
                        th:errorclass="is-invalid"
                        th:value="*{cabinCode}"
                        aria-describedby="nameHelpInline"
-                       placeholder="Enter Cabin code">
+                       th:placeholder="#{cabin_add_code_prompt}">
                 <p class="invalid-feedback" >
                     Cabin code is mandatory!
                 </p>
             </div>
 
             <div class="form-group col-md-6 mb-3">
-                <label for="type" class="text-center text-white font-weight-bold">Cabin type</label>
+                <label for="type" class="text-center text-white font-weight-bold"><th:block th:text="#{cabin_type}"/></label>
                 <select id="type"
                         name="type"
                         th:errorclass="is-invalid"
                         class="form-control">
-                    <option value="">- Select a cabin type -</option>
+                    <option value="">- <th:block th:text="#{cabin_add_type_prompt}"/> -</option>
                     <option
                             th:each="type : ${cabinType}"
                             th:value="${type}"
@@ -60,7 +60,7 @@
 
         <div class="row">
             <div class="form-group col-md-4 mb-3">
-                <label for="adultPrice" class="text-center text-white font-weight-bold">Price per Adult</label>
+                <label for="adultPrice" class="text-center text-white font-weight-bold"><th:block th:text="#{cabin_add_ppa}"/></label>
                 <input id="adultPrice"
                         name="adultPrice"
                         type="number"
@@ -68,7 +68,7 @@
                         th:value="*{adultPrice}"
                         class="form-control"
                         aria-describedby="nameHelpInline"
-                        placeholder="Enter price for Adult">
+                       th:placeholder="#{cabin_add_ppa_prompt}">
 
                 <p class="invalid-feedback">
                     Price should be a positive number.
@@ -77,7 +77,7 @@
             </div>
 
             <div class="form-group col-md-4 mb-3">
-                <label for="childPrice" class="text-center text-white font-weight-bold">Price per Child</label>
+                <label for="childPrice" class="text-center text-white font-weight-bold"><th:block th:text="#{cabin_add_ppc}"/></label>
                 <input id="childPrice"
                        name="childPrice"
                        type="number"
@@ -85,7 +85,7 @@
                        th:value="*{childPrice}"
                        class="form-control"
                        aria-describedby="nameHelpInline"
-                       placeholder="Enter price for Child">
+                       th:placeholder="#{cabin_add_ppc_prompt}">
 
                 <p class="invalid-feedback">
                     Price should be a positive number.
@@ -94,7 +94,7 @@
             </div>
 
             <div class="form-group col-md-4 mb-3">
-                <label for="extraAdultPrice" class="text-center text-white font-weight-bold">Price per 3rd/4th Adult</label>
+                <label for="extraAdultPrice" class="text-center text-white font-weight-bold"><th:block th:text="#{cabin_add_ppe}"/></label>
                 <input id="extraAdultPrice"
                        name="extraAdultPrice"
                        type="number"
@@ -102,7 +102,7 @@
                        th:value="*{extraAdultPrice}"
                        class="form-control"
                        aria-describedby="nameHelpInline"
-                       placeholder="Enter price for Additional Adult">
+                       th:placeholder="#{cabin_add_ppe_prompt}">
 
                 <p class="invalid-feedback">
                     Price should be a positive number.
@@ -115,27 +115,27 @@
 
         <div class="row">
             <div class="form-group col-md-6 mb-3">
-                <label class="text-white font-weight-bold" for="maxOccupancy">Max Occupancy</label>
+                <label class="text-white font-weight-bold" for="maxOccupancy"><th:block th:text="#{cabin_add_max}"/></label>
                 <input id="maxOccupancy" type="number" step="1" min="2" max="4" class="form-control"
                        name="maxOccupancy"
                        th:errorclass="is-invalid"
                        th:value="*{maxOccupancy}"
                        aria-describedby="nameHelpInline"
-                       placeholder="Enter Max Occupancy">
+                       th:placeholder="#{cabin_add_max_prompt}">
                 <p class="invalid-feedback">
                     Max occupancy can be 2, 3 or 4.
                 </p>
             </div>
 
             <div class="form-group col-md-6">
-                <label class="text-white font-weight-bold" for="count">Number of cabins of this type</label>
+                <label class="text-white font-weight-bold" for="count"><th:block th:text="#{cabin_add_cabins}"/></label>
                 <input type="number" step="1" min="1" max="10" class="form-control"
                        id="count"
                        name="count"
                        th:errorclass="is-invalid"
                        th:value="*{count}"
                        aria-describedby="nameHelpInline"
-                       placeholder="Enter cabin count">
+                       th:placeholder="#{cabin_add_cabins_prompt}">
                 <p class="invalid-feedback">
                     You can put between 1 and 10 cabins.
                 </p>
@@ -147,7 +147,7 @@
         <div class="row">
             <div class="col col-md-4">
                 <div class="button-holder d-flex">
-                    <input type="submit" class="btn btn-info btn-lg" value="Next"/>
+                    <input type="submit" class="btn btn-info btn-lg" th:value="#{cabin_add_submit}"/>
                 </div>
             </div>
         </div>

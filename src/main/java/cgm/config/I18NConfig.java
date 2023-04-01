@@ -13,16 +13,14 @@ public class I18NConfig {
 
   @Bean
   public LocaleResolver localeResolver() {
-    CookieLocaleResolver clr = new CookieLocaleResolver();
-    clr.setCookieName("lang");
-    return clr;
+    return new CookieLocaleResolver("lang");
   }
 
   @Bean
   public LocaleChangeInterceptor localeChangeInterceptor() {
-    LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
-    lci.setParamName("lang");
-    return lci;
+    LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+    localeChangeInterceptor.setParamName("lang");
+    return localeChangeInterceptor;
   }
 
   @Bean
