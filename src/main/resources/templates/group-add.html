@@ -14,7 +14,7 @@
 
 <main>
 <div class="container">
-    <h2 class="text-center text-white">Add Cruise Group</h2>
+    <h2 class="text-center text-white"><th:block th:text="#{groups_add}"/></h2>
     <form th:method="POST"
           th:action="@{/groups/add}"
           th:object="${groupAddDto}"
@@ -23,13 +23,13 @@
         <div class="row">
 
             <div class="form-group col-md-12 mb-3">
-                <label class="text-white font-weight-bold" for="name">Group name</label>
+                <label class="text-white font-weight-bold" for="name"><th:block th:text="#{groups_name}"/></label>
                 <input id="name" type="text" class="form-control"
                        name="name"
                        th:errorclass="is-invalid"
                        th:value="*{name}"
                        aria-describedby="nameHelpInline"
-                       placeholder="Enter Group Name">
+                       th:placeholder="#{groups_name_prompt}">
                 <p class="invalid-feedback">
                     Group name should be at least 10 characters long.
                 </p>
@@ -39,12 +39,12 @@
 
         <div class="row">
             <div class="form-group col-md-6 mb-3">
-                <label for="ship" class="text-center text-white font-weight-bold">Ship</label>
+                <label for="ship" class="text-center text-white font-weight-bold"><th:block th:text="#{groups_ship}"/></label>
                 <select id="ship"
                         name="ship"
                         th:errorclass="is-invalid"
                         class="form-control">
-                    <option value="">- Select a ship -</option>
+                    <option value="">- <th:block th:text="#{groups_ship_prompt}"/> -</option>
                     <optgroup th:each="line : ${cruiselines}"
                               th:label="${line.name}">
                         <option
@@ -62,14 +62,14 @@
                 </p>
             </div>
             <div class="form-group col-md-6 mb-3">
-                <label for="totalPax" class="text-white font-weight-bold">Total size of group</label>
+                <label for="totalPax" class="text-white font-weight-bold"><th:block th:text="#{groups_total}"/></label>
                 <input type="number" step="1"
                        id="totalPax"
                        name="totalPax"
                        th:value="*{totalPax}"
                        th:errorclass="is-invalid"
                        class="form-control"
-                       placeholder="Enter group size"/>
+                       th:placeholder="#{groups_size_prompt}"/>
                 <p class="invalid-feedback">
                     Total group size should be at least 10 passengers.
                 </p>
@@ -79,7 +79,7 @@
 
         <div class="row">
             <div class="form-group col-md-6 mb-2">
-                <label for="startDate" class="text-center text-white font-weight-bold">Date of Departure</label>
+                <label for="startDate" class="text-center text-white font-weight-bold"><th:block th:text="#{groups_departure}"/></label>
                 <input type="date"
                         id="startDate"
                         name="startDate"
@@ -93,7 +93,7 @@
             </div>
 
             <div class="form-group col-md-6 mb-2">
-                <label for="endDate" class="text-center text-white font-weight-bold">Date of Return</label>
+                <label for="endDate" class="text-center text-white font-weight-bold"><th:block th:text="#{groups_return}"/></label>
                 <input type="date"
                        id="endDate"
                        name="endDate"
@@ -112,12 +112,12 @@
 
         <div class="row">
             <div class="form-group col-md-6 mb-3">
-                <label for="transportation" class="text-center text-white font-weight-bold">Transport</label>
+                <label for="transportation" class="text-center text-white font-weight-bold"><th:block th:text="#{groups_transport}"/></label>
                 <select id="transportation"
                         name="transportation"
                         th:errorclass="is-invalid"
                         class="form-control">
-                    <option value="">- Select transport -</option>
+                    <option value="">- <th:block th:text="#{groups_transport_prompt}"/> -</option>
                     <option th:each="vehicle : ${transportation}"
                             th:value="${vehicle}"
                             th:text="${vehicle.label}"
@@ -129,7 +129,7 @@
                 </p>
             </div>
             <div class="form-group col-md-6 mb-3">
-                <label class="text-white font-weight-bold" for="imageUrl">Image URL</label>
+                <label class="text-white font-weight-bold" for="imageUrl"><th:block th:text="#{groups_image_url}"/></label>
                 <input id="imageUrl"
                        name="imageUrl"
                        type="url"
@@ -137,7 +137,7 @@
                        th:value="*{imageUrl}"
                        th:text="*{imageUrl}"
                        class="form-control"
-                       placeholder="Place group image URL here">
+                       th:placeholder="#{groups_image_prompt}">
                 <p class="invalid-feedback">
                     Group image URL is required.
                 </p>
@@ -145,14 +145,14 @@
         </div>
 
         <div class="form-group">
-            <label class="text-white font-weight-bold" for="itinerary">Itinerary</label>
+            <label class="text-white font-weight-bold" for="itinerary"><th:block th:text="#{groups_itinerary}"/></label>
             <textarea id="itinerary"
                       name="itinerary"
                       th:errorclass="is-invalid"
                       th:value="*{itinerary}"
                       th:text="*{itinerary}"
                       type="textarea" class="form-control" rows="3"
-                      placeholder="Enter cruise itinerary"></textarea>
+                      th:placeholder="#{groups_itinerary_prompt}"></textarea>
             <p class="invalid-feedback">
                 Description is required.
             </p>
@@ -161,7 +161,7 @@
         <div class="row">
             <div class="col col-md-4">
                 <div class="button-holder d-flex">
-                    <input type="submit" class="btn btn-info btn-lg" value="Next"/>
+                    <input type="submit" class="btn btn-info btn-lg" th:value="#{groups_submit}"/>
                 </div>
             </div>
         </div>

@@ -12,7 +12,7 @@
 </header>
 <main>
 <div class="container-fluid">
-    <h2 class="text-center text-white mt-5">All Cruise Groups</h2>
+    <h2 class="text-center text-white mt-3"><th:block th:text="#{groups_all}"/></h2>
     <div class="offers row mx-auto d-flex flex-row justify-content-center">
         <div
                 th:each="group, iter: ${groups}"
@@ -29,14 +29,14 @@
             </div>
             <ul class="offer-details list-group list-group-flush">
                 <li class="list-group-item">
-                    <div class="card-text"><span>• Total passengers: <strong><th:block th:text="*{totalPax}"/></strong></span></div>
-                    <div class="card-text"><span>• Transport: <th:block th:text="*{transportation.label}"/></span></div>
-                    <div class="card-text"><span>• Departure: <th:block th:text="*{#dates.format(startDate, 'dd MMM yyyy')}"/></span></div>
-                    <div class="card-text"><span>• Duration: <th:block th:text="*{duration}"/> days</span></div>
+                    <div class="card-text"><span>• <th:block th:text="#{groups_total_pax}"/>: <strong><th:block th:text="*{totalPax}"/></strong></span></div>
+                    <div class="card-text"><span>• <th:block th:text="#{groups_transport}"/>: <th:block th:text="*{transportation.label}"/></span></div>
+                    <div class="card-text"><span>• <th:block th:text="#{groups_departure}"/>: <th:block th:text="*{#dates.format(startDate, 'dd MMM yyyy')}"/></span></div>
+                    <div class="card-text"><span>• <th:block th:text="#{groups_duration}"/>: <th:block th:text="*{duration}"/> days</span></div>
                 </li>
             </ul>
             <div class="card-body mx-auto">
-                <a class="btn btn-info bg-danger" th:href="@{/groups/delete/{id}(id= *{id})}">DELETE</a>
+                <a class="btn btn-info bg-danger" th:href="@{/groups/delete/{id}(id= *{id})}"><th:block th:text="#{groups_delete}"/></a>
             </div>
 
         </div>
