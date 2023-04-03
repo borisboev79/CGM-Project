@@ -31,3 +31,4 @@ services:
       - MYSQL_HOST=db
       - MYSQL_USER=cg
       - MYSQL_PASSWORD=1234
+      - HOSTNAME=http://localhost:8080

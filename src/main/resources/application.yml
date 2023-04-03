@@ -25,7 +25,8 @@ spring:
       filter:
         enabled: true
 
-hostName: http://localhost:8080
+
+hostName: ${HOSTNAME:http://localhost:8080}
 
 mail:
   host: ${MAIL_HOST:localhost}
