@@ -6,7 +6,7 @@ services:
       - "3306:3306"
     command: [ '--character-set-server=utf8mb4', '--collation-server=utf8mb4_bin', '--default-authentication-plugin=mysql_native_password' ]
     environment:
-      - MYSQL_ALLOW_EMPTY_PASSWORD="no"
+      - MYSQL_ALLOW_EMPTY_PASSWORD="yes"
       - MYSQL_DATABASE=cruisegroups
       - MYSQL_USER=cg
       - MYSQL_PASSWORD=1234
