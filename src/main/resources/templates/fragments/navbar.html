@@ -55,13 +55,13 @@
                 <form class="float-right" th:method="get">
 
                     <input hidden id="lang" name="lang" th:value="bg_BG">
-                    <input class="btn btn-link nav-link" type="submit" value="БГ">
+                    <input th:if="${#locale.country == 'US'}" class="btn btn-link nav-link" type="submit" value="БГ">
                 </form>
                 </form>
                 <form class="float-right" th:method="get">
                     <div>
                         <input hidden id="lang" name="lang" th:value="en_US">
-                        <input class="btn btn-link nav-link" type="submit" value="EN">
+                        <input th:if="${#locale.country == 'BG'}" class="btn btn-link nav-link" type="submit" value="EN">
                     </div>
                 </form>
 
