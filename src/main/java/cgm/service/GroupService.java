@@ -54,7 +54,7 @@ public class GroupService {
 
     private Instant dateToInstant(LocalDate date) {
         ZoneId zoneId = ZoneId.systemDefault();
-        return date.plusDays(1).atStartOfDay(zoneId).toInstant();
+        return date.atStartOfDay(zoneId).toInstant();
     }
 
     public List<GroupViewDto> getAllGroups() {
