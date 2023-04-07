@@ -8,9 +8,9 @@ spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
 
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/cruisegroups?useSSL=false&createDatabaseIfNotExist=true
-    username: ${MYSQL_USER:root}
-    password: ${MYSQL_PASSWORD:1234}
+    url: jdbc:mysql://bb-db.mysql.database.azure.com:3306/cruise_groups?allowPublic.KeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
@@ -26,7 +26,7 @@ spring:
         enabled: true
 
 
-hostName: ${HOSTNAME:http://localhost:8080}
+hostName: https://bb-spring-app-grouman.azuremicroservices.io
 
 mail:
   host: ${MAIL_HOST:localhost}
