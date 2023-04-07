@@ -90,7 +90,6 @@ public class GuestService {
         if (!guest.getBirthDate().equals(guestViewDto.getBirthDate())) {
             guest.setAge(Math.abs((int) ChronoUnit.YEARS.between(LocalDate.now(), dtoBirthDate)));
             guest.setBirthDate(guestViewDto.getBirthDate()
-                    .plus(1, ChronoUnit.DAYS)
             );
         }
 
@@ -174,7 +173,7 @@ public class GuestService {
 
     private Instant dateToInstant(LocalDate date) {
         ZoneId zoneId = ZoneId.systemDefault();
-        return date.plusDays(1).atStartOfDay(zoneId).toInstant();
+        return date.atStartOfDay(zoneId).toInstant();
     }
 
     private LocalDate instantToLocalDate(Instant date) {
