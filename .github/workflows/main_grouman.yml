@@ -58,5 +58,5 @@ jobs:
         with:
           app-name: 'grouman'
           slot-name: 'Production'
-          package: 'java-app'
+          package: 'cgm-0.8.0.jar'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E4F8CE9DDE0449AFAF2DBA060CD7BB69 }}
