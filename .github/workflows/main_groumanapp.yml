@@ -21,14 +21,26 @@ jobs:
         with:
           java-version: '17'
 
-      - name: Build with Maven
-        run: mvn clean install
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
 
-      - name: Upload artifact for deployment job
+      - name: Set executable permissions for gradlew
+        run: chmod +x ./gradlew
+  
+      - name: Build with Gradle
+        run: ./gradlew build
+    
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.war'
+          path: build/libs/cgm-0.8.0.jar
+
+      # - name: Upload artifact for deployment job
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: java-app
+      #     path: '${{ github.workspace }}/target/*.war'
 
   deploy:
     runs-on: ubuntu-latest
@@ -49,5 +61,5 @@ jobs:
         with:
           app-name: 'groumanapp'
           slot-name: 'Production'
-          package: '*.war'
+          package: '*.jar'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_1D4795A71CE04840A6782919720FEB85 }}
