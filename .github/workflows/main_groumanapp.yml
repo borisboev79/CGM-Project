@@ -28,13 +28,13 @@ jobs:
         run: chmod +x ./gradlew
   
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew war
     
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: java-app
-          path: build/libs/cgm-0.8.0.jar
+          path: build/libs/cgm-0.8.0.war
 
       # - name: Upload artifact for deployment job
       #   uses: actions/upload-artifact@v3
@@ -61,5 +61,5 @@ jobs:
         with:
           app-name: 'groumanapp'
           slot-name: 'Production'
-          package: '*.jar'
+          package: '*.war'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_1D4795A71CE04840A6782919720FEB85 }}
