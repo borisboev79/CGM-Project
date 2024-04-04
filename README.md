@@ -5,4 +5,4 @@ User 2: username: manager, password: topsecret
 User 3: username: user, password: topsecret
 
 Application deployed on Microsoft Azure at:
-https://bb-spring-app-grouman.azuremicroservices.io
+[https://bb-spring-app-grouman.azuremicroservices.io](https://my-azure-grouman-groumanapp.azuremicroservices.io/)
