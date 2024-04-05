@@ -6,3 +6,6 @@ User 3: username: user, password: topsecret
 
 Application deployed on Microsoft Azure at:
 https://my-azure-grouman-groumanapp.azuremicroservices.io
+
+New React Fron end in development. Can be seen here:
+https://grouman-73a41.firebaseapp.com/
